@@ -8,6 +8,7 @@ import org.junit.Rule
 import org.junit.Test
 
 class RegistrationFeature {
+
     @get: Rule
     val composeRule = createAndroidComposeRule<MainActivity>()
 
