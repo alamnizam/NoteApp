@@ -35,7 +35,7 @@ class ValidateUsernameTest {
     }
 
     @Test
-    fun `Correct error message when username is empty`(){
+    fun `getting correct error message when username is empty`(){
         val username = ""
         val result = ValidateUsername().execute(username)
         val expectedErrorMessage = "The username can't be blank"

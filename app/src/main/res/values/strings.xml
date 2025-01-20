@@ -3,4 +3,6 @@
     <string name="the_email_can_t_be_blank">The email can\'t be blank</string>
     <string name="that_s_not_a_valid_email">That\'s not a valid email</string>
     <string name="the_username_can_t_be_blank">The username can\'t be blank</string>
+    <string name="the_password_can_t_be_blank">The password can\'t be blank</string>
+    <string name="the_password_need_to_consist_of_at_least_8_characters">The password need to consist of at least 8 characters</string>
 </resources>
