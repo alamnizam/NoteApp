@@ -12,6 +12,7 @@ lifecycleViewModelCompose = "2.8.7"
 junitJupiter = "5.11.4"
 robolectric = "4.14.1"
 coreKtxVersion = "1.6.1"
+daggerHilt = "2.51.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,10 +33,14 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
+dagger-hilt = { module = "com.google.dagger:hilt-android", version = "2.52" }
+dagger-kapt = { module = 'com.google.dagger:hilt-android-compiler', version = "2.52" }
+hilt-compose-navigation = { module = "androidx.hilt:hilt-navigation-compose", version = "1.2.0" }
 
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+dagger = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
 
