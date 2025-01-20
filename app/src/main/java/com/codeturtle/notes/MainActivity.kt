@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.codeturtle.notes.authentication.registration.presentation.screens.RegistrationScreen
+import com.codeturtle.notes.authentication.registration.presentation.viewmodel.RegistrationViewModel
 import com.codeturtle.notes.ui.theme.NotesTheme
 
 class MainActivity : ComponentActivity() {
@@ -12,7 +15,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             NotesTheme {
-
+                val viewModel = viewModel<RegistrationViewModel>()
+                RegistrationScreen(viewModel = viewModel)
             }
         }
     }
