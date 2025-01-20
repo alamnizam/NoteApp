@@ -7,18 +7,18 @@ import com.codeturtle.notes.common.uits.UiText
 
 class ValidateEmail {
     fun execute(email: String): ValidationResult {
-        if(email.isBlank()) {
-            return ValidationResult(
+        return when {
+            email.isBlank() -> ValidationResult(
                 success = false,
                 errorMessage = UiText.StringResource(R.string.the_email_can_t_be_blank)
             )
-        }
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            return ValidationResult(
+
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> ValidationResult(
                 success = false,
                 errorMessage = UiText.StringResource(R.string.that_s_not_a_valid_email)
             )
+
+            else -> ValidationResult(success = true)
         }
-        return ValidationResult(success = true)
     }
 }
