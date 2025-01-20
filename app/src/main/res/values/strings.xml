@@ -2,4 +2,5 @@
     <string name="app_name">Notes</string>
     <string name="the_email_can_t_be_blank">The email can\'t be blank</string>
     <string name="that_s_not_a_valid_email">That\'s not a valid email</string>
+    <string name="the_username_can_t_be_blank">The username can\'t be blank</string>
 </resources>
