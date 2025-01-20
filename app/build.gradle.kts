@@ -39,6 +39,7 @@ android {
     buildFeatures {
         compose = true
     }
+    @Suppress("UnstableApiUsage")
     testOptions{
         unitTests {
             isIncludeAndroidResources = true
