@@ -2,13 +2,17 @@ package com.codeturtle.notes.authentication.registration.domain.use_case.validat
 
 import android.content.Context
 import android.content.res.Resources
+import android.os.Build.VERSION_CODES.Q
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
-@RunWith(RobolectricTestRunner::class)
+@RunWith(AndroidJUnit4::class)
+@Config(sdk = [Q])
 class ValidateUsernameTest {
 
     private lateinit var context: Context
@@ -24,14 +28,14 @@ class ValidateUsernameTest {
     fun `Username is empty`() {
         val username = ""
         val result = ValidateUsername().execute(username)
-        assert(!result.success)
+        assertEquals(result.success,false)
     }
 
     @Test
     fun `Username is not empty`() {
         val username = "Nizam Alam"
         val result = ValidateUsername().execute(username)
-        assert(result.success)
+        assertEquals(result.success,true)
     }
 
     @Test
@@ -39,6 +43,6 @@ class ValidateUsernameTest {
         val username = ""
         val result = ValidateUsername().execute(username)
         val expectedErrorMessage = "The username can't be blank"
-        assert(result.errorMessage?.asString(context)?.equals(expectedErrorMessage) == true)
+        assertEquals(result.errorMessage?.asString(context)?.equals(expectedErrorMessage),true)
     }
 }

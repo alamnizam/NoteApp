@@ -1,5 +1,6 @@
-package com.codeturtle.notes.authentication.registration.presentation.screens
+package com.codeturtle.notes.authentication.registration.presentation
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,29 +9,47 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.codeturtle.notes.authentication.registration.presentation.event.RegistrationUIEvent
-import com.codeturtle.notes.authentication.registration.presentation.state.RegistrationUIState
-import com.codeturtle.notes.authentication.registration.presentation.viewmodel.RegistrationViewModel
 
 @Composable
 fun RegistrationScreen(
     viewModel: RegistrationViewModel
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    LaunchedEffect(key1 = context) {
+        viewModel.validationEventChanel.collect { event ->
+            when (event) {
+                is RegistrationViewModel.ValidationEvent.Success -> {
+                    Toast.makeText(
+                        context,
+                        "Success",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+
     Register(
         uiState = uiState.value,
         onEvent = {
@@ -56,7 +75,7 @@ fun Register(
         ) {
             Greeting()
             Spacer(Modifier.height(10.dp))
-            RegistrationForm(uiState,onEvent)
+            RegistrationForm(uiState, onEvent)
         }
 
     }
@@ -81,7 +100,6 @@ fun RegistrationForm(
     uiState: RegistrationUIState,
     onEvent: (RegistrationUIEvent) -> Unit
 ) {
-
     Column(modifier = Modifier.testTag("RegistrationForm")) {
         OutlinedTextField(
             modifier = Modifier
@@ -90,7 +108,16 @@ fun RegistrationForm(
             value = uiState.userName,
             shape = RoundedCornerShape(12.dp),
             onValueChange = { onEvent(RegistrationUIEvent.UserNameChanged(it)) },
-            label = { Text("User Name") }
+            label = { Text("User Name") },
+            isError = uiState.userNameError != null,
+            supportingText = {
+                uiState.userNameError?.asString()?.let {
+                    Text(
+                        text = it,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
         )
         Spacer(Modifier.height(10.dp))
         OutlinedTextField(
@@ -100,7 +127,19 @@ fun RegistrationForm(
             value = uiState.email,
             shape = RoundedCornerShape(12.dp),
             onValueChange = { onEvent(RegistrationUIEvent.EmailChanged(it)) },
-            label = { Text("Email") }
+            label = { Text("Email") },
+            isError = uiState.emailError != null,
+            supportingText = {
+                uiState.emailError?.asString()?.let {
+                    Text(
+                        text = it,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email
+            )
         )
         Spacer(Modifier.height(10.dp))
         OutlinedTextField(
@@ -110,7 +149,20 @@ fun RegistrationForm(
             value = uiState.password,
             shape = RoundedCornerShape(12.dp),
             onValueChange = { onEvent(RegistrationUIEvent.PasswordChanged(it)) },
-            label = { Text("Password") }
+            label = { Text("Password") },
+            isError = uiState.passwordError != null,
+            supportingText = {
+                uiState.passwordError?.asString()?.let {
+                    Text(
+                        text = it,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password
+            ),
+            visualTransformation = PasswordVisualTransformation()
         )
         Spacer(Modifier.height(10.dp))
         OutlinedTextField(
@@ -120,14 +172,27 @@ fun RegistrationForm(
             value = uiState.confirmPassword,
             shape = RoundedCornerShape(12.dp),
             onValueChange = { onEvent(RegistrationUIEvent.ConfirmPasswordChanged(it)) },
-            label = { Text("Confirm Password") }
+            label = { Text("Confirm Password") },
+            isError = uiState.confirmPasswordError != null,
+            supportingText = {
+                uiState.confirmPasswordError?.asString()?.let {
+                    Text(
+                        text = it,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password
+            ),
+            visualTransformation = PasswordVisualTransformation()
         )
         Spacer(Modifier.height(30.dp))
         Button(
             modifier = Modifier
                 .testTag("Register")
                 .fillMaxWidth(),
-            onClick = { },
+            onClick = { onEvent(RegistrationUIEvent.RegisterButtonClicked) },
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 10.dp)
         ) {
             Text("Register")

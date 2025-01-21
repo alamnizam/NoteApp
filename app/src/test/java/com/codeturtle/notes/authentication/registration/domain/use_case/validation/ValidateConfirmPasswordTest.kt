@@ -2,13 +2,16 @@ package com.codeturtle.notes.authentication.registration.domain.use_case.validat
 
 import android.content.Context
 import android.content.res.Resources
+import android.os.Build.VERSION_CODES.Q
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
-@RunWith(RobolectricTestRunner::class)
+@RunWith(AndroidJUnit4::class)
+@Config(sdk = [Q])
 class ValidateConfirmPasswordTest {
 
     private lateinit var context: Context

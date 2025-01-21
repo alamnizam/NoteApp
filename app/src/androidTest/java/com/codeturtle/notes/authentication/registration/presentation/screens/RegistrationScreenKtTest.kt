@@ -1,4 +1,4 @@
-package com.codeturtle.notes.authentication
+package com.codeturtle.notes.authentication.registration.presentation.screens
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -8,8 +8,7 @@ import com.codeturtle.notes.MainActivity
 import org.junit.Rule
 import org.junit.Test
 
-class RegistrationFeature {
-
+class RegistrationScreenKtTest {
     @get: Rule
     val composeRule = createAndroidComposeRule<MainActivity>()
 

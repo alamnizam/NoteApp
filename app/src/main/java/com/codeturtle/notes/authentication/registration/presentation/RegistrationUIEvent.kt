@@ -1,4 +1,4 @@
-package com.codeturtle.notes.authentication.registration.presentation.event
+package com.codeturtle.notes.authentication.registration.presentation
 
 sealed class RegistrationUIEvent {
     data class UserNameChanged(val userName: String) : RegistrationUIEvent()
