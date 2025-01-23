@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.dagger)
     kotlin("kapt")
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -46,7 +47,7 @@ android {
         }
     }
 }
-
+val mockitoAgent = configurations.create("mockitoAgent")
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -71,7 +72,32 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     testImplementation(libs.robolectric)
 
+    //dagger hilt
     implementation(libs.dagger.hilt)
     implementation(libs.hilt.compose.navigation)
     kapt(libs.dagger.kapt)
+
+    //mockito
+    @Suppress("UnstableApiUsage")
+    mockitoAgent(libs.mockito.core) { isTransitive = false }
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.turbine)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockito.inline)
+
+    //room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
+    //retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
+
+    //coroutines
+    testImplementation(libs.kotlinx.coroutines.test)
+
+    //coil
+    implementation(libs.coil.compose)
 }

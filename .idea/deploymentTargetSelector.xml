@@ -5,16 +5,13 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="RegistrationScreenKtTest">
+      <SelectionState runConfigName="RegistrationFeature (1)">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="RegistrationScreenKtTest (1)">
+      <SelectionState runConfigName="validateRegisterFormUserNameTextFieldEmptyAndHasError()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="validateRegisterTitleTextIsDisplayed()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="RegistrationFeature">
+      <SelectionState runConfigName="validateRegisterFormEmailTextFieldEmptyAndHasError()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

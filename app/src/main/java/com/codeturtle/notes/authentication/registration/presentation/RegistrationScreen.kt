@@ -1,6 +1,5 @@
 package com.codeturtle.notes.authentication.registration.presentation
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,11 +39,6 @@ fun RegistrationScreen(
         viewModel.validationEventChanel.collect { event ->
             when (event) {
                 is RegistrationViewModel.ValidationEvent.Success -> {
-                    Toast.makeText(
-                        context,
-                        "Success",
-                        Toast.LENGTH_LONG
-                    ).show()
                 }
             }
         }

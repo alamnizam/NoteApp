@@ -60,37 +60,45 @@ class RegistrationViewModel @Inject constructor(
     }
 
     private fun registerForm() {
+        val isValid = validateRegistrationForm()
+        if(isValid){
+            viewModelScope.launch {
+                _validationEventChanel.send(ValidationEvent.Success)
+            }
+        }
+    }
+
+    private fun validateRegistrationForm() : Boolean {
         val userNameResult = validateUsername.execute(_uiState.value.userName)
         val emailResult = validateEmail.execute(_uiState.value.email)
         val passwordResult = validatePassword.execute(_uiState.value.password)
-        val confirmPasswordResult = validateConfirmPassword.execute(_uiState.value.password, _uiState.value.confirmPassword)
+        val confirmPasswordResult =
+            validateConfirmPassword.execute(_uiState.value.password, _uiState.value.confirmPassword)
 
         val hasError = listOf(
             userNameResult,
             emailResult,
             passwordResult,
             confirmPasswordResult
-        ).any { !it.success}
+        ).any { !it.success }
 
-        if(hasError) {
+        if (hasError) {
             _uiState.value = _uiState.value.copy(
                 userNameError = userNameResult.errorMessage,
                 emailError = emailResult.errorMessage,
                 passwordError = passwordResult.errorMessage,
                 confirmPasswordError = confirmPasswordResult.errorMessage
             )
-        }else{
+        } else {
             _uiState.value = _uiState.value.copy(
                 userNameError = null,
                 emailError = null,
                 passwordError = null,
                 confirmPasswordError = null
             )
-            viewModelScope.launch {
-                _validationEventChanel.send(ValidationEvent.Success)
-            }
         }
 
+        return hasError
     }
 
     sealed class ValidationEvent{

@@ -14,6 +14,19 @@ robolectric = "4.14.1"
 coreKtxVersion = "1.6.1"
 daggerHilt = "2.51.1"
 junitKtx = "1.2.1"
+mockitoCore = "5.15.2"
+kotlinxCoroutinesTest = "1.10.1"
+turbine = "0.12.1"
+mockitoKotlin = "2.0.0"
+mockitoInline = "2.25.0"
+roomRuntime = "2.7.0-alpha12"
+roomCompiler = "2.7.0-alpha12"
+roomKtx = "2.7.0-alpha12"
+retrofit = "2.11.0"
+converterGson = "2.11.0"
+loggingInterceptor = "5.0.0-alpha.14"
+ksp = "2.0.21-1.0.27"
+coilCompose = "2.7.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -38,11 +51,24 @@ dagger-hilt = { module = "com.google.dagger:hilt-android", version = "2.52" }
 dagger-kapt = { module = 'com.google.dagger:hilt-android-compiler', version = "2.52" }
 hilt-compose-navigation = { module = "androidx.hilt:hilt-navigation-compose", version = "1.2.0" }
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
-
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockitoCore" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+mockito-kotlin = { group = "com.nhaarman.mockitokotlin2", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
+mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockitoInline" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converterGson" }
+logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "loggingInterceptor" }
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coilCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 dagger = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+
 
