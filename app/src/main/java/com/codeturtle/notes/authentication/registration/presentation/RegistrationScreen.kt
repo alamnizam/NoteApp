@@ -1,5 +1,7 @@
 package com.codeturtle.notes.authentication.registration.presentation
 
+import android.widget.Toast
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,12 +14,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -30,26 +34,66 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
+fun ProgressBar() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
 fun RegistrationScreen(
     viewModel: RegistrationViewModel
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val registerResponse = viewModel.registerResponse.value
+    val responseEvent = viewModel.responseEvent.collectAsState(initial = null)
     val context = LocalContext.current
-    LaunchedEffect(key1 = context) {
-        viewModel.validationEventChanel.collect { event ->
-            when (event) {
-                is RegistrationViewModel.ValidationEvent.Success -> {
+    Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(15.dp)
+    ) {
+        Box(
+            modifier = Modifier.padding(it)
+        ) {
+            responseEvent.value.let {
+                if (registerResponse.isLoading) {
+                    ProgressBar()
+                }
+                if (registerResponse.errorMessage.isNotBlank()) {
+                    Toast.makeText(
+                        context,
+                        registerResponse.errorMessage,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                if (registerResponse.errorData != null) {
+                    Toast.makeText(
+                        context,
+                        registerResponse.errorData.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                if (registerResponse.data != null) {
+                    Toast.makeText(
+                        context,
+                        registerResponse.data.body()?.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
+            Register(
+                uiState = uiState.value,
+                onEvent = {
+                    viewModel.onEvent(it)
+                }
+            )
         }
-    }
 
-    Register(
-        uiState = uiState.value,
-        onEvent = {
-            viewModel.onEvent(it)
-        }
-    )
+    }
 }
 
 @Composable
@@ -57,22 +101,15 @@ fun Register(
     uiState: RegistrationUIState,
     onEvent: (RegistrationUIEvent) -> Unit
 ) {
-    Scaffold(
+    Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(15.dp)
+            .verticalScroll(rememberScrollState())
     ) {
-        Column(
-            modifier = Modifier
-                .padding(it)
-                .verticalScroll(rememberScrollState())
-        ) {
-            Greeting()
-            Spacer(Modifier.height(10.dp))
-            RegistrationForm(uiState, onEvent)
-        }
-
+        Greeting()
+        Spacer(Modifier.height(10.dp))
+        RegistrationForm(uiState, onEvent)
     }
+
 }
 
 @Composable

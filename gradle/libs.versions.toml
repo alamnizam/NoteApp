@@ -1,13 +1,13 @@
 [versions]
 agp = "8.8.0"
-kotlin = "2.0.0"
+kotlin = "2.0.21"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.0"
-composeBom = "2025.01.00"
+composeBom = "2025.01.01"
 lifecycleViewModelCompose = "2.8.7"
 junitJupiter = "5.11.4"
 robolectric = "4.14.1"
@@ -19,9 +19,9 @@ kotlinxCoroutinesTest = "1.10.1"
 turbine = "0.12.1"
 mockitoKotlin = "2.0.0"
 mockitoInline = "2.25.0"
-roomRuntime = "2.7.0-alpha12"
-roomCompiler = "2.7.0-alpha12"
-roomKtx = "2.7.0-alpha12"
+roomRuntime = "2.7.0-alpha13"
+roomCompiler = "2.7.0-alpha13"
+roomKtx = "2.7.0-alpha13"
 retrofit = "2.11.0"
 converterGson = "2.11.0"
 loggingInterceptor = "5.0.0-alpha.14"
@@ -52,6 +52,7 @@ dagger-kapt = { module = 'com.google.dagger:hilt-android-compiler', version = "2
 hilt-compose-navigation = { module = "androidx.hilt:hilt-navigation-compose", version = "1.2.0" }
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockitoCore" }
+
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 mockito-kotlin = { group = "com.nhaarman.mockitokotlin2", name = "mockito-kotlin", version.ref = "mockitoKotlin" }

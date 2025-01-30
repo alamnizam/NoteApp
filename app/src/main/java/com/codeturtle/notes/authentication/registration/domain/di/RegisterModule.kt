@@ -1,5 +1,7 @@
 package com.codeturtle.notes.authentication.registration.domain.di
 
+import com.codeturtle.notes.authentication.registration.domain.repository.RegisterRepository
+import com.codeturtle.notes.authentication.registration.domain.use_case.RegisterUseCase
 import com.codeturtle.notes.authentication.registration.domain.use_case.validation.ValidateConfirmPassword
 import com.codeturtle.notes.authentication.registration.domain.use_case.validation.ValidateEmail
 import com.codeturtle.notes.authentication.registration.domain.use_case.validation.ValidatePassword
@@ -11,7 +13,7 @@ import dagger.hilt.components.SingletonComponent
 
 @InstallIn(SingletonComponent::class)
 @Module
-class RegisterModule {
+object RegisterModule {
     @Provides
     fun provideValidateUserName() = ValidateUsername()
 
@@ -23,4 +25,7 @@ class RegisterModule {
 
     @Provides
     fun provideValidateConfirmPassword() = ValidateConfirmPassword()
+
+    @Provides
+    fun provideRegisterUseCase(repository: RegisterRepository) = RegisterUseCase(repository)
 }

@@ -2,7 +2,7 @@ package com.codeturtle.notes.authentication.registration.domain.use_case.validat
 
 import com.codeturtle.notes.R
 import com.codeturtle.notes.authentication.registration.domain.use_case.util.ValidationResult
-import com.codeturtle.notes.common.uits.UiText
+import com.codeturtle.notes.common.utils.UiText
 
 class ValidatePassword {
     fun execute(password: String): ValidationResult {

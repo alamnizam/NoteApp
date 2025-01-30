@@ -3,7 +3,7 @@ package com.codeturtle.notes.authentication.registration.domain.use_case.validat
 import android.util.Patterns
 import com.codeturtle.notes.R
 import com.codeturtle.notes.authentication.registration.domain.use_case.util.ValidationResult
-import com.codeturtle.notes.common.uits.UiText
+import com.codeturtle.notes.common.utils.UiText
 
 class ValidateEmail {
     fun execute(email: String): ValidationResult {

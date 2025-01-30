@@ -1,6 +1,6 @@
 package com.codeturtle.notes.authentication.registration.presentation
 
-import com.codeturtle.notes.common.uits.UiText
+import com.codeturtle.notes.common.utils.UiText
 
 data class RegistrationUIState(
     val userName: String = "",

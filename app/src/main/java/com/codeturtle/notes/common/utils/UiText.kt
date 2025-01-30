@@ -1,4 +1,4 @@
-package com.codeturtle.notes.common.uits
+package com.codeturtle.notes.common.utils
 
 import android.content.Context
 import androidx.annotation.StringRes
