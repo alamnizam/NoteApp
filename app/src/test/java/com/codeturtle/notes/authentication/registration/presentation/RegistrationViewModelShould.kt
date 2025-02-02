@@ -73,9 +73,16 @@ class RegistrationViewModelShould {
     @Test
     fun validateSuccessStateUserRegistration() = runTest {
         whenever(validateUsername.execute(username = "Nizam")).thenReturn(ValidationResult(true))
-        whenever(validateEmail.execute(email = "alamnizam1992@gmail.com")).thenReturn(ValidationResult(true))
+        whenever(validateEmail.execute(email = "alamnizam1992@gmail.com")).thenReturn(
+            ValidationResult(true)
+        )
         whenever(validatePassword.execute(password = "Nizam@123")).thenReturn(ValidationResult(true))
-        whenever(validateConfirmPassword.execute(password = "Nizam@123", confirmPassword = "Nizam@123")).thenReturn(
+        whenever(
+            validateConfirmPassword.execute(
+                password = "Nizam@123",
+                confirmPassword = "Nizam@123"
+            )
+        ).thenReturn(
             ValidationResult(true)
         )
         viewModel.onEvent(RegistrationUIEvent.UserNameChanged("Nizam"))
@@ -95,5 +102,37 @@ class RegistrationViewModelShould {
         viewModel.onEvent(RegistrationUIEvent.RegisterButtonClicked)
         mainCoroutineRule.dispatcher.scheduler.advanceUntilIdle()
         assertEquals(data, viewModel.registerResponse.value.data)
+    }
+
+    @Test
+    fun validateErrorStateUserRegistration() = runTest {
+        whenever(validateUsername.execute(username = "Nizam")).thenReturn(ValidationResult(true))
+        whenever(validateEmail.execute(email = "alamnizam1992@gmail.com")).thenReturn(
+            ValidationResult(true)
+        )
+        whenever(validatePassword.execute(password = "Nizam@123")).thenReturn(ValidationResult(true))
+        whenever(
+            validateConfirmPassword.execute(
+                password = "Nizam@123",
+                confirmPassword = "Nizam@123"
+            )
+        ).thenReturn(ValidationResult(true))
+        viewModel.onEvent(RegistrationUIEvent.UserNameChanged("Nizam"))
+        viewModel.onEvent(RegistrationUIEvent.EmailChanged("alamnizam1992@gmail.com"))
+        viewModel.onEvent(RegistrationUIEvent.PasswordChanged("Nizam@123"))
+        viewModel.onEvent(RegistrationUIEvent.ConfirmPasswordChanged("Nizam@123"))
+        val request = RegisterRequest(
+            name = viewModel.uiState.value.userName,
+            email = viewModel.uiState.value.email,
+            password = viewModel.uiState.value.password
+        )
+        whenever(useCase(request)).thenReturn(
+            flow {
+                emit(Resource.Error(error = "Something went wrong"))
+            }
+        )
+        viewModel.onEvent(RegistrationUIEvent.RegisterButtonClicked)
+        mainCoroutineRule.dispatcher.scheduler.advanceUntilIdle()
+        assertEquals("Something went wrong", viewModel.registerResponse.value.errorMessage)
     }
 }

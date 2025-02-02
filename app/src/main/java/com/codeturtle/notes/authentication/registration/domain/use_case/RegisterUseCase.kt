@@ -1,5 +1,7 @@
 package com.codeturtle.notes.authentication.registration.domain.use_case
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import com.codeturtle.notes.authentication.registration.data.model.RegisterRequest
 import com.codeturtle.notes.authentication.registration.data.model.RegisterResponse
 import com.codeturtle.notes.authentication.registration.domain.repository.RegisterRepository
@@ -17,6 +19,7 @@ class RegisterUseCase(
         emit(Resource.Loading())
         emit(Resource.Success(data = repository.register(request)))
     }.catch {
-        emit(Resource.Error(error = it.message))
+        emit(Resource.Error(error = "Something went wrong"))
+        Log.e(TAG, "registerUseCase: ${it.message}")
     }.flowOn(Dispatchers.IO)
 }
