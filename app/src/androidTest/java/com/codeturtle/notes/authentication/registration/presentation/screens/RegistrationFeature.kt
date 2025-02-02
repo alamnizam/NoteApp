@@ -175,6 +175,18 @@ class RegistrationFeature {
     }
 
     @Test
+    fun validateProgressBarIsDisplayed() {
+        composeRule.apply{
+            onNodeWithTag("User Name").assertIsDisplayed().performTextInput("Nizam")
+            onNodeWithTag("Email").assertIsDisplayed().performTextInput("alamnizam1992@gmail.com")
+            onNodeWithTag("Password").assertIsDisplayed().performTextInput("Nizam@123")
+            onNodeWithTag("Confirm Password").assertIsDisplayed().performTextInput("Nizam@123")
+            onNodeWithTag("Register").assertIsDisplayed().performClick()
+            onNodeWithTag("progress").assertIsDisplayed()
+        }
+    }
+
+    @Test
     fun validateRegisterFormButtonIsClickAndShowSuccessMessage() {
         composeRule.apply {
             onNodeWithTag("User Name").assertIsDisplayed().performTextInput("Nizam")

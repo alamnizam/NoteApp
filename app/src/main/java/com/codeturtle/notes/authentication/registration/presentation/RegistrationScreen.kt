@@ -41,7 +41,9 @@ fun ProgressBar() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(
+            modifier = Modifier.testTag("progress")
+        )
     }
 }
 
