@@ -32,6 +32,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.codeturtle.notes.authentication.registration.data.model.RegisterResponse
+import com.google.gson.Gson
 
 @Composable
 fun ProgressBar() {
@@ -70,19 +72,26 @@ fun RegistrationScreen(
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                if (registerResponse.errorData != null) {
-                    Toast.makeText(
-                        context,
-                        registerResponse.errorData.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
                 if (registerResponse.data != null) {
-                    Toast.makeText(
-                        context,
-                        registerResponse.data.body()?.message,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    if (registerResponse.data.body() != null) {
+                        Toast.makeText(
+                            context,
+                            registerResponse.data.body()?.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        val gson = Gson()
+                        val errorResponse = gson.fromJson(
+                            registerResponse.data.errorBody()?.string(),
+                            RegisterResponse::class.java
+                        )
+                        Toast.makeText(
+                            context,
+                            errorResponse.message,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
                 }
             }
             Register(

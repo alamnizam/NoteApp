@@ -6,6 +6,5 @@ import retrofit2.Response
 data class RegisterState(
     val isLoading: Boolean = false,
     val data: Response<RegisterResponse>? = null,
-    val errorData: RegisterResponse? = null,
     val errorMessage: String = ""
 )
