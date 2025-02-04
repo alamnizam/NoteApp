@@ -1,4 +1,4 @@
-package com.codeturtle.notes.common
+package com.codeturtle.notes.common.utils
 
 import retrofit2.Response
 

@@ -9,7 +9,7 @@ import com.codeturtle.notes.authentication.registration.domain.use_case.validati
 import com.codeturtle.notes.authentication.registration.domain.use_case.validation.ValidateEmail
 import com.codeturtle.notes.authentication.registration.domain.use_case.validation.ValidatePassword
 import com.codeturtle.notes.authentication.registration.domain.use_case.validation.ValidateUsername
-import com.codeturtle.notes.common.Resource
+import com.codeturtle.notes.common.utils.Resource
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest

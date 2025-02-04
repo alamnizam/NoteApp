@@ -1,4 +1,4 @@
-package com.codeturtle.notes
+package com.codeturtle.notes.app
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

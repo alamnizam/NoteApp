@@ -2,15 +2,21 @@ package com.codeturtle.notes.authentication.registration.presentation.screens
 
 import android.content.Context
 import android.content.res.Resources
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.test.core.app.ApplicationProvider
-import com.codeturtle.notes.MainActivity
+import androidx.test.espresso.IdlingRegistry
 import com.codeturtle.notes.R
+import com.codeturtle.notes.app.MainActivity
+import com.codeturtle.notes.common.utils.EspressoIdlingResource
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -24,8 +30,18 @@ class RegistrationFeature {
 
     @Before
     fun setUp() {
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.idlingResource)
         context = ApplicationProvider.getApplicationContext()
         resources = context.resources
+        composeRule.apply {
+            onNodeWithTag("Login").isDisplayed()
+            onNodeWithTag("Login").performClick()
+        }
+    }
+
+    @After
+    fun tearDown(){
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.idlingResource)
     }
 
     @Test
@@ -101,7 +117,7 @@ class RegistrationFeature {
         composeRule.apply {
             onNodeWithTag("Email").assertIsDisplayed().performTextInput("")
             onNodeWithTag("Register").assertIsDisplayed().performClick()
-            onNodeWithText(with(context){
+            onNodeWithText(with(context) {
                 resources.getString(R.string.the_email_can_t_be_blank)
             }).assertIsDisplayed()
         }
@@ -112,7 +128,7 @@ class RegistrationFeature {
         composeRule.apply {
             onNodeWithTag("Email").assertIsDisplayed().performTextInput("alamnizam1992gmail.com")
             onNodeWithTag("Register").assertIsDisplayed().performClick()
-            onNodeWithText(with(context){
+            onNodeWithText(with(context) {
                 resources.getString(R.string.that_s_not_a_valid_email)
             }).assertIsDisplayed()
         }
@@ -123,7 +139,7 @@ class RegistrationFeature {
         composeRule.apply {
             onNodeWithTag("Password").assertIsDisplayed().performTextInput("")
             onNodeWithTag("Register").assertIsDisplayed().performClick()
-            onNodeWithText(with(context){
+            onNodeWithText(with(context) {
                 resources.getString(R.string.the_password_can_t_be_blank)
             }).assertIsDisplayed()
         }
@@ -134,7 +150,7 @@ class RegistrationFeature {
         composeRule.apply {
             onNodeWithTag("Password").assertIsDisplayed().performTextInput("123")
             onNodeWithTag("Register").assertIsDisplayed().performClick()
-            onNodeWithText(with(context){
+            onNodeWithText(with(context) {
                 resources.getString(R.string.the_password_need_to_consist_of_at_least_8_characters)
             }).assertIsDisplayed()
         }
@@ -145,7 +161,7 @@ class RegistrationFeature {
         composeRule.apply {
             onNodeWithTag("Password").assertIsDisplayed().performTextInput("alamnizam")
             onNodeWithTag("Register").assertIsDisplayed().performClick()
-            onNodeWithText(with(context){
+            onNodeWithText(with(context) {
                 resources.getString(R.string.the_password_must_have_1_special_character_1_number_1_uppercase_and_1_lowercase_character)
             }).assertIsDisplayed()
         }
@@ -156,7 +172,7 @@ class RegistrationFeature {
         composeRule.apply {
             onNodeWithTag("Confirm Password").assertIsDisplayed().performTextInput("")
             onNodeWithTag("Register").assertIsDisplayed().performClick()
-            onNodeWithText(with(context){
+            onNodeWithText(with(context) {
                 resources.getString(R.string.the_confirm_password_can_t_be_blank)
             }).assertIsDisplayed()
         }
@@ -164,11 +180,11 @@ class RegistrationFeature {
 
     @Test
     fun validateRegisterFormConfirmPasswordTextFieldInvalidAndHasErrorOfPasswordNotMatch() {
-        composeRule.apply{
+        composeRule.apply {
             onNodeWithTag("Password").assertIsDisplayed().performTextInput("Nizam@123")
             onNodeWithTag("Confirm Password").assertIsDisplayed().performTextInput("Nizam")
             onNodeWithTag("Register").assertIsDisplayed().performClick()
-            onNodeWithText(with(context){
+            onNodeWithText(with(context) {
                 resources.getString(R.string.the_passwords_don_t_match)
             }).assertIsDisplayed()
         }
@@ -176,7 +192,7 @@ class RegistrationFeature {
 
     @Test
     fun validateProgressBarIsDisplayed() {
-        composeRule.apply{
+        composeRule.apply {
             onNodeWithTag("User Name").assertIsDisplayed().performTextInput("Nizam")
             onNodeWithTag("Email").assertIsDisplayed().performTextInput("alamnizam1992@gmail.com")
             onNodeWithTag("Password").assertIsDisplayed().performTextInput("Nizam@123")
@@ -186,15 +202,21 @@ class RegistrationFeature {
         }
     }
 
+    @OptIn(ExperimentalTestApi::class)
     @Test
-    fun validateRegisterFormButtonIsClickAndShowSuccessMessage() {
+    fun validateRegisterFormButtonIsClickAndShowEmailAlreadyExits() {
         composeRule.apply {
+            onNodeWithTag("RegistrationForm").assertIsDisplayed()
             onNodeWithTag("User Name").assertIsDisplayed().performTextInput("Nizam")
             onNodeWithTag("Email").assertIsDisplayed().performTextInput("alamnizam1992@gmail.com")
             onNodeWithTag("Password").assertIsDisplayed().performTextInput("Nizam@123")
             onNodeWithTag("Confirm Password").assertIsDisplayed().performTextInput("Nizam@123")
             onNodeWithTag("Register").assertIsDisplayed().performClick()
-            onNodeWithText("Success").assertIsDisplayed()
+            waitUntilDoesNotExist(
+                hasTestTag("progress"),
+                5000
+            )
+            onNodeWithText("(alamnizam1992@gmail.com)-email already exists").assertIsDisplayed()
         }
     }
 }

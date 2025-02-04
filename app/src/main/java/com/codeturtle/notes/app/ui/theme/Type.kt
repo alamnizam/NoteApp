@@ -1,4 +1,4 @@
-package com.codeturtle.notes.ui.theme
+package com.codeturtle.notes.app.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

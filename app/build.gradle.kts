@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.dagger)
     kotlin("kapt")
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -63,7 +64,6 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
@@ -100,4 +100,13 @@ dependencies {
 
     //coil
     implementation(libs.coil.compose)
+
+    //navigation
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
+
+    //Idling resource
+    implementation(libs.androidx.espresso.idling.resource)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.espresso.idling.resource)
 }

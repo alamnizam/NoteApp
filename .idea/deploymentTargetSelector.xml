@@ -14,6 +14,9 @@
       <SelectionState runConfigName="validateProgressBarIsDisplayed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="validateRegisterFormButtonIsClickAndShowEmailAlreadyExits()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>

@@ -1,4 +1,4 @@
-package com.codeturtle.notes.ui.theme
+package com.codeturtle.notes.app.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

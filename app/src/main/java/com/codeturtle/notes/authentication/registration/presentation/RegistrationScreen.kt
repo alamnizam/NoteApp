@@ -1,6 +1,5 @@
 package com.codeturtle.notes.authentication.registration.presentation
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,16 +13,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -31,67 +28,68 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.codeturtle.notes.authentication.registration.data.model.RegisterResponse
+import com.codeturtle.notes.common.component.ProgressBar
+import com.codeturtle.notes.common.snakbar.SnackBarController
+import com.codeturtle.notes.common.snakbar.SnackBarEvent
 import com.google.gson.Gson
-
-@Composable
-fun ProgressBar() {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator(
-            modifier = Modifier.testTag("progress")
-        )
-    }
-}
+import kotlinx.coroutines.launch
 
 @Composable
 fun RegistrationScreen(
-    viewModel: RegistrationViewModel
+    viewModel: RegistrationViewModel = hiltViewModel(),
+    navController:NavHostController
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val registerResponse = viewModel.registerResponse.value
     val responseEvent = viewModel.responseEvent.collectAsState(initial = null)
-    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .padding(15.dp)
-    ) {
+    ) { innerPadding ->
         Box(
-            modifier = Modifier.padding(it)
+            modifier = Modifier.padding(innerPadding)
         ) {
             responseEvent.value.let {
                 if (registerResponse.isLoading) {
                     ProgressBar()
                 }
                 if (registerResponse.errorMessage.isNotBlank()) {
-                    Toast.makeText(
-                        context,
-                        registerResponse.errorMessage,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    scope.launch {
+                        SnackBarController.sendEvent(
+                            event = SnackBarEvent(
+                                message = registerResponse.errorMessage
+                            )
+                        )
+                    }
                 }
                 if (registerResponse.data != null) {
                     if (registerResponse.data.body() != null) {
-                        Toast.makeText(
-                            context,
-                            registerResponse.data.body()?.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        scope.launch {
+                            SnackBarController.sendEvent(
+                                event = SnackBarEvent(
+                                    message = registerResponse.data.body()?.message.toString()
+                                )
+                            )
+                        }
                     } else {
                         val gson = Gson()
                         val errorResponse = gson.fromJson(
                             registerResponse.data.errorBody()?.string(),
                             RegisterResponse::class.java
                         )
-                        Toast.makeText(
-                            context,
-                            errorResponse.message,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        scope.launch {
+                            SnackBarController.sendEvent(
+                                event = SnackBarEvent(
+                                    message = errorResponse.message
+                                )
+                            )
+                        }
                     }
 
                 }

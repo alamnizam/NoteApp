@@ -10,7 +10,7 @@ import com.codeturtle.notes.authentication.registration.domain.use_case.validati
 import com.codeturtle.notes.authentication.registration.domain.use_case.validation.ValidateEmail
 import com.codeturtle.notes.authentication.registration.domain.use_case.validation.ValidatePassword
 import com.codeturtle.notes.authentication.registration.domain.use_case.validation.ValidateUsername
-import com.codeturtle.notes.common.Resource
+import com.codeturtle.notes.common.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -3,7 +3,7 @@ package com.codeturtle.notes.authentication.registration.domain.use_case
 import com.codeturtle.notes.authentication.registration.data.model.RegisterRequest
 import com.codeturtle.notes.authentication.registration.data.model.RegisterResponse
 import com.codeturtle.notes.authentication.registration.domain.repository.RegisterRepository
-import com.codeturtle.notes.common.Resource
+import com.codeturtle.notes.common.utils.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow

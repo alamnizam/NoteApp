@@ -4,7 +4,7 @@ import com.codeturtle.notes.MainCoroutineRule
 import com.codeturtle.notes.authentication.registration.data.model.RegisterRequest
 import com.codeturtle.notes.authentication.registration.data.model.RegisterResponse
 import com.codeturtle.notes.authentication.registration.domain.repository.RegisterRepository
-import com.codeturtle.notes.common.Resource
+import com.codeturtle.notes.common.utils.Resource
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -32,7 +32,7 @@ class RegisterUseCaseShould {
     @Test
     fun returnSuccessWhenGotDataFromRepository() = runTest {
         whenever(repository.register(request)).thenReturn(data)
-        var result:Resource<Response<RegisterResponse>>? = null
+        var result: Resource<Response<RegisterResponse>>? = null
         userCase(request).collect{
             result = it
         }
@@ -45,7 +45,7 @@ class RegisterUseCaseShould {
         whenever(repository.register(request)).thenThrow(
             java.lang.RuntimeException("Something went wrong")
         )
-        var result:Resource<Response<RegisterResponse>>? = null
+        var result: Resource<Response<RegisterResponse>>? = null
         userCase(request).collect{
             result = it
         }
