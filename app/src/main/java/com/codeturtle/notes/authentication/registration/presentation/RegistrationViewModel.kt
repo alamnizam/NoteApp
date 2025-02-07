@@ -39,6 +39,8 @@ class RegistrationViewModel @Inject constructor(
     private val _responseEvent = Channel<ResponseEvent>()
     val responseEvent = _responseEvent.receiveAsFlow()
 
+    private val _loginClickEvent = Channel<LoginClickEvent>()
+    val loginClickEvent = _loginClickEvent.receiveAsFlow()
 
     fun onEvent(uiEvent: RegistrationUIEvent) {
         when (uiEvent) {
@@ -69,7 +71,11 @@ class RegistrationViewModel @Inject constructor(
                 registerForm()
             }
 
-            else -> {}
+            is RegistrationUIEvent.LoginButtonClicked -> {
+                viewModelScope.launch {
+                    _loginClickEvent.send(LoginClickEvent.Callback)
+                }
+            }
         }
     }
 
@@ -123,11 +129,15 @@ class RegistrationViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-                    _registerResponse.value = RegisterState(errorMessage = it.error.toString())
+                    _registerResponse.value = RegisterState(errorMessage = it.errorMessage.toString())
                 }
 
                 is Resource.Success -> {
                     _registerResponse.value = RegisterState(data = it.data)
+                }
+
+                is Resource.dataError -> {
+                    _registerResponse.value = RegisterState(errorData = it.errorData)
                 }
             }
         }.launchIn(viewModelScope)
@@ -135,5 +145,9 @@ class RegistrationViewModel @Inject constructor(
 
     sealed class ResponseEvent {
         data object Callback : ResponseEvent()
+    }
+
+    sealed class LoginClickEvent {
+        data object Callback : LoginClickEvent()
     }
 }

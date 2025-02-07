@@ -1,5 +1,6 @@
 package com.codeturtle.notes.authentication.registration.presentation
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,37 +12,54 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.codeturtle.notes.authentication.registration.data.model.RegisterResponse
+import com.codeturtle.notes.R
+import com.codeturtle.notes.authentication.navigation.LoginScreen
 import com.codeturtle.notes.common.component.ProgressBar
 import com.codeturtle.notes.common.snakbar.SnackBarController
 import com.codeturtle.notes.common.snakbar.SnackBarEvent
-import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 @Composable
 fun RegistrationScreen(
     viewModel: RegistrationViewModel = hiltViewModel(),
-    navController:NavHostController
+    navController: NavHostController
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val registerResponse = viewModel.registerResponse.value
@@ -55,6 +73,12 @@ fun RegistrationScreen(
         Box(
             modifier = Modifier.padding(innerPadding)
         ) {
+            LaunchedEffect(key1 = true) {
+                viewModel.loginClickEvent.collect {
+                    navController.navigate(LoginScreen)
+                }
+            }
+
             responseEvent.value.let {
                 if (registerResponse.isLoading) {
                     ProgressBar()
@@ -69,31 +93,25 @@ fun RegistrationScreen(
                     }
                 }
                 if (registerResponse.data != null) {
-                    if (registerResponse.data.body() != null) {
-                        scope.launch {
-                            SnackBarController.sendEvent(
-                                event = SnackBarEvent(
-                                    message = registerResponse.data.body()?.message.toString()
-                                )
+                    scope.launch {
+                        SnackBarController.sendEvent(
+                            event = SnackBarEvent(
+                                message = "User registered successfully"
                             )
-                        }
-                    } else {
-                        val gson = Gson()
-                        val errorResponse = gson.fromJson(
-                            registerResponse.data.errorBody()?.string(),
-                            RegisterResponse::class.java
                         )
-                        scope.launch {
-                            SnackBarController.sendEvent(
-                                event = SnackBarEvent(
-                                    message = errorResponse.message
-                                )
-                            )
-                        }
                     }
-
+                }
+                if (registerResponse.errorData != null) {
+                    scope.launch {
+                        SnackBarController.sendEvent(
+                            event = SnackBarEvent(
+                                message = registerResponse.errorData.message
+                            )
+                        )
+                    }
                 }
             }
+
             Register(
                 uiState = uiState.value,
                 onEvent = {
@@ -124,13 +142,13 @@ fun Register(
 @Composable
 private fun Greeting() {
     Text(
-        text = "Registration",
+        text = stringResource(R.string.registration),
         fontSize = 24.sp,
         fontWeight = FontWeight.Bold
     )
     Spacer(Modifier.height(10.dp))
     Text(
-        text = "Please enter your details to register",
+        text = stringResource(R.string.please_enter_your_details_to_register),
         fontSize = 16.sp
     )
 }
@@ -140,6 +158,8 @@ fun RegistrationForm(
     uiState: RegistrationUIState,
     onEvent: (RegistrationUIEvent) -> Unit
 ) {
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
+    var confirmPasswordVisible by rememberSaveable { mutableStateOf(false) }
     Column(modifier = Modifier.testTag("RegistrationForm")) {
         OutlinedTextField(
             modifier = Modifier
@@ -147,8 +167,9 @@ fun RegistrationForm(
                 .fillMaxWidth(),
             value = uiState.userName,
             shape = RoundedCornerShape(12.dp),
+            singleLine = true,
             onValueChange = { onEvent(RegistrationUIEvent.UserNameChanged(it)) },
-            label = { Text("User Name") },
+            label = { Text(stringResource(R.string.user_name)) },
             isError = uiState.userNameError != null,
             supportingText = {
                 uiState.userNameError?.asString()?.let {
@@ -169,6 +190,7 @@ fun RegistrationForm(
             onValueChange = { onEvent(RegistrationUIEvent.EmailChanged(it)) },
             label = { Text("Email") },
             isError = uiState.emailError != null,
+            singleLine = true,
             supportingText = {
                 uiState.emailError?.asString()?.let {
                     Text(
@@ -189,7 +211,8 @@ fun RegistrationForm(
             value = uiState.password,
             shape = RoundedCornerShape(12.dp),
             onValueChange = { onEvent(RegistrationUIEvent.PasswordChanged(it)) },
-            label = { Text("Password") },
+            label = { Text(stringResource(R.string.password)) },
+            singleLine = true,
             isError = uiState.passwordError != null,
             supportingText = {
                 uiState.passwordError?.asString()?.let {
@@ -199,10 +222,26 @@ fun RegistrationForm(
                     )
                 }
             },
+            trailingIcon = {
+                val image = when {
+                    passwordVisible -> Icons.Filled.Visibility
+                    else -> Icons.Filled.VisibilityOff
+                }
+                val description = when {
+                    passwordVisible -> stringResource(R.string.hide_password)
+                    else -> stringResource(R.string.show_password)
+                }
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    Icon(imageVector = image, description)
+                }
+            },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password
             ),
-            visualTransformation = PasswordVisualTransformation()
+            visualTransformation = when {
+                !passwordVisible -> PasswordVisualTransformation()
+                else -> VisualTransformation.None
+            }
         )
         Spacer(Modifier.height(10.dp))
         OutlinedTextField(
@@ -211,8 +250,9 @@ fun RegistrationForm(
                 .fillMaxWidth(),
             value = uiState.confirmPassword,
             shape = RoundedCornerShape(12.dp),
+            singleLine = true,
             onValueChange = { onEvent(RegistrationUIEvent.ConfirmPasswordChanged(it)) },
-            label = { Text("Confirm Password") },
+            label = { Text(stringResource(R.string.confirm_password)) },
             isError = uiState.confirmPasswordError != null,
             supportingText = {
                 uiState.confirmPasswordError?.asString()?.let {
@@ -222,10 +262,26 @@ fun RegistrationForm(
                     )
                 }
             },
+            trailingIcon = {
+                val image = when {
+                    confirmPasswordVisible -> Icons.Filled.Visibility
+                    else -> Icons.Filled.VisibilityOff
+                }
+                val description = when {
+                    confirmPasswordVisible -> stringResource(R.string.hide_password)
+                    else -> stringResource(R.string.show_password)
+                }
+                IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
+                    Icon(imageVector = image, description)
+                }
+            },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password
             ),
-            visualTransformation = PasswordVisualTransformation()
+            visualTransformation = when {
+                !confirmPasswordVisible -> PasswordVisualTransformation()
+                else -> VisualTransformation.None
+            }
         )
         Spacer(Modifier.height(30.dp))
         Button(
@@ -237,6 +293,30 @@ fun RegistrationForm(
         ) {
             Text("Register")
         }
+        Spacer(Modifier.height(20.dp))
+        Text(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .testTag("Goto LoginScreen")
+                .clickable { onEvent(RegistrationUIEvent.LoginButtonClicked) },
+            text = buildAnnotatedString {
+                withStyle(
+                    style = SpanStyle(color = MaterialTheme.colorScheme.onSurface)
+                ) {
+                    append(stringResource(R.string.already_have_an_account))
+                }
+                withStyle(
+                    style = SpanStyle(
+                        color = MaterialTheme.colorScheme.primary,
+                        textDecoration = TextDecoration.Underline,
+                        fontWeight = FontWeight(500)
+                    )
+                ) {
+                    append(stringResource(R.string.login))
+                }
+            },
+            fontSize = 16.sp
+        )
     }
 }
 

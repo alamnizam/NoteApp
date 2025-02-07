@@ -19,7 +19,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.codeturtle.notes.CustomTestRunner"
     }
 
     buildTypes {
@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.core.ktx)
     implementation(libs.androidx.junit.ktx)
+    implementation(libs.androidx.material.icons.extended.android)
     testImplementation(libs.junit)
     testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.androidx.junit)
@@ -73,9 +74,12 @@ dependencies {
     testImplementation(libs.robolectric)
 
     //dagger hilt
-    implementation(libs.dagger.hilt)
-    implementation(libs.hilt.compose.navigation)
-    kapt(libs.dagger.kapt)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+    kaptAndroidTest(libs.hilt.android.compiler)
+    androidTestImplementation(libs.hilt.android.testing)
+    androidTestAnnotationProcessor(libs.hilt.android.compiler)
 
     //mockito
     @Suppress("UnstableApiUsage")
@@ -107,6 +111,13 @@ dependencies {
 
     //Idling resource
     implementation(libs.androidx.espresso.idling.resource)
-    androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.espresso.idling.resource)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.okhttp3.idling.resource)
+
+    //mock web server
+    testImplementation(libs.mockwebserver)
+    androidTestImplementation(libs.mockwebserver)
+    androidTestImplementation(libs.okhttp)
+    androidTestImplementation(libs.okhttp.tls)
 }

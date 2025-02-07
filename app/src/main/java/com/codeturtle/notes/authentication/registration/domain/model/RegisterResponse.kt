@@ -1,4 +1,4 @@
-package com.codeturtle.notes.authentication.registration.data.model
+package com.codeturtle.notes.authentication.registration.domain.model
 
 data class RegisterResponse(
     val success: Boolean,

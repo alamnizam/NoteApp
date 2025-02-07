@@ -2,7 +2,7 @@ package com.codeturtle.notes.authentication.registration.domain.use_case
 
 import com.codeturtle.notes.MainCoroutineRule
 import com.codeturtle.notes.authentication.registration.data.model.RegisterRequest
-import com.codeturtle.notes.authentication.registration.data.model.RegisterResponse
+import com.codeturtle.notes.authentication.registration.domain.model.RegisterResponse
 import com.codeturtle.notes.authentication.registration.domain.repository.RegisterRepository
 import com.codeturtle.notes.common.utils.Resource
 import com.nhaarman.mockitokotlin2.whenever
@@ -32,12 +32,23 @@ class RegisterUseCaseShould {
     @Test
     fun returnSuccessWhenGotDataFromRepository() = runTest {
         whenever(repository.register(request)).thenReturn(data)
-        var result: Resource<Response<RegisterResponse>>? = null
+        var result: Resource<RegisterResponse>? = null
         userCase(request).collect{
             result = it
         }
         mainCoroutineRule.dispatcher.scheduler.advanceUntilIdle()
-        assertEquals(data, result?.data)
+        assertEquals(data.body(), result?.data)
+    }
+
+    @Test
+    fun returnErrorDataWhenGotDataFromRepository() = runTest {
+        whenever(repository.register(request)).thenReturn(data)
+        var result: Resource<RegisterResponse>? = null
+        userCase(request).collect{
+            result = it
+        }
+        mainCoroutineRule.dispatcher.scheduler.advanceUntilIdle()
+        assertEquals(data.errorBody(), result?.errorData)
     }
 
     @Test
@@ -45,11 +56,11 @@ class RegisterUseCaseShould {
         whenever(repository.register(request)).thenThrow(
             java.lang.RuntimeException("Something went wrong")
         )
-        var result: Resource<Response<RegisterResponse>>? = null
+        var result: Resource<RegisterResponse>? = null
         userCase(request).collect{
             result = it
         }
         mainCoroutineRule.dispatcher.scheduler.advanceUntilIdle()
-        assertEquals("Something went wrong", result?.error)
+        assertEquals("Something went wrong", result?.errorMessage)
     }
 }

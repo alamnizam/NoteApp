@@ -8,4 +8,16 @@
     <string name="the_password_must_have_1_special_character_1_number_1_uppercase_and_1_lowercase_character">the password must have 1 special character 1 number 1 uppercase and 1 lowercase character</string>
     <string name="the_confirm_password_can_t_be_blank">The confirm password can\'t be blank</string>
     <string name="the_passwords_don_t_match">The passwords don\'t match</string>
+    <string name="don_t_have_an_account">"Don't have an account? "</string>
+    <string name="register">Register</string>
+    <string name="registration">Registration</string>
+    <string name="please_enter_your_details_to_register">Please enter your details to register</string>
+    <string name="already_have_an_account">"Already have an account? "</string>
+    <string name="login">Login</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="password">Password</string>
+    <string name="user_name">User Name</string>
+    <string name="user_registered_successfully">User registered successfully</string>
 </resources>

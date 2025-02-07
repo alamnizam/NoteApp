@@ -28,8 +28,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             NotesTheme {
+                val navController = rememberNavController()
                 val snackBarHostState = remember { SnackbarHostState() }
                 val scope = rememberCoroutineScope()
+
                 ObserveAsEvents(
                     flow = SnackBarController.events,
                     snackBarHostState
@@ -52,7 +54,6 @@ class MainActivity : ComponentActivity() {
                     },
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
-                    val navController = rememberNavController()
                     RootNavigation(navController,innerPadding)
                 }
             }

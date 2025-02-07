@@ -10,7 +10,7 @@ import com.codeturtle.notes.authentication.registration.presentation.Registratio
 fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
     navigation<AuthNavGraph>(startDestination = LoginScreen) {
         composable<LoginScreen> {
-            LoginScreen(navController)
+            LoginScreen(navController = navController)
         }
         composable<RegisterScreen> {
             RegistrationScreen(navController = navController)

@@ -2,9 +2,7 @@ package com.codeturtle.notes.authentication.registration.presentation.screens
 
 import android.content.Context
 import android.content.res.Resources
-import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -15,46 +13,78 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.IdlingRegistry
 import com.codeturtle.notes.R
 import com.codeturtle.notes.app.MainActivity
-import com.codeturtle.notes.common.utils.EspressoIdlingResource
+import com.codeturtle.notes.authentication.registration.data.mockserver.MockServerDispatcher
+import com.codeturtle.notes.common.constant.ServerUrlList.REGISTER
+import com.jakewharton.espresso.OkHttp3IdlingResource
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import okhttp3.OkHttpClient
+import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.RecordedRequest
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import javax.inject.Inject
 
+@HiltAndroidTest
 class RegistrationFeature {
-    @get: Rule
+
+    @get:Rule(order = 0)
+    val hiltRule = HiltAndroidRule(this)
+
+    @get:Rule(order = 1)
     val composeRule = createAndroidComposeRule<MainActivity>()
 
     private lateinit var context: Context
     private lateinit var resources: Resources
 
+    @Inject
+    lateinit var okHttp: OkHttpClient
+    private lateinit var okHttp3IdlingResource: OkHttp3IdlingResource
+    private lateinit var mockServer: MockWebServer
+    private val successServiceMap: Map<String, String> = mapOf(
+        Pair("/$REGISTER", "auth_register_success.json")
+    )
+
+    private val emailErrorServiceMap: Map<String, String> = mapOf(
+        Pair("/$REGISTER", "auth_register_email_error.json")
+    )
+
     @Before
     fun setUp() {
-        IdlingRegistry.getInstance().register(EspressoIdlingResource.idlingResource)
+        hiltRule.inject()
+        okHttp3IdlingResource = OkHttp3IdlingResource.create("okhttp", okHttp)
+        IdlingRegistry.getInstance().register(okHttp3IdlingResource)
+        mockServer = MockWebServer()
+        mockServer.start(8080)
+
         context = ApplicationProvider.getApplicationContext()
         resources = context.resources
         composeRule.apply {
-            onNodeWithTag("Login").isDisplayed()
-            onNodeWithTag("Login").performClick()
+            onNodeWithTag("Goto RegistrationScreen").isDisplayed()
+            onNodeWithTag("Goto RegistrationScreen").performClick()
         }
     }
 
     @After
-    fun tearDown(){
-        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.idlingResource)
+    fun tearDown() {
+        mockServer.shutdown()
+        IdlingRegistry.getInstance().unregister(okHttp3IdlingResource)
     }
 
     @Test
     fun validateRegisterTitleTextIsDisplayed() {
         composeRule.apply {
-            onNodeWithText("Registration").assertIsDisplayed()
+            onNodeWithText(context.resources.getString(R.string.registration)).assertIsDisplayed()
         }
     }
 
     @Test
     fun validateRegisterSubTitleTextIsDisplayed() {
         composeRule.apply {
-            onNodeWithText("Please enter your details to register").assertIsDisplayed()
+            onNodeWithText(context.resources.getString(R.string.please_enter_your_details_to_register)).assertIsDisplayed()
         }
     }
 
@@ -97,7 +127,7 @@ class RegistrationFeature {
     @Test
     fun validateRegisterFormRegisterButtonIsDisplayed() {
         composeRule.apply {
-            onNodeWithText("Register").assertIsDisplayed()
+            onNodeWithText(context.resources.getString(R.string.register)).assertIsDisplayed()
         }
     }
 
@@ -202,9 +232,9 @@ class RegistrationFeature {
         }
     }
 
-    @OptIn(ExperimentalTestApi::class)
     @Test
-    fun validateRegisterFormButtonIsClickAndShowEmailAlreadyExits() {
+    fun validateRegisterFormButtonIsClickAndShowSuccessSnackBar() {
+        mockServer.dispatcher = MockServerDispatcher().successDispatcher(successServiceMap)
         composeRule.apply {
             onNodeWithTag("RegistrationForm").assertIsDisplayed()
             onNodeWithTag("User Name").assertIsDisplayed().performTextInput("Nizam")
@@ -212,11 +242,40 @@ class RegistrationFeature {
             onNodeWithTag("Password").assertIsDisplayed().performTextInput("Nizam@123")
             onNodeWithTag("Confirm Password").assertIsDisplayed().performTextInput("Nizam@123")
             onNodeWithTag("Register").assertIsDisplayed().performClick()
-            waitUntilDoesNotExist(
-                hasTestTag("progress"),
-                5000
-            )
+            val request: RecordedRequest = mockServer.takeRequest()
+            assertEquals("/$REGISTER", request.path)
+            onNodeWithText(context.getString(R.string.user_registered_successfully)).assertIsDisplayed()
+        }
+    }
+
+    @Test
+    fun validateRegisterFormButtonIsClickAndShowEmailAlreadyExistsSnackBar() {
+        mockServer.dispatcher = MockServerDispatcher().emailErrorDispatcher(emailErrorServiceMap)
+        composeRule.apply {
+            onNodeWithTag("RegistrationForm").assertIsDisplayed()
+            onNodeWithTag("User Name").assertIsDisplayed().performTextInput("Nizam")
+            onNodeWithTag("Email").assertIsDisplayed().performTextInput("alamnizam1992@gmail.com")
+            onNodeWithTag("Password").assertIsDisplayed().performTextInput("Nizam@123")
+            onNodeWithTag("Confirm Password").assertIsDisplayed().performTextInput("Nizam@123")
+            onNodeWithTag("Register").assertIsDisplayed().performClick()
+            val request: RecordedRequest = mockServer.takeRequest()
+            assertEquals("/$REGISTER", request.path)
             onNodeWithText("(alamnizam1992@gmail.com)-email already exists").assertIsDisplayed()
+        }
+    }
+
+    @Test
+    fun validateAlreadyHaveAccountTextIsShowing() {
+        composeRule.apply {
+            onNodeWithTag("Goto LoginScreen").assertIsDisplayed()
+        }
+    }
+
+    @Test
+    fun validateAlreadyHaveAccountTextWhenClickLoginScreenOpens(){
+        composeRule.apply {
+            onNodeWithTag("Goto LoginScreen").assertIsDisplayed()
+            onNodeWithTag("Goto LoginScreen").performClick()
         }
     }
 }

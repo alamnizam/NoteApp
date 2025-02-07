@@ -1,24 +1,31 @@
 package com.codeturtle.notes.authentication.registration.domain.use_case
 
 import com.codeturtle.notes.authentication.registration.data.model.RegisterRequest
-import com.codeturtle.notes.authentication.registration.data.model.RegisterResponse
+import com.codeturtle.notes.authentication.registration.domain.model.RegisterResponse
 import com.codeturtle.notes.authentication.registration.domain.repository.RegisterRepository
+import com.codeturtle.notes.common.utils.ErrorResponse
 import com.codeturtle.notes.common.utils.Resource
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onStart
-import retrofit2.Response
 
 class RegisterUseCase(
     private val repository: RegisterRepository
 ) {
-    operator fun invoke(request: RegisterRequest) = flow<Resource<Response<RegisterResponse>>> {
-        emit(Resource.Success(data = repository.register(request)))
-    }.onStart{
+    operator fun invoke(request: RegisterRequest):Flow<Resource<RegisterResponse>> = flow {
         emit(Resource.Loading())
-    }.catch {
-        emit(Resource.Error(error = "Something went wrong"))
+        try {
+            val response = repository.register(request)
+            if (response.isSuccessful) {
+                emit(Resource.Success(data = response.body()))
+            } else {
+                val errorResponse = Gson().fromJson(response.errorBody()?.string(), ErrorResponse::class.java)
+                emit(Resource.dataError(errorData = errorResponse))
+            }
+        }catch (e:Exception){
+            emit(Resource.Error("Something went wrong"))
+        }
     }.flowOn(Dispatchers.IO)
 }

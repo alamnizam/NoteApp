@@ -2,7 +2,7 @@ package com.codeturtle.notes.authentication.registration.presentation
 
 import com.codeturtle.notes.MainCoroutineRule
 import com.codeturtle.notes.authentication.registration.data.model.RegisterRequest
-import com.codeturtle.notes.authentication.registration.data.model.RegisterResponse
+import com.codeturtle.notes.authentication.registration.domain.model.RegisterResponse
 import com.codeturtle.notes.authentication.registration.domain.use_case.RegisterUseCase
 import com.codeturtle.notes.authentication.registration.domain.use_case.util.ValidationResult
 import com.codeturtle.notes.authentication.registration.domain.use_case.validation.ValidateConfirmPassword
@@ -18,7 +18,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.mock
-import retrofit2.Response
 
 class RegistrationViewModelShould {
     private lateinit var viewModel: RegistrationViewModel
@@ -28,7 +27,7 @@ class RegistrationViewModelShould {
     private val validateConfirmPassword: ValidateConfirmPassword = mock()
 
     private val validateUsername: ValidateUsername = mock()
-    private val data: Response<RegisterResponse> = mock()
+    private val data: RegisterResponse = mock()
     private val useCase: RegisterUseCase = mock()
 
     @get:Rule

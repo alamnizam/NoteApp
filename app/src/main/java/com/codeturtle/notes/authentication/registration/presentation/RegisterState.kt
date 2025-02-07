@@ -1,10 +1,11 @@
 package com.codeturtle.notes.authentication.registration.presentation
 
-import com.codeturtle.notes.authentication.registration.data.model.RegisterResponse
-import retrofit2.Response
+import com.codeturtle.notes.authentication.registration.domain.model.RegisterResponse
+import com.codeturtle.notes.common.utils.ErrorResponse
 
 data class RegisterState(
     val isLoading: Boolean = false,
-    val data: Response<RegisterResponse>? = null,
+    val data: RegisterResponse? = null,
+    val errorData: ErrorResponse? = null,
     val errorMessage: String = ""
 )
