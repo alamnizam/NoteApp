@@ -1,14 +1,19 @@
 package com.codeturtle.notes.authentication.login.presentation
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codeturtle.notes.authentication.login.data.model.LoginRequest
+import com.codeturtle.notes.authentication.login.domain.usecase.LoginUseCase
+import com.codeturtle.notes.common.utils.Resource
 import com.codeturtle.notes.common.validation.ValidateEmail
 import com.codeturtle.notes.common.validation.ValidateLoginPassword
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,10 +21,14 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val validateEmail: ValidateEmail,
-    private val validateLoginPassword: ValidateLoginPassword
+    private val validateLoginPassword: ValidateLoginPassword,
+    private val useCase: LoginUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginUIState())
     val uiState: StateFlow<LoginUIState> = _uiState
+
+    private val _loginResponse = mutableStateOf(LoginState())
+    val loginResponse: State<LoginState> = _loginResponse
 
     private val _registerClickEvent = Channel<RegisterClickEvent>()
     val registerClickEvent = _registerClickEvent.receiveAsFlow()
@@ -83,8 +92,23 @@ class LoginViewModel @Inject constructor(
         data object Callback : ResponseEvent()
     }
 
-    private fun loginUser(request: LoginRequest) {
-        TODO("Not yet implemented")
+    private fun loginUser(request: LoginRequest) = viewModelScope.launch {
+        useCase(request).onEach{
+            when (it) {
+                is Resource.Loading -> {
+                    _loginResponse.value = LoginState(isLoading = true)
+                }
+                is Resource.Error -> {
+                    _loginResponse.value = LoginState(errorMessage = it.errorMessage.toString())
+                }
+                is Resource.DataError -> {
+                    _loginResponse.value = LoginState(errorData = it.errorData)
+                }
+                is Resource.Success -> {
+                    _loginResponse.value = LoginState(data = it.data)
+                }
+            }
+        }
     }
 
     sealed class RegisterClickEvent {

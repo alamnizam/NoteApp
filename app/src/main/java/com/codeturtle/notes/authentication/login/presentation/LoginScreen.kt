@@ -25,8 +25,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -49,6 +51,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.codeturtle.notes.R
 import com.codeturtle.notes.authentication.navigation.RegisterScreen
+import com.codeturtle.notes.common.component.ProgressBar
+import com.codeturtle.notes.common.snakbar.SnackBarController
+import com.codeturtle.notes.common.snakbar.SnackBarEvent
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -56,6 +62,9 @@ fun LoginScreen(
     navController: NavHostController
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val loginResponse = viewModel.loginResponse.value
+    val responseEvent = viewModel.responseEvent.collectAsState(initial = null)
+    val scope = rememberCoroutineScope()
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -69,6 +78,40 @@ fun LoginScreen(
                     navController.navigate(RegisterScreen)
                 }
             }
+
+            responseEvent.value.let {
+                if (loginResponse.isLoading) {
+                    ProgressBar()
+                }
+                if (loginResponse.errorMessage.isNotBlank()) {
+                    scope.launch {
+                        SnackBarController.sendEvent(
+                            event = SnackBarEvent(
+                                message = loginResponse.errorMessage
+                            )
+                        )
+                    }
+                }
+                if (loginResponse.data != null) {
+                    scope.launch {
+                        SnackBarController.sendEvent(
+                            event = SnackBarEvent(
+                                message = "User logged in successfully"
+                            )
+                        )
+                    }
+                }
+                if (loginResponse.errorData != null) {
+                    scope.launch {
+                        SnackBarController.sendEvent(
+                            event = SnackBarEvent(
+                                message = loginResponse.errorData.message
+                            )
+                        )
+                    }
+                }
+            }
+
             Login(
                 uiState = uiState.value,
                 onEvent = {

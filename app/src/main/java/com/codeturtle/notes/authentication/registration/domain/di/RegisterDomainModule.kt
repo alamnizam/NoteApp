@@ -9,7 +9,7 @@ import dagger.hilt.components.SingletonComponent
 
 @InstallIn(SingletonComponent::class)
 @Module
-object RegisterModule {
+object RegisterDomainModule {
     @Provides
     fun provideRegisterUseCase(repository: RegisterRepository) = RegisterUseCase(repository)
 }

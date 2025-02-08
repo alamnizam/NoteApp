@@ -22,7 +22,7 @@ class RegisterUseCase(
                 emit(Resource.Success(data = response.body()))
             } else {
                 val errorResponse = Gson().fromJson(response.errorBody()?.string(), ErrorResponse::class.java)
-                emit(Resource.dataError(errorData = errorResponse))
+                emit(Resource.DataError(errorData = errorResponse))
             }
         }catch (e:Exception){
             emit(Resource.Error("Something went wrong"))

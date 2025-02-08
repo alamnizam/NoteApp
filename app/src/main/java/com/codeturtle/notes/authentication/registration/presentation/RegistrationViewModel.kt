@@ -134,7 +134,7 @@ class RegistrationViewModel @Inject constructor(
                     _registerResponse.value = RegisterState(data = it.data)
                 }
 
-                is Resource.dataError -> {
+                is Resource.DataError -> {
                     _registerResponse.value = RegisterState(errorData = it.errorData)
                 }
             }
