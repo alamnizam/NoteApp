@@ -1,4 +1,4 @@
-package com.codeturtle.notes.authentication.registration.data.mockserver
+package com.codeturtle.notes
 
 
 import com.codeturtle.notes.common.di.NetworkModule

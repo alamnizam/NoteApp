@@ -4,11 +4,11 @@ import com.codeturtle.notes.MainCoroutineRule
 import com.codeturtle.notes.authentication.registration.data.model.RegisterRequest
 import com.codeturtle.notes.authentication.registration.domain.model.RegisterResponse
 import com.codeturtle.notes.authentication.registration.domain.use_case.RegisterUseCase
-import com.codeturtle.notes.authentication.registration.domain.use_case.util.ValidationResult
-import com.codeturtle.notes.authentication.registration.domain.use_case.validation.ValidateConfirmPassword
-import com.codeturtle.notes.authentication.registration.domain.use_case.validation.ValidateEmail
-import com.codeturtle.notes.authentication.registration.domain.use_case.validation.ValidatePassword
-import com.codeturtle.notes.authentication.registration.domain.use_case.validation.ValidateUsername
+import com.codeturtle.notes.common.utils.ValidationResult
+import com.codeturtle.notes.common.validation.ValidateConfirmPassword
+import com.codeturtle.notes.common.validation.ValidateEmail
+import com.codeturtle.notes.common.validation.ValidatePassword
+import com.codeturtle.notes.common.validation.ValidateUsername
 import com.codeturtle.notes.common.utils.Resource
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.flow.flow

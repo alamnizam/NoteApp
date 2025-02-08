@@ -1,7 +1,7 @@
-package com.codeturtle.notes.authentication.registration.domain.use_case.validation
+package com.codeturtle.notes.common.validation
 
 import com.codeturtle.notes.R
-import com.codeturtle.notes.authentication.registration.domain.use_case.util.ValidationResult
+import com.codeturtle.notes.common.utils.ValidationResult
 import com.codeturtle.notes.common.utils.UiText
 
 class ValidatePassword {

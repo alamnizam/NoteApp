@@ -132,7 +132,7 @@ fun Register(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
     ) {
-        Greeting()
+        RegistrationGreeting()
         Spacer(Modifier.height(10.dp))
         RegistrationForm(uiState, onEvent)
     }
@@ -140,7 +140,7 @@ fun Register(
 }
 
 @Composable
-private fun Greeting() {
+private fun RegistrationGreeting() {
     Text(
         text = stringResource(R.string.registration),
         fontSize = 24.sp,
@@ -169,7 +169,7 @@ fun RegistrationForm(
             shape = RoundedCornerShape(12.dp),
             singleLine = true,
             onValueChange = { onEvent(RegistrationUIEvent.UserNameChanged(it)) },
-            label = { Text(stringResource(R.string.user_name)) },
+            label = { Text(stringResource(R.string.user_name)   ) },
             isError = uiState.userNameError != null,
             supportingText = {
                 uiState.userNameError?.asString()?.let {
@@ -188,9 +188,9 @@ fun RegistrationForm(
             value = uiState.email,
             shape = RoundedCornerShape(12.dp),
             onValueChange = { onEvent(RegistrationUIEvent.EmailChanged(it)) },
-            label = { Text("Email") },
-            isError = uiState.emailError != null,
+            label = { Text(stringResource(R.string.email)) },
             singleLine = true,
+            isError = uiState.emailError != null,
             supportingText = {
                 uiState.emailError?.asString()?.let {
                     Text(
@@ -291,14 +291,14 @@ fun RegistrationForm(
             onClick = { onEvent(RegistrationUIEvent.RegisterButtonClicked) },
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 10.dp)
         ) {
-            Text("Register")
+            Text(stringResource(R.string.register))
         }
         Spacer(Modifier.height(20.dp))
         Text(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .testTag("Goto LoginScreen")
-                .clickable { onEvent(RegistrationUIEvent.LoginButtonClicked) },
+                .clickable { onEvent(RegistrationUIEvent.LoginTextClicked) },
             text = buildAnnotatedString {
                 withStyle(
                     style = SpanStyle(color = MaterialTheme.colorScheme.onSurface)

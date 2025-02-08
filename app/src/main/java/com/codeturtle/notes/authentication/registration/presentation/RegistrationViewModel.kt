@@ -6,11 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codeturtle.notes.authentication.registration.data.model.RegisterRequest
 import com.codeturtle.notes.authentication.registration.domain.use_case.RegisterUseCase
-import com.codeturtle.notes.authentication.registration.domain.use_case.validation.ValidateConfirmPassword
-import com.codeturtle.notes.authentication.registration.domain.use_case.validation.ValidateEmail
-import com.codeturtle.notes.authentication.registration.domain.use_case.validation.ValidatePassword
-import com.codeturtle.notes.authentication.registration.domain.use_case.validation.ValidateUsername
 import com.codeturtle.notes.common.utils.Resource
+import com.codeturtle.notes.common.validation.ValidateConfirmPassword
+import com.codeturtle.notes.common.validation.ValidateEmail
+import com.codeturtle.notes.common.validation.ValidatePassword
+import com.codeturtle.notes.common.validation.ValidateUsername
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,11 +67,9 @@ class RegistrationViewModel @Inject constructor(
                     confirmPassword = uiEvent.confirmPassword
                 )
             }
-            is RegistrationUIEvent.RegisterButtonClicked ->{
-                registerForm()
-            }
+            is RegistrationUIEvent.RegisterButtonClicked -> registerForm()
 
-            is RegistrationUIEvent.LoginButtonClicked -> {
+            is RegistrationUIEvent.LoginTextClicked -> {
                 viewModelScope.launch {
                     _loginClickEvent.send(LoginClickEvent.Callback)
                 }

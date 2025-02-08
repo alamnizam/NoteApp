@@ -5,10 +5,13 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="RegistrationScreenPreview">
+      <SelectionState runConfigName="RegistrationFeature">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="RegistrationFeature">
+      <SelectionState runConfigName="LoginFeature">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="validateLoginTitleTextDisplayed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

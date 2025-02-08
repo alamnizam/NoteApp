@@ -1,23 +1,23 @@
-package com.codeturtle.notes.authentication.registration.data.mockserver
+package com.codeturtle.notes.authentication.login.mockwebserver
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import com.codeturtle.notes.common.constant.ServerUrlList.REGISTER
+import com.codeturtle.notes.common.constant.ServerUrlList.LOGIN
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
 import java.io.InputStreamReader
 
-class MockServerDispatcher {
+class LoginMockServerDispatcher {
     fun successDispatcher(map: Map<String, String>): Dispatcher {
         return object : Dispatcher() {
             override fun dispatch(request: RecordedRequest): MockResponse {
                 Log.e(TAG, "dispatch: path = ${request.path}")
                 return when (request.path) {
-                    "/$REGISTER" -> {
+                    "/$LOGIN" -> {
                         var json = ""
-                        if (map.containsKey("/$REGISTER")) {
-                            json = map["/$REGISTER"]!!
+                        if (map.containsKey("/$LOGIN")) {
+                            json = map["/$LOGIN"]!!
                         }
                         MockResponse().setResponseCode(200).setBody(getJsonContent(json))
                     }
@@ -28,18 +28,18 @@ class MockServerDispatcher {
         }
     }
 
-    fun emailErrorDispatcher(map: Map<String, String>): Dispatcher {
+    fun emailPasswordErrorDispatcher(map: Map<String, String>): Dispatcher {
         return object : Dispatcher() {
             override fun dispatch(request: RecordedRequest): MockResponse {
                 return when (request.path) {
-                    "/$REGISTER" -> {
+                    "/$LOGIN" -> {
                         var json = ""
-                        if (map.containsKey("/$REGISTER")) {
-                            json = map["/$REGISTER"]!!
+                        if (map.containsKey("/$LOGIN")) {
+                            json = map["/$LOGIN"]!!
                         }
-                        MockResponse().setResponseCode(409).setBody(getJsonContent(json))
+                        MockResponse().setResponseCode(400).setBody(getJsonContent(json))
                     }
-                    else -> MockResponse().setResponseCode(404).setBody("")
+                    else -> MockResponse().setResponseCode(400).setBody("")
                 }
             }
         }

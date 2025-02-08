@@ -62,7 +62,7 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.androidx.junit.ktx)
     implementation(libs.androidx.material.icons.extended.android)
-    testImplementation(libs.junit)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -70,7 +70,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    //test String resource
+    testImplementation(libs.junit)
     testImplementation(libs.robolectric)
 
     //dagger hilt

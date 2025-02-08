@@ -6,5 +6,5 @@ sealed class RegistrationUIEvent {
     data class PasswordChanged(val password: String) : RegistrationUIEvent()
     data class ConfirmPasswordChanged(val confirmPassword: String) : RegistrationUIEvent()
     data object RegisterButtonClicked : RegistrationUIEvent()
-    data object LoginButtonClicked : RegistrationUIEvent()
+    data object LoginTextClicked : RegistrationUIEvent()
 }

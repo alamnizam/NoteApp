@@ -1,4 +1,4 @@
-package com.codeturtle.notes.authentication.registration.presentation.screens
+package com.codeturtle.notes.authentication.registration.presentation
 
 import android.content.Context
 import android.content.res.Resources
@@ -13,7 +13,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.IdlingRegistry
 import com.codeturtle.notes.R
 import com.codeturtle.notes.app.MainActivity
-import com.codeturtle.notes.authentication.registration.data.mockserver.MockServerDispatcher
+import com.codeturtle.notes.authentication.registration.mockwebserver.RegisterMockServerDispatcher
 import com.codeturtle.notes.common.constant.ServerUrlList.REGISTER
 import com.jakewharton.espresso.OkHttp3IdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -234,7 +234,7 @@ class RegistrationFeature {
 
     @Test
     fun validateRegisterFormButtonIsClickAndShowSuccessSnackBar() {
-        mockServer.dispatcher = MockServerDispatcher().successDispatcher(successServiceMap)
+        mockServer.dispatcher = RegisterMockServerDispatcher().successDispatcher(successServiceMap)
         composeRule.apply {
             onNodeWithTag("RegistrationForm").assertIsDisplayed()
             onNodeWithTag("User Name").assertIsDisplayed().performTextInput("Nizam")
@@ -250,7 +250,7 @@ class RegistrationFeature {
 
     @Test
     fun validateRegisterFormButtonIsClickAndShowEmailAlreadyExistsSnackBar() {
-        mockServer.dispatcher = MockServerDispatcher().emailErrorDispatcher(emailErrorServiceMap)
+        mockServer.dispatcher = RegisterMockServerDispatcher().emailErrorDispatcher(emailErrorServiceMap)
         composeRule.apply {
             onNodeWithTag("RegistrationForm").assertIsDisplayed()
             onNodeWithTag("User Name").assertIsDisplayed().performTextInput("Nizam")
@@ -276,6 +276,7 @@ class RegistrationFeature {
         composeRule.apply {
             onNodeWithTag("Goto LoginScreen").assertIsDisplayed()
             onNodeWithTag("Goto LoginScreen").performClick()
+            onNodeWithText(context.resources.getString(R.string.login))
         }
     }
 }
