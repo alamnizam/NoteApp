@@ -150,6 +150,17 @@ class LoginFeature {
         }
     }
 
+    @Test
+    fun validateProgressBarIsDisplayed() {
+        IdlingRegistry.getInstance().unregister(okHttp3IdlingResource)
+        composeRule.apply {
+            onNodeWithTag("Email").assertIsDisplayed().performTextInput("alamnizam1992@gmail.com")
+            onNodeWithTag("Password").assertIsDisplayed().performTextInput("Nizam@123")
+            onNodeWithTag("Login").assertIsDisplayed().performClick()
+            onNodeWithTag("progress").assertIsDisplayed()
+        }
+    }
+
 
 
     @Test
