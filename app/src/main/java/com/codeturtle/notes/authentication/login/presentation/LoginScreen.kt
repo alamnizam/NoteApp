@@ -33,6 +33,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -65,6 +66,7 @@ fun LoginScreen(
     val loginResponse = viewModel.loginResponse.value
     val responseEvent = viewModel.responseEvent.collectAsState(initial = null)
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -96,7 +98,7 @@ fun LoginScreen(
                     scope.launch {
                         SnackBarController.sendEvent(
                             event = SnackBarEvent(
-                                message = "User logged in successfully"
+                                message = context.getString(R.string.user_logged_in_successfully)
                             )
                         )
                     }
