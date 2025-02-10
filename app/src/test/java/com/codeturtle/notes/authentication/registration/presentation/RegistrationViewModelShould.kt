@@ -22,11 +22,10 @@ import org.mockito.Mockito.mock
 class RegistrationViewModelShould {
     private lateinit var viewModel: RegistrationViewModel
 
+    private val validateUsername: ValidateUsername = mock()
     private val validateEmail: ValidateEmail = mock()
     private val validatePassword: ValidatePassword = mock()
     private val validateConfirmPassword: ValidateConfirmPassword = mock()
-
-    private val validateUsername: ValidateUsername = mock()
     private val data: RegisterResponse = mock()
     private val useCase: RegisterUseCase = mock()
 

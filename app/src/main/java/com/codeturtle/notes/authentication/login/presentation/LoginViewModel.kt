@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -24,6 +25,7 @@ class LoginViewModel @Inject constructor(
     private val validateLoginPassword: ValidateLoginPassword,
     private val useCase: LoginUseCase
 ) : ViewModel() {
+
     private val _uiState = MutableStateFlow(LoginUIState())
     val uiState: StateFlow<LoginUIState> = _uiState
 
@@ -36,19 +38,22 @@ class LoginViewModel @Inject constructor(
     private val _responseEvent = Channel<ResponseEvent>()
     val responseEvent = _responseEvent.receiveAsFlow()
 
-    fun onEvent(uiEvent: LoginUIEvent){
-        when(uiEvent){
+    fun onEvent(uiEvent: LoginUIEvent) {
+        when (uiEvent) {
             is LoginUIEvent.EmailChanged -> {
                 _uiState.value = _uiState.value.copy(
                     email = uiEvent.email
                 )
             }
+
             is LoginUIEvent.PasswordChanged -> {
                 _uiState.value = _uiState.value.copy(
                     password = uiEvent.password
                 )
             }
+
             is LoginUIEvent.LoginButtonClicked -> loginForm()
+
             is LoginUIEvent.RegisterTextClicked -> {
                 viewModelScope.launch {
                     _registerClickEvent.send(RegisterClickEvent.Callback)
@@ -76,39 +81,42 @@ class LoginViewModel @Inject constructor(
                 passwordError = null
             )
         }
-        if(!hasError){
+        if (!hasError) {
             val request = LoginRequest(
                 email = _uiState.value.email,
                 password = _uiState.value.password
             )
             loginUser(request)
-            viewModelScope.launch {
-                _responseEvent.send(ResponseEvent.Callback)
-            }
+        }
+        viewModelScope.launch {
+            _responseEvent.send(ResponseEvent.Callback)
         }
     }
 
-    sealed class ResponseEvent {
-        data object Callback : ResponseEvent()
-    }
-
     private fun loginUser(request: LoginRequest) = viewModelScope.launch {
-        useCase(request).onEach{
+        useCase(request).onEach {
             when (it) {
                 is Resource.Loading -> {
                     _loginResponse.value = LoginState(isLoading = true)
                 }
+
                 is Resource.Error -> {
                     _loginResponse.value = LoginState(errorMessage = it.errorMessage.toString())
                 }
+
                 is Resource.DataError -> {
                     _loginResponse.value = LoginState(errorData = it.errorData)
                 }
+
                 is Resource.Success -> {
                     _loginResponse.value = LoginState(data = it.data)
                 }
             }
-        }
+        }.launchIn(viewModelScope)
+    }
+
+    sealed class ResponseEvent {
+        data object Callback : ResponseEvent()
     }
 
     sealed class RegisterClickEvent {

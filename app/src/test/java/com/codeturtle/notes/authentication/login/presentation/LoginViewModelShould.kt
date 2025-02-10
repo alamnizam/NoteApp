@@ -47,7 +47,7 @@ class LoginViewModelShould {
     }
 
     @Test
-    fun validateSuccessStateUserRegistration() = runTest {
+    fun validateSuccessStateUserLogin() = runTest {
         whenever(validateEmail.execute(email = "alamnizam1992@gmail.com")).thenReturn(
             ValidationResult(true)
         )
@@ -71,7 +71,7 @@ class LoginViewModelShould {
     }
 
     @Test
-    fun validateErrorStateUserRegistration() = runTest {
+    fun validateErrorStateUserLogin() = runTest {
         whenever(validateEmail.execute(email = "alamnizam1992@gmail.com")).thenReturn(
             ValidationResult(true)
         )
