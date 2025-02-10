@@ -12,12 +12,16 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.IdlingRegistry
 import com.codeturtle.notes.R
 import com.codeturtle.notes.app.MainActivity
+import com.codeturtle.notes.authentication.login.mockwebserver.LoginMockServerDispatcher
+import com.codeturtle.notes.common.constant.ServerUrlList.LOGIN
 import com.jakewharton.espresso.OkHttp3IdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.RecordedRequest
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -39,6 +43,10 @@ class LoginFeature {
     lateinit var okHttp: OkHttpClient
     private lateinit var okHttp3IdlingResource: OkHttp3IdlingResource
     private lateinit var mockServer: MockWebServer
+
+    private val successServiceMap = mapOf(
+        "/$LOGIN" to "auth_login_success.json"
+    )
 
     @Before
     fun setUp() {
@@ -144,19 +152,16 @@ class LoginFeature {
 
 
 
-//    @Test
-//    fun validateRegisterFormButtonIsClickAndShowSuccessSnackBar() {
-//        mockServer.dispatcher = RegisterMockServerDispatcher().successDispatcher(successServiceMap)
-//        composeRule.apply {
-//            onNodeWithTag("RegistrationForm").assertIsDisplayed()
-//            onNodeWithTag("User Name").assertIsDisplayed().performTextInput("Nizam")
-//            onNodeWithTag("Email").assertIsDisplayed().performTextInput("alamnizam1992@gmail.com")
-//            onNodeWithTag("Password").assertIsDisplayed().performTextInput("Nizam@123")
-//            onNodeWithTag("Confirm Password").assertIsDisplayed().performTextInput("Nizam@123")
-//            onNodeWithTag("Register").assertIsDisplayed().performClick()
-//            val request: RecordedRequest = mockServer.takeRequest()
-//            assertEquals("/$REGISTER", request.path)
-//            onNodeWithText(context.getString(R.string.user_registered_successfully)).assertIsDisplayed()
-//        }
-//    }
+    @Test
+    fun validateLoginFormButtonIsClickAndShowSuccessSnackBar() {
+        mockServer.dispatcher = LoginMockServerDispatcher().successDispatcher(successServiceMap)
+        composeRule.apply {
+            onNodeWithTag("Email").assertIsDisplayed().performTextInput("alamnizam1992@gmail.com")
+            onNodeWithTag("Password").assertIsDisplayed().performTextInput("Nizam@123")
+            onNodeWithTag("Login").assertIsDisplayed().performClick()
+            val request: RecordedRequest = mockServer.takeRequest()
+            assertEquals("/${LOGIN}", request.path)
+            onNodeWithText(context.getString(R.string.user_logged_in_successfully)).assertIsDisplayed()
+        }
+    }
 }
