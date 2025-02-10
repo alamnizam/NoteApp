@@ -189,7 +189,7 @@ class LoginFeature {
             onNodeWithTag("Login").assertIsDisplayed().performClick()
             val request: RecordedRequest = mockServer.takeRequest()
             assertEquals("/${LOGIN}", request.path)
-            onNodeWithText(context.getString(R.string.wrong_email_password)).assertIsDisplayed()
+            onNodeWithText("Wrong email/password").assertIsDisplayed()
         }
     }
 }
