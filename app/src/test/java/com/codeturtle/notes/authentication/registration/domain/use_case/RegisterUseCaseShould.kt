@@ -41,7 +41,7 @@ class RegisterUseCaseShould {
     }
 
     @Test
-    fun returnErrorDataWhenGotDataFromRepository() = runTest {
+    fun returnErrorDataWhenNotAbleToGotDataFromRepository() = runTest {
         whenever(repository.register(request)).thenReturn(data)
         var result: Resource<RegisterResponse>? = null
         userCase(request).collect{
