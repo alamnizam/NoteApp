@@ -45,11 +45,11 @@ class RegistrationFeature {
     private lateinit var okHttp3IdlingResource: OkHttp3IdlingResource
     private lateinit var mockServer: MockWebServer
     private val successServiceMap: Map<String, String> = mapOf(
-        Pair("/$REGISTER", "auth_register_success.json")
+        "/$REGISTER" to "auth_register_success.json"
     )
 
     private val emailErrorServiceMap: Map<String, String> = mapOf(
-        Pair("/$REGISTER", "auth_register_email_error.json")
+        "/$REGISTER" to "auth_register_email_error.json"
     )
 
     @Before
