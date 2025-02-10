@@ -48,6 +48,10 @@ class LoginFeature {
         "/$LOGIN" to "auth_login_success.json"
     )
 
+    private val emailPasswordErrorServiceMap = mapOf(
+        "/$LOGIN" to "auth_login_failed.json"
+    )
+
     @Before
     fun setUp() {
         hiltRule.inject()
@@ -178,14 +182,14 @@ class LoginFeature {
 
     @Test
     fun validateLoginFormButtonIsClickAndShowFailureSnackBar() {
-        mockServer.dispatcher = LoginMockServerDispatcher().emailPasswordErrorDispatcher(successServiceMap)
+        mockServer.dispatcher = LoginMockServerDispatcher().emailPasswordErrorDispatcher(emailPasswordErrorServiceMap)
         composeRule.apply {
             onNodeWithTag("Email").assertIsDisplayed().performTextInput("alamnizam1992@gmail.com")
             onNodeWithTag("Password").assertIsDisplayed().performTextInput("Nizam@123")
             onNodeWithTag("Login").assertIsDisplayed().performClick()
             val request: RecordedRequest = mockServer.takeRequest()
             assertEquals("/${LOGIN}", request.path)
-            onNodeWithText("").assertIsDisplayed()
+            onNodeWithText(context.getString(R.string.wrong_email_password)).assertIsDisplayed()
         }
     }
 }
