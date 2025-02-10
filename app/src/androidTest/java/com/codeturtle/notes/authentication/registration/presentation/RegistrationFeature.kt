@@ -222,6 +222,7 @@ class RegistrationFeature {
 
     @Test
     fun validateProgressBarIsDisplayed() {
+        IdlingRegistry.getInstance().unregister(okHttp3IdlingResource)
         composeRule.apply {
             onNodeWithTag("User Name").assertIsDisplayed().performTextInput("Nizam")
             onNodeWithTag("Email").assertIsDisplayed().performTextInput("alamnizam1992@gmail.com")
