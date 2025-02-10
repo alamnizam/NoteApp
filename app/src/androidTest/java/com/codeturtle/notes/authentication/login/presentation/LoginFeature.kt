@@ -164,4 +164,17 @@ class LoginFeature {
             onNodeWithText(context.getString(R.string.user_logged_in_successfully)).assertIsDisplayed()
         }
     }
+
+    @Test
+    fun validateLoginFormButtonIsClickAndShowFailureSnackBar() {
+        mockServer.dispatcher = LoginMockServerDispatcher().emailPasswordErrorDispatcher(successServiceMap)
+        composeRule.apply {
+            onNodeWithTag("Email").assertIsDisplayed().performTextInput("alamnizam1992@gmail.com")
+            onNodeWithTag("Password").assertIsDisplayed().performTextInput("Nizam@123")
+            onNodeWithTag("Login").assertIsDisplayed().performClick()
+            val request: RecordedRequest = mockServer.takeRequest()
+            assertEquals("/${LOGIN}", request.path)
+            onNodeWithText("").assertIsDisplayed()
+        }
+    }
 }
