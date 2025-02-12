@@ -40,6 +40,7 @@ hiltNavigationCompose = "1.2.0"
 okhttp = "5.0.0-alpha.14"
 okhttpTls = "5.0.0-alpha.14"
 materialIconsExtendedAndroid = "1.7.7"
+datastorePrefs = "1.1.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -89,6 +90,8 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 androidx-espresso-idling-resource = { group = "androidx.test.espresso", name = "espresso-idling-resource", version.ref = "espressoIdlingResource" }
 okhttp3-idling-resource = { module = "com.jakewharton.espresso:okhttp3-idling-resource", version.ref = "okhttp3IdlingResource" }
 androidx-material-icons-extended-android = { group = "androidx.compose.material", name = "material-icons-extended-android", version.ref = "materialIconsExtendedAndroid" }
+
+datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePrefs" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

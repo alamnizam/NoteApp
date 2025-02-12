@@ -121,4 +121,7 @@ dependencies {
     androidTestImplementation(libs.mockwebserver)
     androidTestImplementation(libs.okhttp)
     androidTestImplementation(libs.okhttp.tls)
+
+    //datastore preference
+    implementation(libs.datastore.preferences)
 }
