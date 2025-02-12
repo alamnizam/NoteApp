@@ -7,14 +7,20 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 
 @InstallIn(SingletonComponent::class)
 @Module
 object RegisterDataModule {
+    private val loggingInterceptor = OkHttpClient.Builder()
+        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+        .build()
+
     @Provides
-    fun provideRegisterApiService(retrofit: Retrofit): RegisterApiService {
-        return retrofit.create(RegisterApiService::class.java)
+    fun provideRegisterApiService(retrofit: Retrofit.Builder): RegisterApiService {
+        return retrofit.client(loggingInterceptor).build().create(RegisterApiService::class.java)
     }
 
     @Provides
