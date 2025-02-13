@@ -4,7 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.codeturtle.notes.common.utils.Pref.USER_TOKEN
+import com.codeturtle.notes.common.constant.Pref.USER_TOKEN
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 

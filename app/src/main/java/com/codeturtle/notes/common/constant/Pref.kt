@@ -1,4 +1,4 @@
-package com.codeturtle.notes.common.utils
+package com.codeturtle.notes.common.constant
 
 object Pref {
     const val USER_DATASTORE = "user_datastore"

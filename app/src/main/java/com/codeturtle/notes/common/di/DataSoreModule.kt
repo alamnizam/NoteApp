@@ -7,7 +7,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.codeturtle.notes.common.utils.Pref.USER_DATASTORE
+import com.codeturtle.notes.common.constant.Pref.USER_DATASTORE
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
