@@ -2,17 +2,20 @@ package com.codeturtle.notes.common.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
-import androidx.datastore.preferences.core.PreferenceDataStoreFactory
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.preferencesDataStoreFile
-import com.codeturtle.notes.common.constant.Pref.USER_DATASTORE
+import androidx.datastore.core.DataStoreFactory
+import androidx.datastore.dataStoreFile
+import com.codeturtle.notes.common.constant.Pref.DATA_STORE_FILE_NAME
+import com.codeturtle.notes.common.preference.tokken.TokenManager
+import com.codeturtle.notes.common.preference.tokken.model.UserPreferences
+import com.codeturtle.notes.common.preference.tokken.model.UserPreferencesSerializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import javax.inject.Singleton
 
 @Module
@@ -20,9 +23,18 @@ import javax.inject.Singleton
 object DataSoreModule {
     @Singleton
     @Provides
-    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
-        return PreferenceDataStoreFactory.create(
-            corruptionHandler = ReplaceFileCorruptionHandler(produceNewData = { emptyPreferences() }),
-            produceFile = { context.preferencesDataStoreFile(USER_DATASTORE) })
+    fun provideProtoDataStore(@ApplicationContext appContext: Context): DataStore<UserPreferences> {
+        return DataStoreFactory.create(
+            serializer = UserPreferencesSerializer,
+            produceFile = { appContext.dataStoreFile(DATA_STORE_FILE_NAME) },
+            corruptionHandler = null,
+            scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideTokenManager(dataStore: DataStore<UserPreferences>): TokenManager {
+        return TokenManager(dataStore)
     }
 }

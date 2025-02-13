@@ -1,6 +1,5 @@
 package com.codeturtle.notes.common.constant
 
 object Pref {
-    const val USER_DATASTORE = "user_datastore"
-    const val USER_TOKEN = "user_token"
+    const val DATA_STORE_FILE_NAME = "user_prefs.pb"
 }

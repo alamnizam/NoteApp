@@ -96,6 +96,7 @@ fun LoginScreen(
                 }
                 if (loginResponse.data != null) {
                     scope.launch {
+                        viewModel.tokenManager.saveToken(loginResponse.data.message)
                         SnackBarController.sendEvent(
                             event = SnackBarEvent(
                                 message = context.getString(R.string.user_logged_in_successfully)

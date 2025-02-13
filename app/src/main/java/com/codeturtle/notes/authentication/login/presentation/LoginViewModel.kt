@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codeturtle.notes.authentication.login.data.model.LoginRequest
 import com.codeturtle.notes.authentication.login.domain.usecase.LoginUseCase
+import com.codeturtle.notes.common.preference.tokken.TokenManager
 import com.codeturtle.notes.common.utils.Resource
 import com.codeturtle.notes.common.validation.ValidateEmail
 import com.codeturtle.notes.common.validation.ValidateLoginPassword
@@ -25,6 +26,9 @@ class LoginViewModel @Inject constructor(
     private val validateLoginPassword: ValidateLoginPassword,
     private val useCase: LoginUseCase
 ) : ViewModel() {
+
+    @Inject
+    lateinit var tokenManager: TokenManager
 
     private val _uiState = MutableStateFlow(LoginUIState())
     val uiState: StateFlow<LoginUIState> = _uiState
