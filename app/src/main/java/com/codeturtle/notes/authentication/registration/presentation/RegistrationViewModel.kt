@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codeturtle.notes.authentication.registration.data.model.RegisterRequest
 import com.codeturtle.notes.authentication.registration.domain.use_case.RegisterUseCase
+import com.codeturtle.notes.common.preference.tokken.TokenManager
 import com.codeturtle.notes.common.utils.Resource
 import com.codeturtle.notes.common.validation.ValidateConfirmPassword
 import com.codeturtle.notes.common.validation.ValidateEmail
@@ -29,6 +30,9 @@ class RegistrationViewModel @Inject constructor(
     private val validateConfirmPassword: ValidateConfirmPassword,
     private val useCase: RegisterUseCase
 ) : ViewModel() {
+
+    @Inject
+    lateinit var tokenManager: TokenManager
 
     private val _uiState = MutableStateFlow(RegistrationUIState())
     val uiState: StateFlow<RegistrationUIState> = _uiState

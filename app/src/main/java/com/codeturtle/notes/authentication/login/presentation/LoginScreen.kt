@@ -51,10 +51,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.codeturtle.notes.R
+import com.codeturtle.notes.authentication.navigation.AuthNavGraph
 import com.codeturtle.notes.authentication.navigation.RegisterScreen
 import com.codeturtle.notes.common.component.ProgressBar
 import com.codeturtle.notes.common.snakbar.SnackBarController
 import com.codeturtle.notes.common.snakbar.SnackBarEvent
+import com.codeturtle.notes.notes.navigation.NoteNavGraph
 import kotlinx.coroutines.launch
 
 @Composable
@@ -102,6 +104,11 @@ fun LoginScreen(
                                 message = context.getString(R.string.user_logged_in_successfully)
                             )
                         )
+                        navController.popBackStack(
+                            route = AuthNavGraph,
+                            inclusive = true
+                        )
+                        navController.navigate(NoteNavGraph)
                     }
                 }
                 if (loginResponse.errorData != null) {

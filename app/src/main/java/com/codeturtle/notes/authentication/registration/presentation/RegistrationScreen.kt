@@ -51,10 +51,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.codeturtle.notes.R
+import com.codeturtle.notes.authentication.navigation.AuthNavGraph
 import com.codeturtle.notes.authentication.navigation.LoginScreen
 import com.codeturtle.notes.common.component.ProgressBar
 import com.codeturtle.notes.common.snakbar.SnackBarController
 import com.codeturtle.notes.common.snakbar.SnackBarEvent
+import com.codeturtle.notes.notes.navigation.NoteNavGraph
 import kotlinx.coroutines.launch
 
 @Composable
@@ -96,12 +98,18 @@ fun RegistrationScreen(
                 }
                 if (registerResponse.data != null) {
                     scope.launch {
+                        viewModel.tokenManager.saveToken(registerResponse.data.message)
                         SnackBarController.sendEvent(
                             event = SnackBarEvent(
                                 message = context.getString(R.string.user_registered_successfully)
                             )
                         )
                     }
+                    navController.popBackStack(
+                        route = AuthNavGraph,
+                        inclusive = true
+                    )
+                    navController.navigate(NoteNavGraph)
                 }
                 if (registerResponse.errorData != null) {
                     scope.launch {
