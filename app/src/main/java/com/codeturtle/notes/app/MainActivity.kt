@@ -15,19 +15,27 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.codeturtle.notes.app.naviagtion.RootNavigation
 import com.codeturtle.notes.app.ui.theme.NotesTheme
+import com.codeturtle.notes.common.preference.tokken.TokenManager
 import com.codeturtle.notes.common.snakbar.ObserveAsEvents
 import com.codeturtle.notes.common.snakbar.SnackBarController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var tokenManager: TokenManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val splashScreen = installSplashScreen()
         setContent {
             NotesTheme {
                 val navController = rememberNavController()
@@ -45,7 +53,7 @@ class MainActivity : ComponentActivity() {
                             actionLabel = event.action?.name,
                             duration = SnackbarDuration.Short
                         )
-                        if(result == SnackbarResult.ActionPerformed){
+                        if (result == SnackbarResult.ActionPerformed) {
                             event.action?.action?.invoke()
                         }
                     }
@@ -57,7 +65,7 @@ class MainActivity : ComponentActivity() {
                     contentWindowInsets = WindowInsets.safeContent,
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
-                    RootNavigation(navController,innerPadding)
+                    RootNavigation(navController, innerPadding,splashScreen)
                 }
             }
         }

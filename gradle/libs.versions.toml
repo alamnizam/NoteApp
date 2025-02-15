@@ -1,5 +1,5 @@
 [versions]
-agp = "8.8.0"
+agp = "8.8.1"
 kotlin = "2.1.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -7,7 +7,7 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.0"
-composeBom = "2025.01.01"
+composeBom = "2025.02.00"
 lifecycleViewModelCompose = "2.8.7"
 junitJupiter = "5.11.4"
 okhttp3IdlingResource = "1.0.0"
@@ -20,15 +20,15 @@ kotlinxCoroutinesTest = "1.10.1"
 turbine = "0.12.1"
 mockitoKotlin = "2.0.0"
 mockitoInline = "2.25.0"
-roomRuntime = "2.7.0-alpha13"
-roomCompiler = "2.7.0-alpha13"
-roomKtx = "2.7.0-alpha13"
+roomRuntime = "2.7.0-beta01"
+roomCompiler = "2.7.0-beta01"
+roomKtx = "2.7.0-beta01"
 retrofit = "2.11.0"
 converterGson = "2.11.0"
 loggingInterceptor = "5.0.0-alpha.14"
 ksp = "2.0.21-1.0.27"
 coilCompose = "2.7.0"
-navigationCompose = "2.9.0-alpha05"
+navigationCompose = "2.9.0-alpha06"
 kotlinxSerializationJson = "1.8.0"
 espressoIdlingResource = "3.6.1"
 mockwebserver = "5.0.0-alpha.14"
@@ -39,8 +39,9 @@ hiltCompiler = "2.55"
 hiltNavigationCompose = "1.2.0"
 okhttp = "5.0.0-alpha.14"
 okhttpTls = "5.0.0-alpha.14"
-materialIconsExtendedAndroid = "1.7.7"
+materialIconsExtendedAndroid = "1.7.8"
 datastorePrefs = "1.1.2"
+coreSplashscreen = "1.2.0-alpha02"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -92,6 +93,7 @@ okhttp3-idling-resource = { module = "com.jakewharton.espresso:okhttp3-idling-re
 androidx-material-icons-extended-android = { group = "androidx.compose.material", name = "material-icons-extended-android", version.ref = "materialIconsExtendedAndroid" }
 
 datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePrefs" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

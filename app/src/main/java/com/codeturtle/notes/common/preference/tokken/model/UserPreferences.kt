@@ -13,7 +13,8 @@ import java.util.Base64
 
 @Serializable
 data class UserPreferences(
-    val token: String? = null
+    val token: String? = null,
+    val isLoggedIn: Boolean = false
 )
 
 object UserPreferencesSerializer : Serializer<UserPreferences> {

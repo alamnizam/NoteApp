@@ -99,6 +99,7 @@ fun RegistrationScreen(
                 if (registerResponse.data != null) {
                     scope.launch {
                         viewModel.tokenManager.saveToken(registerResponse.data.message)
+                        viewModel.tokenManager.saveIsLoggedIn(true)
                         SnackBarController.sendEvent(
                             event = SnackBarEvent(
                                 message = context.getString(R.string.user_registered_successfully)

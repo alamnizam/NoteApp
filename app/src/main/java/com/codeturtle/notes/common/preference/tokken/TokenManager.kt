@@ -14,8 +14,19 @@ class TokenManager @Inject constructor(
         }
     }
 
+    suspend fun saveIsLoggedIn(isLoggedIn: Boolean) {
+        dataStore.updateData {
+            it.copy(isLoggedIn = isLoggedIn)
+        }
+    }
+
     suspend fun getToken(): String? {
         val preferences = dataStore.data.first()
         return preferences.token
+    }
+
+    suspend fun getIsLoggedIn(): Boolean {
+        val preferences = dataStore.data.first()
+        return preferences.isLoggedIn
     }
 }

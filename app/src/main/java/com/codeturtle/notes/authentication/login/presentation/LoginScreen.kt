@@ -1,5 +1,7 @@
 package com.codeturtle.notes.authentication.login.presentation
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -99,6 +101,9 @@ fun LoginScreen(
                 if (loginResponse.data != null) {
                     scope.launch {
                         viewModel.tokenManager.saveToken(loginResponse.data.message)
+                        viewModel.tokenManager.saveIsLoggedIn(true)
+                        Log.e(TAG, "LoginScreen: token = ${viewModel.tokenManager.getToken()}", )
+                        Log.e(TAG, "LoginScreen: isLoggedIn = ${viewModel.tokenManager.getIsLoggedIn()}", )
                         SnackBarController.sendEvent(
                             event = SnackBarEvent(
                                 message = context.getString(R.string.user_logged_in_successfully)
