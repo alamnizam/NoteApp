@@ -3,7 +3,6 @@ package com.codeturtle.notes.authentication.registration.presentation
 import android.content.Context
 import android.content.res.Resources
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -11,6 +10,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.IdlingRegistry
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.codeturtle.notes.R
 import com.codeturtle.notes.app.MainActivity
 import com.codeturtle.notes.authentication.registration.mockwebserver.RegisterMockServerDispatcher
@@ -26,9 +26,11 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import javax.inject.Inject
 
 @HiltAndroidTest
+@RunWith(AndroidJUnit4::class)
 class RegistrationFeature {
 
     @get:Rule(order = 0)
@@ -62,8 +64,9 @@ class RegistrationFeature {
 
         context = ApplicationProvider.getApplicationContext()
         resources = context.resources
-        composeRule.apply {
-            onNodeWithTag("Goto RegistrationScreen").isDisplayed()
+
+        composeRule.apply{
+            onNodeWithTag("Goto RegistrationScreen").assertIsDisplayed()
             onNodeWithTag("Goto RegistrationScreen").performClick()
         }
     }
@@ -214,6 +217,7 @@ class RegistrationFeature {
             onNodeWithTag("Password").assertIsDisplayed().performTextInput("Nizam@123")
             onNodeWithTag("Confirm Password").assertIsDisplayed().performTextInput("Nizam")
             onNodeWithTag("Register").assertIsDisplayed().performClick()
+            composeRule.waitForIdle()
             onNodeWithText(with(context) {
                 resources.getString(R.string.the_passwords_don_t_match)
             }).assertIsDisplayed()
@@ -234,7 +238,7 @@ class RegistrationFeature {
     }
 
     @Test
-    fun validateRegisterFormButtonIsClickAndShowSuccessSnackBar() {
+    fun validateRegisterFormButtonIsClickAndCheckNoteListIsShowing() {
         mockServer.dispatcher = RegisterMockServerDispatcher().successDispatcher(successServiceMap)
         composeRule.apply {
             onNodeWithTag("RegistrationForm").assertIsDisplayed()
@@ -245,7 +249,10 @@ class RegistrationFeature {
             onNodeWithTag("Register").assertIsDisplayed().performClick()
             val request: RecordedRequest = mockServer.takeRequest()
             assertEquals("/$REGISTER", request.path)
-            onNodeWithText(context.getString(R.string.user_registered_successfully)).assertIsDisplayed()
+            waitForIdle()
+            Thread.sleep(3000)
+            onNodeWithTag("NoteList").assertIsDisplayed()
+            onNodeWithText(context.resources.getString(R.string.note_list)).assertIsDisplayed()
         }
     }
 
@@ -261,6 +268,7 @@ class RegistrationFeature {
             onNodeWithTag("Register").assertIsDisplayed().performClick()
             val request: RecordedRequest = mockServer.takeRequest()
             assertEquals("/$REGISTER", request.path)
+            Thread.sleep(3000)
             onNodeWithText("(alamnizam1992@gmail.com)-email already exists").assertIsDisplayed()
         }
     }

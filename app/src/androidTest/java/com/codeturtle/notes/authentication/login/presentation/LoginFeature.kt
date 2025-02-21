@@ -168,7 +168,7 @@ class LoginFeature {
 
 
     @Test
-    fun validateLoginFormButtonIsClickAndShowSuccessSnackBar() {
+    fun validateLoginFormButtonIsClickAndCheckNoteListIsShowing() {
         mockServer.dispatcher = LoginMockServerDispatcher().successDispatcher(successServiceMap)
         composeRule.apply {
             onNodeWithTag("Email").assertIsDisplayed().performTextInput("alamnizam1992@gmail.com")
@@ -176,7 +176,10 @@ class LoginFeature {
             onNodeWithTag("Login").assertIsDisplayed().performClick()
             val request: RecordedRequest = mockServer.takeRequest()
             assertEquals("/${LOGIN}", request.path)
-            onNodeWithText(context.getString(R.string.user_logged_in_successfully)).assertIsDisplayed()
+            waitForIdle()
+//            Thread.sleep(3000)
+            onNodeWithTag("NoteList").assertIsDisplayed()
+            onNodeWithText(context.resources.getString(R.string.note_list)).assertIsDisplayed()
         }
     }
 
@@ -189,6 +192,8 @@ class LoginFeature {
             onNodeWithTag("Login").assertIsDisplayed().performClick()
             val request: RecordedRequest = mockServer.takeRequest()
             assertEquals("/${LOGIN}", request.path)
+            waitForIdle()
+            Thread.sleep(3000)
             onNodeWithText("Wrong email/password").assertIsDisplayed()
         }
     }

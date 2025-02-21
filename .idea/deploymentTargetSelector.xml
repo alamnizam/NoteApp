@@ -5,16 +5,19 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="RegistrationFeature">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="validateRegisterFormButtonIsClickAndShowEmailAlreadyExistsSnackBar()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="validateRegisterFormButtonIsClickAndCheckNoteListIsShowing()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
       <SelectionState runConfigName="Tests in 'com.codeturtle.notes'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="validateProgressBarIsDisplayed()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="LoginFeature">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="validateLoginFormButtonIsClickAndShowFailureSnackBar()">
+      <SelectionState runConfigName="validateLoginFormButtonIsClickAndShowSuccessSnackBar()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

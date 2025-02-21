@@ -15,7 +15,6 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.codeturtle.notes.app.naviagtion.RootNavigation
 import com.codeturtle.notes.app.ui.theme.NotesTheme
@@ -35,7 +34,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val splashScreen = installSplashScreen()
+        val isLoggedIn = intent.getBooleanExtra("isLoggedIn", false)
         setContent {
             NotesTheme {
                 val navController = rememberNavController()
@@ -65,7 +64,7 @@ class MainActivity : ComponentActivity() {
                     contentWindowInsets = WindowInsets.safeContent,
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
-                    RootNavigation(navController, innerPadding,splashScreen)
+                    RootNavigation(navController, innerPadding,isLoggedIn)
                 }
             }
         }

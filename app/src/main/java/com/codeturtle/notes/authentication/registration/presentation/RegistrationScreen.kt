@@ -130,7 +130,6 @@ fun RegistrationScreen(
                 }
             )
         }
-
     }
 }
 
@@ -141,6 +140,7 @@ fun Register(
 ) {
     Column(
         modifier = Modifier
+            .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
         RegistrationGreeting()

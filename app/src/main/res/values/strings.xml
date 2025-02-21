@@ -25,4 +25,7 @@
     <string name="email">Email</string>
     <string name="user_logged_in_successfully">User logged in successfully</string>
     <string name="splash_screen_logo">Splash Screen Logo</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="app_logo">App Logo</string>
+    <string name="note_list">Note List</string>
 </resources>

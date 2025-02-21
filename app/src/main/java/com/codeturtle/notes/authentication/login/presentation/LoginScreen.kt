@@ -1,7 +1,5 @@
 package com.codeturtle.notes.authentication.login.presentation
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -102,19 +101,17 @@ fun LoginScreen(
                     scope.launch {
                         viewModel.tokenManager.saveToken(loginResponse.data.message)
                         viewModel.tokenManager.saveIsLoggedIn(true)
-                        Log.e(TAG, "LoginScreen: token = ${viewModel.tokenManager.getToken()}", )
-                        Log.e(TAG, "LoginScreen: isLoggedIn = ${viewModel.tokenManager.getIsLoggedIn()}", )
                         SnackBarController.sendEvent(
                             event = SnackBarEvent(
                                 message = context.getString(R.string.user_logged_in_successfully)
                             )
                         )
-                        navController.popBackStack(
-                            route = AuthNavGraph,
-                            inclusive = true
-                        )
-                        navController.navigate(NoteNavGraph)
                     }
+                    navController.popBackStack(
+                        route = AuthNavGraph,
+                        inclusive = true
+                    )
+                    navController.navigate(NoteNavGraph)
                 }
                 if (loginResponse.errorData != null) {
                     scope.launch {
@@ -145,6 +142,7 @@ fun Login(
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
+            .imePadding()
     ) {
         LoginGreeting()
         Spacer(Modifier.height(10.dp))
