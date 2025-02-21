@@ -1,38 +1,88 @@
 package com.codeturtle.notes.notes.notes_list.presentation
 
+import android.content.Context
+import android.content.res.Resources
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.IdlingRegistry
+import com.codeturtle.notes.R
 import com.codeturtle.notes.app.MainActivity
+import com.codeturtle.notes.authentication.login.mockwebserver.LoginMockServerDispatcher
+import com.codeturtle.notes.common.constant.ServerUrlList.LOGIN
+import com.jakewharton.espresso.OkHttp3IdlingResource
+import dagger.hilt.android.testing.HiltAndroidRule
+import dagger.hilt.android.testing.HiltAndroidTest
+import okhttp3.OkHttpClient
+import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.RecordedRequest
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
+import javax.inject.Inject
 
+@HiltAndroidTest
 class NoteListFeature {
+    @get:Rule(order = 0)
+    val hiltRule = HiltAndroidRule(this)
 
-    @get:Rule(order = 1)
+    @get:Rule(order = 0)
     val composeRule = createAndroidComposeRule<MainActivity>()
+
+    private lateinit var context: Context
+    private lateinit var resources: Resources
+
+    @Inject
+    lateinit var okHttp: OkHttpClient
+    private lateinit var okHttp3IdlingResource: OkHttp3IdlingResource
+    private lateinit var mockServer: MockWebServer
+
+    private val successServiceMap = mapOf(
+        "/$LOGIN" to "auth_login_success.json"
+    )
 
     @Before
     fun setUp() {
+        hiltRule.inject()
+        okHttp3IdlingResource = OkHttp3IdlingResource.create("okhttp", okHttp)
+        IdlingRegistry.getInstance().register(okHttp3IdlingResource)
+        mockServer = MockWebServer()
+        mockServer.start(8080)
+
+        context = ApplicationProvider.getApplicationContext()
+        resources = context.resources
+        doLogin()
     }
 
     @After
     fun tearDown() {
+        mockServer.shutdown()
+        IdlingRegistry.getInstance().unregister(okHttp3IdlingResource)
     }
 
-    fun doLogin(){
+    private fun doLogin(){
+        mockServer.dispatcher = LoginMockServerDispatcher().successDispatcher(successServiceMap)
         composeRule.apply {
             onNodeWithTag("Email").assertIsDisplayed().performTextInput("alamnizam1992@gmail.com")
             onNodeWithTag("Password").assertIsDisplayed().performTextInput("Nizam@123")
             onNodeWithTag("Login").assertIsDisplayed().performClick()
+            val request: RecordedRequest = mockServer.takeRequest()
+            assertEquals("/${LOGIN}", request.path)
+            waitForIdle()
         }
     }
 
-//    @Test
-//    fun validateNoteListScreenHaveTopBarWithTextNote(){
-//
-//    }
+    @Test
+    fun validateNoteListScreenHaveTopBarWithTextNote(){
+        composeRule.apply {
+            onNodeWithTag("NoteList").assertIsDisplayed()
+            onNodeWithText(resources.getString(R.string.note_list)).assertIsDisplayed()
+        }
+    }
 }
