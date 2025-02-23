@@ -1,4 +1,4 @@
-package com.codeturtle.notes.authentication.registration.domain.use_case
+package com.codeturtle.notes.authentication.registration.domain.usecase
 
 import com.codeturtle.notes.MainCoroutineRule
 import com.codeturtle.notes.authentication.registration.data.model.RegisterRequest

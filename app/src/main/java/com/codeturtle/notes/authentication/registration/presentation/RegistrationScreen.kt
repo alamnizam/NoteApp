@@ -4,10 +4,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -22,6 +24,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -57,12 +61,13 @@ import com.codeturtle.notes.common.component.ProgressBar
 import com.codeturtle.notes.common.snakbar.SnackBarController
 import com.codeturtle.notes.common.snakbar.SnackBarEvent
 import com.codeturtle.notes.notes.navigation.NoteNavGraph
-import kotlinx.coroutines.launch
+    import kotlinx.coroutines.launch
 
 @Composable
 fun RegistrationScreen(
     viewModel: RegistrationViewModel = hiltViewModel(),
-    navController: NavHostController
+    navController: NavHostController,
+    snackBarHostState: SnackbarHostState
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val registerResponse = viewModel.registerResponse.value
@@ -70,9 +75,12 @@ fun RegistrationScreen(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackBarHostState)
+        },
+        contentWindowInsets = WindowInsets.safeContent,
         modifier = Modifier
             .fillMaxSize()
-            .padding(15.dp)
     ) { innerPadding ->
         Box(
             modifier = Modifier.padding(innerPadding)

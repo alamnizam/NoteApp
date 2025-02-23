@@ -24,7 +24,7 @@ object RegisterDataModule {
     }
 
     @Provides
-    fun provideRegisterRepository(registerApiService: RegisterApiService): RegisterRepository {
-        return RegisterRepositoryImpl(registerApiService)
+    fun provideRegisterRepository(apiService: RegisterApiService): RegisterRepository {
+        return RegisterRepositoryImpl(apiService)
     }
 }

@@ -1,6 +1,8 @@
 package com.codeturtle.notes.notes.add_note.data.di
 
 import com.codeturtle.notes.notes.add_note.data.network.AddNoteApiService
+import com.codeturtle.notes.notes.add_note.data.repository.AddNoteRepositoryImpl
+import com.codeturtle.notes.notes.add_note.domain.repository.AddNoteRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,5 +21,11 @@ object AddNoteModule {
         okHttpClient: OkHttpClient
     ): AddNoteApiService {
         return retrofit.client(okHttpClient).build().create(AddNoteApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAddNoteRepository(apiService: AddNoteApiService): AddNoteRepository {
+        return AddNoteRepositoryImpl(apiService)
     }
 }

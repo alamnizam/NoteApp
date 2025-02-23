@@ -21,6 +21,7 @@ class AuthInterceptor @Inject constructor() : Interceptor {
             }
         }
         Log.d("Token", token)
+        request.addHeader("Authorization", "Bearer $token")
         return chain.proceed(request.build())
     }
 }

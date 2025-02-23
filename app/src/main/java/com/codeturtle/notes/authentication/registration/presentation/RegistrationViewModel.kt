@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codeturtle.notes.authentication.registration.data.model.RegisterRequest
-import com.codeturtle.notes.authentication.registration.domain.use_case.RegisterUseCase
+import com.codeturtle.notes.authentication.registration.domain.usecase.RegisterUseCase
 import com.codeturtle.notes.common.preference.tokken.TokenManager
 import com.codeturtle.notes.common.utils.Resource
 import com.codeturtle.notes.common.validation.ValidateConfirmPassword

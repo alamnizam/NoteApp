@@ -85,4 +85,39 @@ class NoteListFeature {
             onNodeWithText(resources.getString(R.string.note_list)).assertIsDisplayed()
         }
     }
+
+    @Test
+    fun validateNoteListScreenHaveTopBarWithSearchIcon(){
+        composeRule.apply {
+            onNodeWithTag("Search").assertIsDisplayed()
+        }
+    }
+
+    @Test
+    fun validateNoteListScreenHaveTopBarWithLogoutIcon(){
+        composeRule.apply {
+            onNodeWithTag("Logout").assertIsDisplayed()
+        }
+    }
+
+    @Test
+    fun validateNoteListScreenHaveFloatingActionButtonToAddNote() {
+        composeRule.apply {
+            onNodeWithTag("Add").assertIsDisplayed()
+        }
+    }
+
+    @Test
+    fun validateNoteListScreenHaveLottiAnimationIfDataNotPresentInList() {
+        composeRule.apply {
+            onNodeWithTag("LottieAnimation").assertIsDisplayed()
+        }
+    }
+
+    @Test
+    fun validateNoteListScreenHaveNoteListIfDataPresentInList() {
+        composeRule.apply {
+            onNodeWithTag("NoteList").assertIsDisplayed()
+        }
+    }
 }

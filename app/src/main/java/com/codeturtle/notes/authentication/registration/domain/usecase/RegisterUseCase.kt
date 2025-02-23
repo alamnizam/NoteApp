@@ -1,4 +1,4 @@
-package com.codeturtle.notes.authentication.registration.domain.use_case
+package com.codeturtle.notes.authentication.registration.domain.usecase
 
 import com.codeturtle.notes.authentication.registration.data.model.RegisterRequest
 import com.codeturtle.notes.authentication.registration.domain.model.RegisterResponse
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.flowOn
 class RegisterUseCase(
     private val repository: RegisterRepository
 ) {
-    operator fun invoke(request: RegisterRequest):Flow<Resource<RegisterResponse>> = flow {
+    operator fun invoke(request: RegisterRequest): Flow<Resource<RegisterResponse>> = flow {
         emit(Resource.Loading())
         try {
             val response = repository.register(request)
@@ -24,7 +24,7 @@ class RegisterUseCase(
                 val errorResponse = Gson().fromJson(response.errorBody()?.string(), ErrorResponse::class.java)
                 emit(Resource.DataError(errorData = errorResponse))
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             emit(Resource.Error("Something went wrong"))
         }
     }.flowOn(Dispatchers.IO)

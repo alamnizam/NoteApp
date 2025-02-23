@@ -3,7 +3,7 @@ package com.codeturtle.notes.authentication.registration.presentation
 import com.codeturtle.notes.MainCoroutineRule
 import com.codeturtle.notes.authentication.registration.data.model.RegisterRequest
 import com.codeturtle.notes.authentication.registration.domain.model.RegisterResponse
-import com.codeturtle.notes.authentication.registration.domain.use_case.RegisterUseCase
+import com.codeturtle.notes.authentication.registration.domain.usecase.RegisterUseCase
 import com.codeturtle.notes.common.utils.Resource
 import com.codeturtle.notes.common.utils.ValidationResult
 import com.codeturtle.notes.common.validation.ValidateConfirmPassword

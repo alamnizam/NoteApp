@@ -28,4 +28,7 @@
     <string name="title_activity_splash">SplashActivity</string>
     <string name="app_logo">App Logo</string>
     <string name="note_list">Note List</string>
+    <string name="search_icon">Search Icon</string>
+    <string name="logout">Logout</string>
+    <string name="add_note">Add Note</string>
 </resources>
