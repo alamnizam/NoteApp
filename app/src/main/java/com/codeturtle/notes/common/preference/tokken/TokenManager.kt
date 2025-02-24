@@ -29,4 +29,10 @@ class TokenManager @Inject constructor(
         val preferences = dataStore.data.first()
         return preferences.isLoggedIn
     }
+
+    suspend fun clearData() {
+        dataStore.updateData {
+            it.copy(token = "", isLoggedIn = false)
+        }
+    }
 }

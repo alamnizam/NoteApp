@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.codeturtle.notes.common.preference.tokken.TokenManager
 import com.codeturtle.notes.common.utils.Resource
 import com.codeturtle.notes.notes.notes_list.domain.usecase.NoteListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,8 +20,11 @@ class NoteListViewModel @Inject constructor(
     private val useCase: NoteListUseCase
 ): ViewModel() {
 
+    @Inject
+    lateinit var tokenManager: TokenManager
+
     private val _noteListResponse = mutableStateOf(NoteListState())
-    val noteListResponse: State<NoteListState> get() = _noteListResponse
+    val noteListResponse: State<NoteListState> = _noteListResponse
 
     private val _searchIconEvent = Channel<SearchIconEvent>()
     val searchIconEvent = _searchIconEvent.receiveAsFlow()
@@ -55,7 +59,7 @@ class NoteListViewModel @Inject constructor(
         }
     }
 
-    fun getNoteList() = viewModelScope.launch {
+    private fun getNoteList() = viewModelScope.launch {
         useCase().onEach {
             when(it){
                 is Resource.Loading -> _noteListResponse.value = NoteListState(isLoading = true)

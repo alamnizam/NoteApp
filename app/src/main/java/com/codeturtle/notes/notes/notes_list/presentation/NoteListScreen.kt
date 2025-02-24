@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -42,9 +43,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.codeturtle.notes.R
+import com.codeturtle.notes.authentication.navigation.AuthNavGraph
 import com.codeturtle.notes.common.component.ProgressBar
 import com.codeturtle.notes.common.snakbar.SnackBarController
 import com.codeturtle.notes.common.snakbar.SnackBarEvent
+import com.codeturtle.notes.notes.navigation.NoteNavGraph
+import com.codeturtle.notes.notes.navigation.NoteSearchScreen
 import com.codeturtle.notes.notes.notes_list.domain.model.NoteListResponseItem
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -58,7 +62,29 @@ fun NoteListScreen(
     snackBarHostState: SnackbarHostState
 ) {
     val noteListResponse = viewModel.noteListResponse.value
+    val searchIconEvent = viewModel.searchIconEvent.collectAsState(initial = null)
+    val logoutIconEvent = viewModel.logoutIconEvent.collectAsState(initial = null)
+    val addNoteEvent = viewModel.addNoteEvent.collectAsState(initial = null)
     val scope = rememberCoroutineScope()
+
+    searchIconEvent.value.let {
+        navController.navigate(NoteSearchScreen)
+    }
+
+    logoutIconEvent.value.let {
+        scope.launch {
+            viewModel.tokenManager.clearData()
+        }
+        navController.popBackStack(
+            route = NoteNavGraph,
+            inclusive = true
+        )
+        navController.navigate(AuthNavGraph)
+    }
+
+    addNoteEvent.value.let {
+        navController.navigate(NoteSearchScreen)
+    }
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)

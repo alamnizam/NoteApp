@@ -6,7 +6,7 @@ import com.codeturtle.notes.notes.notes_list.domain.model.NoteListResponseItem
 import com.codeturtle.notes.notes.notes_list.domain.usecase.NoteListUseCase
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -26,11 +26,10 @@ class NoteListViewModelShould {
     @Before
     fun setUp() {
         viewModel = NoteListViewModel(useCase)
-        viewModel.getNoteList()
     }
 
     @Test
-    fun validateSuccessStateDataIsStoredOnNoteList() = runTest {
+    fun validateSuccessStateDataIsStoredOnNoteList() = runBlocking {
         whenever(useCase()).thenReturn(
             flow{
                 emit(Resource.Success(data = data))
@@ -41,13 +40,12 @@ class NoteListViewModelShould {
     }
 
     @Test
-    fun validateErrorStateDataIsStoredOnNoteList() = runTest {
+    fun validateErrorStateDataIsStoredOnNoteList() = runBlocking {
         whenever(useCase()).thenReturn(
             flow{
                 emit(Resource.Error(error = "Something went wrong"))
             }
         )
-        viewModel.onEvent(NoteListUIEvent.AddNoteClicked)
         mainCoroutineRule.dispatcher.scheduler.advanceUntilIdle()
         assertEquals("Something went wrong", viewModel.noteListResponse.value.errorMessage)
     }

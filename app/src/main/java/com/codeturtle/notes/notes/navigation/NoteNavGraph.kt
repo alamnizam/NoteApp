@@ -6,6 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.codeturtle.notes.notes.add_note.presentation.AddNoteScreen
+import com.codeturtle.notes.notes.note_detail.presentation.NoteDetailScreen
+import com.codeturtle.notes.notes.note_search.presentation.NoteSearchScreen
 import com.codeturtle.notes.notes.notes_list.presentation.NoteListScreen
 
 fun NavGraphBuilder.noteNavGraph(
@@ -18,6 +20,12 @@ fun NavGraphBuilder.noteNavGraph(
         }
         composable<AddNoteScreen> {
             AddNoteScreen(navController = navController, snackBarHostState = snackBarHostState)
+        }
+        composable<NoteSearchScreen> {
+            NoteSearchScreen(navController = navController,snackBarHostState = snackBarHostState)
+        }
+        composable<NoteDetailScreen> {
+            NoteDetailScreen(navController = navController,snackBarHostState = snackBarHostState)
         }
     }
 }

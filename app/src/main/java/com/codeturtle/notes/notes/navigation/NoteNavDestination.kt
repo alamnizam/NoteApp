@@ -8,3 +8,7 @@ object NoteNavGraph
 object AddNoteScreen
 @Serializable
 object NoteListScreen
+@Serializable
+object NoteSearchScreen
+@Serializable
+object NoteDetailScreen
