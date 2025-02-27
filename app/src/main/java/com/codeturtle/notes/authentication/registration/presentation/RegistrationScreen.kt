@@ -61,7 +61,9 @@ import com.codeturtle.notes.common.component.ProgressBar
 import com.codeturtle.notes.common.snakbar.SnackBarController
 import com.codeturtle.notes.common.snakbar.SnackBarEvent
 import com.codeturtle.notes.notes.navigation.NoteNavGraph
-    import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun RegistrationScreen(
@@ -106,19 +108,23 @@ fun RegistrationScreen(
                 }
                 if (registerResponse.data != null) {
                     scope.launch {
-                        viewModel.tokenManager.saveToken(registerResponse.data.message)
-                        viewModel.tokenManager.saveIsLoggedIn(true)
-                        SnackBarController.sendEvent(
-                            event = SnackBarEvent(
-                                message = context.getString(R.string.user_registered_successfully)
+                        val job = launch {
+                            viewModel.tokenManager.saveToken(registerResponse.data.message)
+                            viewModel.tokenManager.saveIsLoggedIn(true)
+                            SnackBarController.sendEvent(
+                                event = SnackBarEvent(
+                                    message = context.getString(R.string.user_registered_successfully)
+                                )
                             )
-                        )
+                        }
+                        job.join()
+                        withContext(Dispatchers.Main) {
+                            navController.popBackStack(
+                                route = AuthNavGraph, inclusive = true
+                            )
+                            navController.navigate(NoteNavGraph)
+                        }
                     }
-                    navController.popBackStack(
-                        route = AuthNavGraph,
-                        inclusive = true
-                    )
-                    navController.navigate(NoteNavGraph)
                 }
                 if (registerResponse.errorData != null) {
                     scope.launch {

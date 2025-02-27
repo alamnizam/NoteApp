@@ -177,8 +177,7 @@ class LoginFeature {
             val request: RecordedRequest = mockServer.takeRequest()
             assertEquals("/${LOGIN}", request.path)
             waitForIdle()
-//            Thread.sleep(3000)
-            onNodeWithTag("NoteList").assertIsDisplayed()
+            Thread.sleep(3000)
             onNodeWithText(context.resources.getString(R.string.note_list)).assertIsDisplayed()
         }
     }

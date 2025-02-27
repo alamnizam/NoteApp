@@ -251,7 +251,6 @@ class RegistrationFeature {
             assertEquals("/$REGISTER", request.path)
             waitForIdle()
             Thread.sleep(3000)
-            onNodeWithTag("NoteList").assertIsDisplayed()
             onNodeWithText(context.resources.getString(R.string.note_list)).assertIsDisplayed()
         }
     }

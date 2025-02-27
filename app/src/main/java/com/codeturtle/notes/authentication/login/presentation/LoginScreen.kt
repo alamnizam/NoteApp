@@ -62,7 +62,9 @@ import com.codeturtle.notes.common.component.ProgressBar
 import com.codeturtle.notes.common.snakbar.SnackBarController
 import com.codeturtle.notes.common.snakbar.SnackBarEvent
 import com.codeturtle.notes.notes.navigation.NoteNavGraph
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun LoginScreen(
@@ -78,14 +80,11 @@ fun LoginScreen(
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)
-        },
-        contentWindowInsets = WindowInsets.safeContent,
-        modifier = Modifier
-            .fillMaxSize()
-    ) {innerPadding ->
+        }, contentWindowInsets = WindowInsets.safeContent, modifier = Modifier.fillMaxSize()
+    ) { innerPadding ->
         Box(
             modifier = Modifier.padding(innerPadding)
-        ){
+        ) {
             LaunchedEffect(key1 = true) {
                 viewModel.registerClickEvent.collect {
                     navController.navigate(RegisterScreen)
@@ -107,19 +106,24 @@ fun LoginScreen(
                 }
                 if (loginResponse.data != null) {
                     scope.launch {
-                        viewModel.tokenManager.saveToken(loginResponse.data.message)
-                        viewModel.tokenManager.saveIsLoggedIn(true)
-                        SnackBarController.sendEvent(
-                            event = SnackBarEvent(
-                                message = context.getString(R.string.user_logged_in_successfully)
+                        val job = launch {
+                            viewModel.tokenManager.saveToken(loginResponse.data.message)
+                            viewModel.tokenManager.saveIsLoggedIn(true)
+                            SnackBarController.sendEvent(
+                                event = SnackBarEvent(
+                                    message = context.getString(R.string.user_logged_in_successfully)
+                                )
                             )
-                        )
+                        }
+                        job.join()
+                        withContext(Dispatchers.Main) {
+                            navController.popBackStack(
+                                route = AuthNavGraph, inclusive = true
+                            )
+                            navController.navigate(NoteNavGraph)
+                        }
                     }
-                    navController.popBackStack(
-                        route = AuthNavGraph,
-                        inclusive = true
-                    )
-                    navController.navigate(NoteNavGraph)
+
                 }
                 if (loginResponse.errorData != null) {
                     scope.launch {
@@ -132,20 +136,16 @@ fun LoginScreen(
                 }
             }
 
-            Login(
-                uiState = uiState.value,
-                onEvent = {
-                    viewModel.onEvent(it)
-                }
-            )
+            Login(uiState = uiState.value, onEvent = {
+                viewModel.onEvent(it)
+            })
         }
     }
 }
 
 @Composable
 fun Login(
-    uiState: LoginUIState,
-    onEvent: (LoginUIEvent) -> Unit
+    uiState: LoginUIState, onEvent: (LoginUIEvent) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -154,28 +154,24 @@ fun Login(
     ) {
         LoginGreeting()
         Spacer(Modifier.height(10.dp))
-        LoginForm(uiState,onEvent)
+        LoginForm(uiState, onEvent)
     }
 }
 
 @Composable
 fun LoginGreeting() {
     Text(
-        text = stringResource(R.string.user_login),
-        fontSize = 24.sp,
-        fontWeight = FontWeight.Bold
+        text = stringResource(R.string.user_login), fontSize = 24.sp, fontWeight = FontWeight.Bold
     )
     Spacer(Modifier.height(10.dp))
     Text(
-        text = stringResource(R.string.please_enter_your_details_to_login),
-        fontSize = 16.sp
+        text = stringResource(R.string.please_enter_your_details_to_login), fontSize = 16.sp
     )
 }
 
 @Composable
 fun LoginForm(
-    uiState: LoginUIState,
-    onEvent: (LoginUIEvent) -> Unit
+    uiState: LoginUIState, onEvent: (LoginUIEvent) -> Unit
 ) {
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
     Column(
@@ -194,8 +190,7 @@ fun LoginForm(
             supportingText = {
                 uiState.emailError?.asString()?.let {
                     Text(
-                        text = it,
-                        color = MaterialTheme.colorScheme.error
+                        text = it, color = MaterialTheme.colorScheme.error
                     )
                 }
             },
@@ -217,8 +212,7 @@ fun LoginForm(
             supportingText = {
                 uiState.passwordError?.asString()?.let {
                     Text(
-                        text = it,
-                        color = MaterialTheme.colorScheme.error
+                        text = it, color = MaterialTheme.colorScheme.error
                     )
                 }
             },
@@ -254,11 +248,10 @@ fun LoginForm(
             Text(stringResource(R.string.login))
         }
         Spacer(Modifier.height(20.dp))
-        Text(
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .testTag("Goto RegistrationScreen")
-                .clickable { onEvent(LoginUIEvent.RegisterTextClicked) },
+        Text(modifier = Modifier
+            .align(Alignment.CenterHorizontally)
+            .testTag("Goto RegistrationScreen")
+            .clickable { onEvent(LoginUIEvent.RegisterTextClicked) },
             text = buildAnnotatedString {
                 withStyle(
                     style = SpanStyle(color = MaterialTheme.colorScheme.onSurface)
@@ -283,8 +276,5 @@ fun LoginForm(
 @Preview(showSystemUi = true)
 @Composable
 private fun LoginScreenPreview() {
-    Login(
-        uiState = LoginUIState(),
-        onEvent = {}
-    )
+    Login(uiState = LoginUIState(), onEvent = {})
 }
