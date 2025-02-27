@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -31,9 +32,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -42,6 +47,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.codeturtle.notes.R
 import com.codeturtle.notes.authentication.navigation.AuthNavGraph
 import com.codeturtle.notes.common.component.ProgressBar
@@ -62,29 +71,41 @@ fun NoteListScreen(
     snackBarHostState: SnackbarHostState
 ) {
     val noteListResponse = viewModel.noteListResponse.value
-    val searchIconEvent = viewModel.searchIconEvent.collectAsState(initial = null)
-    val logoutIconEvent = viewModel.logoutIconEvent.collectAsState(initial = null)
-    val addNoteEvent = viewModel.addNoteEvent.collectAsState(initial = null)
     val scope = rememberCoroutineScope()
 
-    searchIconEvent.value.let {
-        navController.navigate(NoteSearchScreen)
-    }
+    val isPlaying by remember { mutableStateOf(true) }
+    val speed by remember { mutableFloatStateOf(1F) }
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty_list_lottie))
 
-    logoutIconEvent.value.let {
-        scope.launch {
-            viewModel.tokenManager.clearData()
+
+
+    LaunchedEffect(key1 = true) {
+        viewModel.searchIconEvent.collect {
+            navController.navigate(NoteSearchScreen)
         }
-        navController.popBackStack(
-            route = NoteNavGraph,
-            inclusive = true
-        )
-        navController.navigate(AuthNavGraph)
     }
 
-    addNoteEvent.value.let {
-        navController.navigate(NoteSearchScreen)
+    LaunchedEffect(key1 = true) {
+        viewModel.logoutIconEvent.collect {
+            scope.launch {
+                viewModel.tokenManager.clearData()
+            }
+            navController.popBackStack(
+                route = NoteNavGraph,
+                inclusive = true
+            )
+            navController.navigate(AuthNavGraph)
+        }
     }
+
+    LaunchedEffect(key1 = true) {
+        viewModel.addNoteEvent.collect {
+            navController.navigate(NoteSearchScreen)
+        }
+    }
+
+
+
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackBarHostState)
@@ -94,7 +115,8 @@ fun NoteListScreen(
             .fillMaxSize(),
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {viewModel.onEvent(NoteListUIEvent.AddNoteClicked)},
+                modifier = Modifier.testTag("Add"),
+                onClick = { viewModel.onEvent(NoteListUIEvent.AddNoteClicked) },
                 shape = CircleShape
             ) {
                 Icon(
@@ -105,6 +127,7 @@ fun NoteListScreen(
         },
         topBar = {
             TopAppBar(
+                modifier = Modifier.testTag("topAppBar"),
                 title = {
                     Text(
                         text = stringResource(R.string.note_list),
@@ -112,13 +135,19 @@ fun NoteListScreen(
                     )
                 },
                 actions = {
-                    IconButton(onClick = {viewModel.onEvent(NoteListUIEvent.SearchIconClicked)}) {
+                    IconButton(
+                        modifier = Modifier.testTag("Search"),
+                        onClick = { viewModel.onEvent(NoteListUIEvent.SearchIconClicked) }
+                    ) {
                         Icon(
                             imageVector = Icons.Outlined.Search,
                             contentDescription = stringResource(R.string.search_icon)
                         )
                     }
-                    IconButton(onClick = {viewModel.onEvent(NoteListUIEvent.LogoutIconClicked)}) {
+                    IconButton(
+                        modifier = Modifier.testTag("Logout"),
+                        onClick = { viewModel.onEvent(NoteListUIEvent.LogoutIconClicked) }
+                    ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.Logout,
                             contentDescription = stringResource(R.string.logout)
@@ -131,6 +160,7 @@ fun NoteListScreen(
         Box(
             modifier = Modifier.padding(innerPadding)
         ) {
+
             if (noteListResponse.isLoading) {
                 ProgressBar()
             }
@@ -157,10 +187,23 @@ fun NoteListScreen(
                 }
             }
             if (noteListResponse.data != null) {
-                LazyColumn {
-                    items(noteListResponse.data) {
-                        NoteListItem(note = it)
+                if(noteListResponse.data.isNotEmpty()){
+                    LazyColumn(
+                        modifier = Modifier.testTag("NoteList")
+                    ) {
+                        items(noteListResponse.data) {
+                            NoteListItem(note = it)
+                        }
                     }
+                }else{
+                    LottieAnimation(
+                        composition = composition,
+                        modifier = Modifier.size(400.dp).testTag("LottieAnimation"),
+                        speed = speed,
+                        iterations = LottieConstants.IterateForever,
+                        isPlaying = isPlaying,
+                        restartOnPlay = false
+                    )
                 }
             }
         }
