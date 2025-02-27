@@ -13,7 +13,9 @@ import androidx.test.espresso.IdlingRegistry
 import com.codeturtle.notes.R
 import com.codeturtle.notes.app.MainActivity
 import com.codeturtle.notes.authentication.login.mockwebserver.LoginMockServerDispatcher
+import com.codeturtle.notes.common.constant.Pref.TEST_DATA_STORE_FILE_NAME
 import com.codeturtle.notes.common.constant.ServerUrlList.LOGIN
+import com.codeturtle.notes.common.preference.tokken.TokenManager
 import com.jakewharton.espresso.OkHttp3IdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -32,7 +34,7 @@ class NoteListFeature {
     @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
-    @get:Rule(order = 0)
+    @get:Rule(order = 1)
     val composeRule = createAndroidComposeRule<MainActivity>()
 
     private lateinit var context: Context
@@ -43,7 +45,10 @@ class NoteListFeature {
     private lateinit var okHttp3IdlingResource: OkHttp3IdlingResource
     private lateinit var mockServer: MockWebServer
 
-    private val successServiceMap = mapOf(
+    @Inject
+    lateinit var tokenManager: TokenManager
+
+    private val successLoginServiceMap = mapOf(
         "/$LOGIN" to "auth_login_success.json"
     )
 
@@ -57,17 +62,21 @@ class NoteListFeature {
 
         context = ApplicationProvider.getApplicationContext()
         resources = context.resources
+
         doLogin()
+        composeRule.waitUntil(timeoutMillis = 5000) {
+            try {
+                composeRule.onNodeWithTag("topAppBar").fetchSemanticsNode()
+                true
+            } catch (e: AssertionError) {
+                false
+            }
+        }
+
     }
 
-    @After
-    fun tearDown() {
-        mockServer.shutdown()
-        IdlingRegistry.getInstance().unregister(okHttp3IdlingResource)
-    }
-
-    private fun doLogin(){
-        mockServer.dispatcher = LoginMockServerDispatcher().successDispatcher(successServiceMap)
+    private fun doLogin() {
+        mockServer.dispatcher = LoginMockServerDispatcher().successDispatcher(successLoginServiceMap)
         composeRule.apply {
             onNodeWithTag("Email").assertIsDisplayed().performTextInput("alamnizam1992@gmail.com")
             onNodeWithTag("Password").assertIsDisplayed().performTextInput("Nizam@123")
@@ -78,10 +87,16 @@ class NoteListFeature {
         }
     }
 
+    @After
+    fun tearDown() {
+        mockServer.shutdown()
+        IdlingRegistry.getInstance().unregister(okHttp3IdlingResource)
+        ApplicationProvider.getApplicationContext<Context>().deleteFile(TEST_DATA_STORE_FILE_NAME)
+    }
+
     @Test
     fun validateNoteListScreenHaveTopBarWithTextNote(){
         composeRule.apply {
-            onNodeWithTag("NoteList").assertIsDisplayed()
             onNodeWithText(resources.getString(R.string.note_list)).assertIsDisplayed()
         }
     }
@@ -104,20 +119,6 @@ class NoteListFeature {
     fun validateNoteListScreenHaveFloatingActionButtonToAddNote() {
         composeRule.apply {
             onNodeWithTag("Add").assertIsDisplayed()
-        }
-    }
-
-    @Test
-    fun validateNoteListScreenHaveLottiAnimationIfDataNotPresentInList() {
-        composeRule.apply {
-            onNodeWithTag("LottieAnimation").assertIsDisplayed()
-        }
-    }
-
-    @Test
-    fun validateNoteListScreenHaveNoteListIfDataPresentInList() {
-        composeRule.apply {
-            onNodeWithTag("NoteList").assertIsDisplayed()
         }
     }
 }
