@@ -1,4 +1,4 @@
-package com.codeturtle.notes
+package com.codeturtle.notes.di
 
 
 import com.codeturtle.notes.common.di.NetworkModule
