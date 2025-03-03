@@ -73,12 +73,6 @@ fun NoteListScreen(
     val noteListResponse = viewModel.noteListResponse.value
     val scope = rememberCoroutineScope()
 
-    val isPlaying by remember { mutableStateOf(true) }
-    val speed by remember { mutableFloatStateOf(1F) }
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty_list_lottie))
-
-
-
     LaunchedEffect(key1 = true) {
         viewModel.searchIconEvent.collect {
             navController.navigate(NoteSearchScreen)
@@ -104,6 +98,26 @@ fun NoteListScreen(
         }
     }
 
+    NoteList(
+        noteListResponse = noteListResponse,
+        onEvent = {
+            viewModel.onEvent(it)
+        },
+        snackBarHostState = snackBarHostState
+    )
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun NoteList(
+    onEvent: (NoteListUIEvent) -> Unit,
+    snackBarHostState: SnackbarHostState,
+    noteListResponse: NoteListState
+) {
+    val scope = rememberCoroutineScope()
+    val isPlaying by remember { mutableStateOf(true) }
+    val speed by remember { mutableFloatStateOf(1F) }
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty_list_lottie))
 
 
     Scaffold(
@@ -116,7 +130,7 @@ fun NoteListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 modifier = Modifier.testTag("Add"),
-                onClick = { viewModel.onEvent(NoteListUIEvent.AddNoteClicked) },
+                onClick = { onEvent(NoteListUIEvent.AddNoteClicked) },
                 shape = CircleShape
             ) {
                 Icon(
@@ -137,7 +151,7 @@ fun NoteListScreen(
                 actions = {
                     IconButton(
                         modifier = Modifier.testTag("Search"),
-                        onClick = { viewModel.onEvent(NoteListUIEvent.SearchIconClicked) }
+                        onClick = { onEvent(NoteListUIEvent.SearchIconClicked) }
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Search,
@@ -146,7 +160,7 @@ fun NoteListScreen(
                     }
                     IconButton(
                         modifier = Modifier.testTag("Logout"),
-                        onClick = { viewModel.onEvent(NoteListUIEvent.LogoutIconClicked) }
+                        onClick = { onEvent(NoteListUIEvent.LogoutIconClicked) }
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.Logout,
@@ -187,7 +201,7 @@ fun NoteListScreen(
                 }
             }
             if (noteListResponse.data != null) {
-                if(noteListResponse.data.isNotEmpty()){
+                if (noteListResponse.data.isNotEmpty()) {
                     LazyColumn(
                         modifier = Modifier.testTag("NoteList")
                     ) {
@@ -195,10 +209,12 @@ fun NoteListScreen(
                             NoteListItem(note = it)
                         }
                     }
-                }else{
+                } else {
                     LottieAnimation(
                         composition = composition,
-                        modifier = Modifier.size(400.dp).testTag("LottieAnimation"),
+                        modifier = Modifier
+                            .size(400.dp)
+                            .testTag("LottieAnimation"),
                         speed = speed,
                         iterations = LottieConstants.IterateForever,
                         isPlaying = isPlaying,
@@ -253,13 +269,32 @@ fun NoteListItem(note: NoteListResponseItem) {
 @Preview
 @Composable
 private fun NoteListItemPreview() {
-    NoteListItem(
+    val noteList = listOf(
+        NoteListResponseItem(
+            noteTitle = "Note Title",
+            description = "Stack Overflow https://stackoverflow.com › questions › kotlin-convert-t. I'm trying to find out how I can convert timestamp to datetime in Kotlin, this is very simple in Java but I cant find any equivalent of it in Kotlin.",
+            id = 1,
+            date = 1740338779
+        ),
+        NoteListResponseItem(
+            noteTitle = "Note Title",
+            description = "Stack Overflow https://stackoverflow.com › questions › kotlin-convert-t. I'm trying to find out how I can convert timestamp to datetime in Kotlin, this is very simple in Java but I cant find any equivalent of it in Kotlin.",
+            id = 1,
+            date = 1740338779
+        ),
         NoteListResponseItem(
             noteTitle = "Note Title",
             description = "Stack Overflow https://stackoverflow.com › questions › kotlin-convert-t. I'm trying to find out how I can convert timestamp to datetime in Kotlin, this is very simple in Java but I cant find any equivalent of it in Kotlin.",
             id = 1,
             date = 1740338779
         )
+    )
+    NoteList(
+        noteListResponse = NoteListState(
+            data = noteList
+        ),
+        onEvent = {},
+        snackBarHostState = SnackbarHostState()
     )
 }
 
