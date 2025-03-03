@@ -2,6 +2,7 @@ package com.codeturtle.notes.common.di
 
 import com.codeturtle.notes.common.validation.ValidateConfirmPassword
 import com.codeturtle.notes.common.validation.ValidateEmail
+import com.codeturtle.notes.common.validation.ValidateFieldNotEmpty
 import com.codeturtle.notes.common.validation.ValidateLoginPassword
 import com.codeturtle.notes.common.validation.ValidatePassword
 import com.codeturtle.notes.common.validation.ValidateUsername
@@ -27,4 +28,7 @@ object ValidationModule {
 
     @Provides
     fun provideValidateConfirmPassword() = ValidateConfirmPassword()
+    
+    @Provides
+    fun provideValidateFieldNotEmpty() = ValidateFieldNotEmpty()
 }
