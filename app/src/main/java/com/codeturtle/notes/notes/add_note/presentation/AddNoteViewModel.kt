@@ -36,16 +36,16 @@ class AddNoteViewModel @Inject constructor(
     private val _responseEvent = Channel<ResponseEvent>()
     val responseEvent = _responseEvent.receiveAsFlow()
 
-    fun onEvent(uiEvent: AddNoteUiEvent){
+    fun onEvent(uiEvent: AddNoteUIEvent){
         when(uiEvent){
-            AddNoteUiEvent.OnBackNavigation -> {
+            AddNoteUIEvent.OnBackNavigation -> {
                 viewModelScope.launch {
                     _backArrowIconEvent.send(BackArrowIconEvent.Callback)
                 }
             }
-            is AddNoteUiEvent.OnTitleChanged -> _uiState.value = _uiState.value.copy(title = uiEvent.title)
-            is AddNoteUiEvent.OnDescriptionChanged -> _uiState.value = _uiState.value.copy(description = uiEvent.description)
-            AddNoteUiEvent.OnSaveNote -> saveNote()
+            is AddNoteUIEvent.OnTitleChanged -> _uiState.value = _uiState.value.copy(title = uiEvent.title)
+            is AddNoteUIEvent.OnDescriptionChanged -> _uiState.value = _uiState.value.copy(description = uiEvent.description)
+            AddNoteUIEvent.OnSaveNote -> saveNote()
         }
     }
 

@@ -124,7 +124,7 @@ fun AddNoteScreen(
 @Composable
 private fun AddNote(
     uiState: AddNoteUIState,
-    onEvent: (AddNoteUiEvent) -> Unit,
+    onEvent: (AddNoteUIEvent) -> Unit,
     snackBarHostState: SnackbarHostState
 ) {
     Scaffold(
@@ -134,7 +134,7 @@ private fun AddNote(
                     Text("Add Note", fontSize = 24.sp, fontWeight = FontWeight.Bold)
                 },
                 navigationIcon = {
-                    IconButton(onClick = { onEvent(AddNoteUiEvent.OnBackNavigation) }) {
+                    IconButton(onClick = { onEvent(AddNoteUIEvent.OnBackNavigation) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back_navigation)
@@ -149,7 +149,7 @@ private fun AddNote(
         contentWindowInsets = WindowInsets.safeContent, modifier = Modifier.fillMaxSize(),
         bottomBar = {
             Button(
-                onClick = { onEvent(AddNoteUiEvent.OnSaveNote) },
+                onClick = { onEvent(AddNoteUIEvent.OnSaveNote) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
@@ -166,7 +166,7 @@ private fun AddNote(
         ) {
             BasicTextField(
                 value = uiState.title,
-                onValueChange = { onEvent(AddNoteUiEvent.OnTitleChanged(it)) },
+                onValueChange = { onEvent(AddNoteUIEvent.OnTitleChanged(it)) },
                 textStyle = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
                 modifier = Modifier.fillMaxWidth(),
                 decorationBox = { innerTextField ->
@@ -204,7 +204,7 @@ private fun AddNote(
                 }
                 BasicTextField(
                     value = uiState.description,
-                    onValueChange = { onEvent(AddNoteUiEvent.OnDescriptionChanged(it)) },
+                    onValueChange = { onEvent(AddNoteUIEvent.OnDescriptionChanged(it)) },
                     textStyle = TextStyle(fontSize = 16.sp),
                     modifier = Modifier.fillMaxSize(),
                     decorationBox = { innerTextField ->
