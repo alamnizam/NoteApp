@@ -56,6 +56,7 @@ import com.codeturtle.notes.authentication.navigation.AuthNavGraph
 import com.codeturtle.notes.common.component.ProgressBar
 import com.codeturtle.notes.common.snakbar.SnackBarController
 import com.codeturtle.notes.common.snakbar.SnackBarEvent
+import com.codeturtle.notes.notes.navigation.AddNoteScreen
 import com.codeturtle.notes.notes.navigation.NoteNavGraph
 import com.codeturtle.notes.notes.navigation.NoteSearchScreen
 import com.codeturtle.notes.notes.notes_list.domain.model.NoteListResponseItem
@@ -63,7 +64,6 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteListScreen(
     navController: NavHostController,
@@ -94,7 +94,7 @@ fun NoteListScreen(
 
     LaunchedEffect(key1 = true) {
         viewModel.addNoteEvent.collect {
-            navController.navigate(NoteSearchScreen)
+            navController.navigate(AddNoteScreen)
         }
     }
 
