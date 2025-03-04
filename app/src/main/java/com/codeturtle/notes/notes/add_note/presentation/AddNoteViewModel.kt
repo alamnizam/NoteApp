@@ -38,7 +38,7 @@ class AddNoteViewModel @Inject constructor(
 
     fun onEvent(uiEvent: AddNoteUIEvent) {
         when (uiEvent) {
-            AddNoteUIEvent.OnBackNavigation -> {
+            AddNoteUIEvent.OnBackNavigationClicked -> {
                 viewModelScope.launch {
                     _backArrowIconEvent.send(BackArrowIconEvent.Callback)
                 }
@@ -50,7 +50,7 @@ class AddNoteViewModel @Inject constructor(
             is AddNoteUIEvent.OnDescriptionChanged -> _uiState.value =
                 _uiState.value.copy(description = uiEvent.description)
 
-            AddNoteUIEvent.OnSaveNote -> saveNote()
+            AddNoteUIEvent.OnSaveNoteClicked -> saveNote()
         }
     }
 

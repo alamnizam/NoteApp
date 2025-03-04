@@ -13,5 +13,11 @@ fun EditNoteScreen(
     snackBarHostState: SnackbarHostState,
     note: EditNoteScreen
 ) {
-
+    EditNote(
+        note = note,
+        onEvent = {
+            viewModel.onEvent(it)
+        },
+        snackBarHostState = snackBarHostState
+    )
 }

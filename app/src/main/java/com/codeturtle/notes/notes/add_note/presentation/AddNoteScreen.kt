@@ -134,7 +134,7 @@ private fun AddNote(
                     Text(stringResource(R.string.add_note), fontSize = 24.sp, fontWeight = FontWeight.Bold)
                 },
                 navigationIcon = {
-                    IconButton(onClick = { onEvent(AddNoteUIEvent.OnBackNavigation) }) {
+                    IconButton(onClick = { onEvent(AddNoteUIEvent.OnBackNavigationClicked) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back_navigation)
@@ -149,7 +149,7 @@ private fun AddNote(
         contentWindowInsets = WindowInsets.safeContent, modifier = Modifier.fillMaxSize(),
         bottomBar = {
             Button(
-                onClick = { onEvent(AddNoteUIEvent.OnSaveNote) },
+                onClick = { onEvent(AddNoteUIEvent.OnSaveNoteClicked) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)

@@ -6,4 +6,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditNoteViewModel @Inject constructor(): ViewModel() {
+    fun onEvent(uiEvent: EditNoteUIEvent) {
+        TODO("Not yet implemented")
+    }
 }
