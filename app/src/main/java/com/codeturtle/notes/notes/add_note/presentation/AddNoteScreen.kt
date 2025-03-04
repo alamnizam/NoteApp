@@ -131,7 +131,7 @@ private fun AddNote(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Add Note", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.add_note), fontSize = 24.sp, fontWeight = FontWeight.Bold)
                 },
                 navigationIcon = {
                     IconButton(onClick = { onEvent(AddNoteUIEvent.OnBackNavigation) }) {
