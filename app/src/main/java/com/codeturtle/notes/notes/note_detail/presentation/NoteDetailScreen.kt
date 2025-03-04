@@ -20,6 +20,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -35,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.codeturtle.notes.R
 import com.codeturtle.notes.common.utils.HandleDate.convertLongToDate
+import com.codeturtle.notes.notes.navigation.EditNoteScreen
 import com.codeturtle.notes.notes.navigation.NoteDetailScreen
 import com.codeturtle.notes.notes.notes_list.domain.model.NoteListResponseItem
 
@@ -45,6 +47,13 @@ fun NoteDetailScreen(
     snackBarHostState: SnackbarHostState,
     note: NoteDetailScreen
 ) {
+    LaunchedEffect(key1 = true) {
+        viewModel.editIconEvent.collect{
+            it.note?.let { note ->
+                navController.navigate(EditNoteScreen(note = note))
+            }
+        }
+    }
     NoteDetail(
         note = note,
         onEvent = {
@@ -74,7 +83,7 @@ fun NoteDetail(
                 navigationIcon = {
                     IconButton(
                         modifier = Modifier.testTag("BackNavigation"),
-                        onClick = { onEvent(NoteDetailUIEvent.OnBackNavigation) }) {
+                        onClick = { onEvent(NoteDetailUIEvent.OnBackNavigationClicked) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back_navigation)
@@ -84,7 +93,7 @@ fun NoteDetail(
                 actions = {
                     IconButton(
                         modifier = Modifier.testTag("EditNote"),
-                        onClick = { onEvent(NoteDetailUIEvent.OnEditNote) }
+                        onClick = { onEvent(NoteDetailUIEvent.OnEditNoteClicked(note.note)) }
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Edit,

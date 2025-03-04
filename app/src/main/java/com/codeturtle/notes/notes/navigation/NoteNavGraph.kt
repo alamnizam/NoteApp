@@ -8,6 +8,7 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.codeturtle.notes.common.utils.CustomNavType
 import com.codeturtle.notes.notes.add_note.presentation.AddNoteScreen
+import com.codeturtle.notes.notes.edit_note.presentation.EditNoteScreen
 import com.codeturtle.notes.notes.note_detail.presentation.NoteDetailScreen
 import com.codeturtle.notes.notes.note_search.presentation.NoteSearchScreen
 import com.codeturtle.notes.notes.notes_list.domain.model.NoteListResponseItem
@@ -38,6 +39,17 @@ fun NavGraphBuilder.noteNavGraph(
         ) {
             val note = it.toRoute<NoteDetailScreen>()
             NoteDetailScreen(navController = navController, snackBarHostState = snackBarHostState,note = note)
+        }
+        composable<EditNoteScreen>(
+            typeMap = mapOf(
+                typeOf<NoteListResponseItem>() to CustomNavType(
+                    NoteListResponseItem::class,
+                    NoteListResponseItem.serializer()
+                )
+            )
+        ) {
+            val note = it.toRoute<EditNoteScreen>()
+            EditNoteScreen(navController = navController, snackBarHostState = snackBarHostState,note = note)
         }
     }
 }

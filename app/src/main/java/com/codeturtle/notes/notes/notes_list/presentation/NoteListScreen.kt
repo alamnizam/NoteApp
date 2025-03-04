@@ -103,7 +103,6 @@ fun NoteListScreen(
             it.note?.let { note ->
                 navController.navigate(NoteDetailScreen(note = note))
             }
-
         }
     }
 

@@ -36,15 +36,20 @@ class AddNoteViewModel @Inject constructor(
     private val _responseEvent = Channel<ResponseEvent>()
     val responseEvent = _responseEvent.receiveAsFlow()
 
-    fun onEvent(uiEvent: AddNoteUIEvent){
-        when(uiEvent){
+    fun onEvent(uiEvent: AddNoteUIEvent) {
+        when (uiEvent) {
             AddNoteUIEvent.OnBackNavigation -> {
                 viewModelScope.launch {
                     _backArrowIconEvent.send(BackArrowIconEvent.Callback)
                 }
             }
-            is AddNoteUIEvent.OnTitleChanged -> _uiState.value = _uiState.value.copy(title = uiEvent.title)
-            is AddNoteUIEvent.OnDescriptionChanged -> _uiState.value = _uiState.value.copy(description = uiEvent.description)
+
+            is AddNoteUIEvent.OnTitleChanged -> _uiState.value =
+                _uiState.value.copy(title = uiEvent.title)
+
+            is AddNoteUIEvent.OnDescriptionChanged -> _uiState.value =
+                _uiState.value.copy(description = uiEvent.description)
+
             AddNoteUIEvent.OnSaveNote -> saveNote()
         }
     }
@@ -83,10 +88,14 @@ class AddNoteViewModel @Inject constructor(
 
     private fun addNote(request: AddNoteRequest) = viewModelScope.launch {
         addNoteUseCase(request).onEach {
-            when(it){
+            when (it) {
                 is Resource.Loading -> _addNoteResponse.value = AddNoteState(isLoading = true)
-                is Resource.Error -> _addNoteResponse.value = AddNoteState(errorMessage = it.errorMessage.toString())
-                is Resource.DataError -> _addNoteResponse.value = AddNoteState(errorData = it.errorData)
+                is Resource.Error -> _addNoteResponse.value =
+                    AddNoteState(errorMessage = it.errorMessage.toString())
+
+                is Resource.DataError -> _addNoteResponse.value =
+                    AddNoteState(errorData = it.errorData)
+
                 is Resource.Success -> _addNoteResponse.value = AddNoteState(data = it.data)
             }
         }.launchIn(viewModelScope)
@@ -99,6 +108,4 @@ class AddNoteViewModel @Inject constructor(
     sealed class BackArrowIconEvent {
         data object Callback : BackArrowIconEvent()
     }
-
-
 }

@@ -13,3 +13,5 @@ object NoteListScreen
 object NoteSearchScreen
 @Serializable
 data class NoteDetailScreen(val note:NoteListResponseItem)
+@Serializable
+data class EditNoteScreen(val note:NoteListResponseItem)
