@@ -1,6 +1,6 @@
 package com.codeturtle.notes.notes.notes_list.presentation
 
-import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -56,13 +56,13 @@ import com.codeturtle.notes.authentication.navigation.AuthNavGraph
 import com.codeturtle.notes.common.component.ProgressBar
 import com.codeturtle.notes.common.snakbar.SnackBarController
 import com.codeturtle.notes.common.snakbar.SnackBarEvent
+import com.codeturtle.notes.common.utils.HandleDate.convertLongToDate
 import com.codeturtle.notes.notes.navigation.AddNoteScreen
+import com.codeturtle.notes.notes.navigation.NoteDetailScreen
 import com.codeturtle.notes.notes.navigation.NoteNavGraph
 import com.codeturtle.notes.notes.navigation.NoteSearchScreen
 import com.codeturtle.notes.notes.notes_list.domain.model.NoteListResponseItem
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
 
 @Composable
 fun NoteListScreen(
@@ -95,6 +95,15 @@ fun NoteListScreen(
     LaunchedEffect(key1 = true) {
         viewModel.addNoteEvent.collect {
             navController.navigate(AddNoteScreen)
+        }
+    }
+
+    LaunchedEffect(key1 = true) {
+        viewModel.noteDetailEvent.collect{
+            it.note?.let { note ->
+                navController.navigate(NoteDetailScreen(note = note))
+            }
+
         }
     }
 
@@ -206,7 +215,10 @@ private fun NoteList(
                         modifier = Modifier.testTag("NoteList")
                     ) {
                         items(noteListResponse.data) {
-                            NoteListItem(note = it)
+                            NoteListItem(
+                                onEvent = onEvent,
+                                note = it
+                            )
                         }
                     }
                 } else {
@@ -227,11 +239,12 @@ private fun NoteList(
 }
 
 @Composable
-fun NoteListItem(note: NoteListResponseItem) {
+fun NoteListItem(note: NoteListResponseItem, onEvent: (NoteListUIEvent) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 15.dp),
+            .padding(bottom = 15.dp)
+            .clickable { onEvent(NoteListUIEvent.NoteDetailClicked(note)) },
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
     ) {
         Column(
@@ -249,7 +262,7 @@ fun NoteListItem(note: NoteListResponseItem) {
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = convertLongToTime(note.date),
+                    text = convertLongToDate(note.date),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Normal
                 )
@@ -296,11 +309,4 @@ private fun NoteListItemPreview() {
         onEvent = {},
         snackBarHostState = SnackbarHostState()
     )
-}
-
-@SuppressLint("SimpleDateFormat")
-fun convertLongToTime(timeStamp: Long): String {
-    val date = Date(timeStamp * 1000)
-    val format = SimpleDateFormat("dd-MMM-yyyy")
-    return format.format(date)
 }

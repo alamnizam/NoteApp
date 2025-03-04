@@ -1,4 +1,4 @@
-package com.codeturtle.notes.app.naviagtion
+package com.codeturtle.notes.common.utils
 
 import android.os.Build
 import android.os.Bundle
@@ -13,6 +13,7 @@ class CustomNavType<T : Parcelable>(
     private val serializer: KSerializer<T>,
 ) : NavType<T>(false) {
     override fun get(bundle: Bundle, key: String): T? {
+        @Suppress("DEPRECATION")
         return when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> bundle.getParcelable(
                 key,
