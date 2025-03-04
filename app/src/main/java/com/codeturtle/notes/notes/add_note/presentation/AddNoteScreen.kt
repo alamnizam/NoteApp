@@ -1,5 +1,6 @@
 package com.codeturtle.notes.notes.add_note.presentation
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,6 +20,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -85,7 +87,7 @@ fun AddNoteScreen(
                 val job = launch {
                     SnackBarController.sendEvent(
                         event = SnackBarEvent(
-                            message = context.getString(R.string.user_registered_successfully)
+                            message = context.getString(R.string.note_added_successfully)
                         )
                     )
                 }
@@ -131,7 +133,11 @@ private fun AddNote(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(stringResource(R.string.add_note), fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                    Text(
+                        stringResource(R.string.add_note),
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
                 },
                 navigationIcon = {
                     IconButton(onClick = { onEvent(AddNoteUIEvent.OnBackNavigationClicked) }) {
@@ -154,7 +160,7 @@ private fun AddNote(
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                Text("Save")
+                Text(stringResource(R.string.save_note))
             }
         },
     ) { innerPadding ->
@@ -167,14 +173,18 @@ private fun AddNote(
             BasicTextField(
                 value = uiState.title,
                 onValueChange = { onEvent(AddNoteUIEvent.OnTitleChanged(it)) },
-                textStyle = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold),
+                textStyle = TextStyle(
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                ),
                 modifier = Modifier.fillMaxWidth(),
                 decorationBox = { innerTextField ->
                     if (uiState.title.isEmpty()) Text(
                         stringResource(R.string.title),
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Gray
+                        color = MaterialTheme.colorScheme.onSurface,
                     )
                     innerTextField()
                 }
@@ -205,14 +215,17 @@ private fun AddNote(
                 BasicTextField(
                     value = uiState.description,
                     onValueChange = { onEvent(AddNoteUIEvent.OnDescriptionChanged(it)) },
-                    textStyle = TextStyle(fontSize = 16.sp),
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = 16.sp
+                    ),
                     modifier = Modifier.fillMaxSize(),
                     decorationBox = { innerTextField ->
                         if (uiState.description.isEmpty())
                             Text(
                                 text = stringResource(R.string.description),
                                 fontSize = 16.sp,
-                                color = Color.Gray
+                                color = MaterialTheme.colorScheme.onSurface,
                             )
                         innerTextField()
                     }
@@ -231,7 +244,7 @@ private fun AddNote(
     }
 }
 
-@Preview
+@Preview(showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun AddNotePrev() {
     AddNote(

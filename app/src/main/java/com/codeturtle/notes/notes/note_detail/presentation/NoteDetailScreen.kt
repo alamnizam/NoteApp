@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
@@ -47,6 +49,12 @@ fun NoteDetailScreen(
     snackBarHostState: SnackbarHostState,
     note: NoteDetailScreen
 ) {
+    LaunchedEffect(key1 = true) {
+        viewModel.backArrowIconEvent.collect{
+            navController.popBackStack()
+        }
+    }
+
     LaunchedEffect(key1 = true) {
         viewModel.editIconEvent.collect{
             it.note?.let { note ->
@@ -112,6 +120,7 @@ fun NoteDetail(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(it)
+                .verticalScroll(rememberScrollState())
         ) {
             Note(note = note)
         }

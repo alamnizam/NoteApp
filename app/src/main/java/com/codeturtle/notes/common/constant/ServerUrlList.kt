@@ -6,4 +6,5 @@ object ServerUrlList {
     const val LOGIN = "users/login"
     const val GET_NOTES = "notes"
     const val ADD_NOTE = "notes/create"
+    const val UPDATE_NOTE = "notes/update"
 }
