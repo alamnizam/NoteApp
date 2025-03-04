@@ -9,7 +9,7 @@ class ValidateFieldNotEmpty {
         return when {
             fieldData.isBlank() -> ValidationResult(
                 success = false,
-                errorMessage = UiText.StringResource(R.string.this_feild_cannot_be_empty)
+                errorMessage = UiText.StringResource(R.string.this_field_cannot_be_empty)
             )
 
             else -> ValidationResult(success = true)
