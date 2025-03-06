@@ -100,7 +100,7 @@ fun NoteListScreen(
     }
 
     LaunchedEffect(key1 = true) {
-        viewModel.noteDetailEvent.collect{
+        viewModel.noteDetailEvent.collect {
             it.note?.let { note ->
                 navController.navigate(NoteDetailScreen(note = note))
             }
@@ -212,13 +212,15 @@ private fun NoteList(
             if (noteListResponse.data != null) {
                 if (noteListResponse.data.isNotEmpty()) {
                     LazyVerticalStaggeredGrid(
-                        modifier = Modifier.testTag("NoteList").fillMaxSize(),
+                        modifier = Modifier
+                            .testTag("NoteList")
+                            .fillMaxSize(),
                         columns = StaggeredGridCells.Adaptive(300.dp),
-                        horizontalArrangement = Arrangement. spacedBy(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalItemSpacing = 16.dp
 
                     ) {
-                        items(noteListResponse.data){
+                        items(noteListResponse.data) {
                             NoteListItem(
                                 onEvent = onEvent,
                                 note = it
@@ -287,19 +289,28 @@ private fun NoteListItemPreview() {
     val noteList = listOf(
         NoteListResponseItem(
             noteTitle = "Note Title",
-            description = "Stack Overflow https://stackoverflow.com › questions › kotlin-convert-t. I'm trying to find out how I can convert timestamp to datetime in Kotlin, this is very simple in Java but I cant find any equivalent of it in Kotlin.",
+            description = "Stack Overflow https://stackoverflow.com › questions › " +
+                    "kotlin-convert-t. I'm trying to find out how I can convert timestamp to " +
+                    "datetime in Kotlin, this is very simple in Java but I cant find any " +
+                    "equivalent of it in Kotlin.",
             id = 1,
             date = 1740338779
         ),
         NoteListResponseItem(
             noteTitle = "Note Title",
-            description = "Stack Overflow https://stackoverflow.com › questions › kotlin-convert-t. I'm trying to find out how I can convert timestamp to datetime in Kotlin, this is very simple in Java but I cant find any equivalent of it in Kotlin.",
+            description = "Stack Overflow https://stackoverflow.com › questions › " +
+                    "kotlin-convert-t. I'm trying to find out how I can convert timestamp to " +
+                    "datetime in Kotlin, this is very simple in Java but I cant find any " +
+                    "equivalent of it in Kotlin.",
             id = 1,
             date = 1740338779
         ),
         NoteListResponseItem(
             noteTitle = "Note Title",
-            description = "Stack Overflow https://stackoverflow.com › questions › kotlin-convert-t. I'm trying to find out how I can convert timestamp to datetime in Kotlin, this is very simple in Java but I cant find any equivalent of it in Kotlin.",
+            description = "Stack Overflow https://stackoverflow.com › questions › " +
+                    "kotlin-convert-t. I'm trying to find out how I can convert timestamp to " +
+                    "datetime in Kotlin, this is very simple in Java but I cant find any " +
+                    "equivalent of it in Kotlin.",
             id = 1,
             date = 1740338779
         )
