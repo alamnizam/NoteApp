@@ -17,6 +17,8 @@
             <option value="$PROJECT_DIR$/authentication/login/domain" />
             <option value="$PROJECT_DIR$/authentication/login/presentation" />
             <option value="$PROJECT_DIR$/authentication/naviagtion" />
+            <option value="$PROJECT_DIR$/authentication/registration" />
+            <option value="$PROJECT_DIR$/authentication/registration/data" />
           </set>
         </option>
       </GradleProjectSettings>
