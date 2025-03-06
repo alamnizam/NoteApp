@@ -12,8 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Logout
@@ -210,10 +211,14 @@ private fun NoteList(
             }
             if (noteListResponse.data != null) {
                 if (noteListResponse.data.isNotEmpty()) {
-                    LazyColumn(
-                        modifier = Modifier.testTag("NoteList")
+                    LazyVerticalStaggeredGrid(
+                        modifier = Modifier.testTag("NoteList").fillMaxSize(),
+                        columns = StaggeredGridCells.Adaptive(300.dp),
+                        horizontalArrangement = Arrangement. spacedBy(16.dp),
+                        verticalItemSpacing = 16.dp
+
                     ) {
-                        items(noteListResponse.data) {
+                        items(noteListResponse.data){
                             NoteListItem(
                                 onEvent = onEvent,
                                 note = it
@@ -241,7 +246,6 @@ private fun NoteList(
 fun NoteListItem(note: NoteListResponseItem, onEvent: (NoteListUIEvent) -> Unit) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
             .padding(bottom = 15.dp)
             .clickable { onEvent(NoteListUIEvent.NoteDetailClicked(note)) },
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
