@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Notes"
 include(":app")
- 
+include(":authentication:login:data")
