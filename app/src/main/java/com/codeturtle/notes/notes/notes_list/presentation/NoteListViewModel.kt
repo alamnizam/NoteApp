@@ -63,7 +63,7 @@ class NoteListViewModel @Inject constructor(
                 }
             }
 
-            is NoteListUIEvent.NoteDetailClicked -> {
+            is NoteListUIEvent.NoteClicked -> {
                 viewModelScope.launch {
                     _noteDetailEvent.send(NoteDetailEvent.Callback(note = uiEvent.note))
                 }
