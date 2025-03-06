@@ -64,7 +64,7 @@ fun AddNoteScreen(
     val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
-        viewModel.backArrowIconEvent.collect {
+        viewModel.backArrowIconClickedEvent.collect {
             navController.navigateUp()
         }
     }

@@ -30,8 +30,8 @@ class AddNoteViewModel @Inject constructor(
     private val _addNoteResponse = mutableStateOf(AddNoteState())
     val addNoteResponse: State<AddNoteState> = _addNoteResponse
 
-    private val _backArrowIconEvent = Channel<BackArrowIconClickedEvent>()
-    val backArrowIconEvent = _backArrowIconEvent.receiveAsFlow()
+    private val _backArrowIconClickedEvent = Channel<BackArrowIconClickedEvent>()
+    val backArrowIconClickedEvent = _backArrowIconClickedEvent.receiveAsFlow()
 
     private val _responseEvent = Channel<ResponseEvent>()
     val responseEvent = _responseEvent.receiveAsFlow()
@@ -40,7 +40,7 @@ class AddNoteViewModel @Inject constructor(
         when (uiEvent) {
             AddNoteUIEvent.OnBackNavigationClicked -> {
                 viewModelScope.launch {
-                    _backArrowIconEvent.send(BackArrowIconClickedEvent.Callback)
+                    _backArrowIconClickedEvent.send(BackArrowIconClickedEvent.Callback)
                 }
             }
 
