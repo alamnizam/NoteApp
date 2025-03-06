@@ -27,16 +27,16 @@ class NoteListViewModel @Inject constructor(
     private val _noteListResponse = mutableStateOf(NoteListState())
     val noteListResponse: State<NoteListState> = _noteListResponse
 
-    private val _searchIconEvent = Channel<SearchIconEvent>()
+    private val _searchIconEvent = Channel<SearchIconClickedEvent>()
     val searchIconEvent = _searchIconEvent.receiveAsFlow()
 
-    private val _logoutIconEvent = Channel<LogoutIconEvent>()
+    private val _logoutIconEvent = Channel<LogoutIconClickedEvent>()
     val logoutIconEvent = _logoutIconEvent.receiveAsFlow()
 
     private val _addNoteEvent = Channel<AddNoteEvent>()
     val addNoteEvent = _addNoteEvent.receiveAsFlow()
 
-    private val _noteDetailEvent = Channel<NoteDetailEvent>()
+    private val _noteDetailEvent = Channel<NoteClickEvent>()
     val noteDetailEvent = _noteDetailEvent.receiveAsFlow()
 
     init {
@@ -47,13 +47,13 @@ class NoteListViewModel @Inject constructor(
         when (uiEvent) {
             NoteListUIEvent.OnSearchIconClicked -> {
                 viewModelScope.launch {
-                    _searchIconEvent.send(SearchIconEvent.Callback)
+                    _searchIconEvent.send(SearchIconClickedEvent.Callback)
                 }
             }
 
             NoteListUIEvent.OnLogoutIconClicked -> {
                 viewModelScope.launch {
-                    _logoutIconEvent.send(LogoutIconEvent.Callback)
+                    _logoutIconEvent.send(LogoutIconClickedEvent.Callback)
                 }
             }
 
@@ -65,7 +65,7 @@ class NoteListViewModel @Inject constructor(
 
             is NoteListUIEvent.OnNoteClicked -> {
                 viewModelScope.launch {
-                    _noteDetailEvent.send(NoteDetailEvent.Callback(note = uiEvent.note))
+                    _noteDetailEvent.send(NoteClickEvent.Callback(note = uiEvent.note))
                 }
             }
         }
@@ -86,21 +86,21 @@ class NoteListViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    sealed class SearchIconEvent {
-        data object Callback : SearchIconEvent()
+    sealed class SearchIconClickedEvent {
+        data object Callback : SearchIconClickedEvent()
     }
 
-    sealed class LogoutIconEvent {
-        data object Callback : LogoutIconEvent()
+    sealed class LogoutIconClickedEvent {
+        data object Callback : LogoutIconClickedEvent()
     }
 
     sealed class AddNoteEvent {
         data object Callback : AddNoteEvent()
     }
 
-    sealed class NoteDetailEvent(
+    sealed class NoteClickEvent(
         val note: NoteListResponseItem? = null
     ) {
-        class Callback(note:NoteListResponseItem?) : NoteDetailEvent(note = note)
+        class Callback(note:NoteListResponseItem?) : NoteClickEvent(note = note)
     }
 }
