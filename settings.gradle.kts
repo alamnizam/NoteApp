@@ -25,3 +25,4 @@ rootProject.name = "Notes"
 include(":app")
 include(":authentication:login:data")
 include(":authentication:login:domain")
+include(":authentication:login:presentation")
