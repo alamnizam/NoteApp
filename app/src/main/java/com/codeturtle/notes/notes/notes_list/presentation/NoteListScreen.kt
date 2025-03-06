@@ -75,13 +75,13 @@ fun NoteListScreen(
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = true) {
-        viewModel.searchIconEvent.collect {
+        viewModel.searchIconClickedEvent.collect {
             navController.navigate(NoteSearchScreen)
         }
     }
 
     LaunchedEffect(key1 = true) {
-        viewModel.logoutIconEvent.collect {
+        viewModel.logoutIconClickedEvent.collect {
             scope.launch {
                 viewModel.tokenManager.clearData()
             }
@@ -94,13 +94,13 @@ fun NoteListScreen(
     }
 
     LaunchedEffect(key1 = true) {
-        viewModel.addNoteEvent.collect {
+        viewModel.addNoteClickedEvent.collect {
             navController.navigate(AddNoteScreen)
         }
     }
 
     LaunchedEffect(key1 = true) {
-        viewModel.noteDetailEvent.collect {
+        viewModel.noteClickedEvent.collect {
             it.note?.let { note ->
                 navController.navigate(NoteDetailScreen(note = note))
             }

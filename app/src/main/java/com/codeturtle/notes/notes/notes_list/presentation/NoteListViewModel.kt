@@ -27,17 +27,17 @@ class NoteListViewModel @Inject constructor(
     private val _noteListResponse = mutableStateOf(NoteListState())
     val noteListResponse: State<NoteListState> = _noteListResponse
 
-    private val _searchIconEvent = Channel<SearchIconClickedEvent>()
-    val searchIconEvent = _searchIconEvent.receiveAsFlow()
+    private val _searchIconClickedEvent = Channel<SearchIconClickedEvent>()
+    val searchIconClickedEvent = _searchIconClickedEvent.receiveAsFlow()
 
-    private val _logoutIconEvent = Channel<LogoutIconClickedEvent>()
-    val logoutIconEvent = _logoutIconEvent.receiveAsFlow()
+    private val _logoutIconClickedEvent = Channel<LogoutIconClickedEvent>()
+    val logoutIconClickedEvent = _logoutIconClickedEvent.receiveAsFlow()
 
-    private val _addNoteEvent = Channel<AddNoteEvent>()
-    val addNoteEvent = _addNoteEvent.receiveAsFlow()
+    private val _addNoteClickedEvent = Channel<AddNoteClickedEvent>()
+    val addNoteClickedEvent = _addNoteClickedEvent.receiveAsFlow()
 
-    private val _noteDetailEvent = Channel<NoteClickEvent>()
-    val noteDetailEvent = _noteDetailEvent.receiveAsFlow()
+    private val _noteClickedEvent = Channel<NoteClickEvent>()
+    val noteClickedEvent = _noteClickedEvent.receiveAsFlow()
 
     init {
         getNoteList()
@@ -47,25 +47,25 @@ class NoteListViewModel @Inject constructor(
         when (uiEvent) {
             NoteListUIEvent.OnSearchIconClicked -> {
                 viewModelScope.launch {
-                    _searchIconEvent.send(SearchIconClickedEvent.Callback)
+                    _searchIconClickedEvent.send(SearchIconClickedEvent.Callback)
                 }
             }
 
             NoteListUIEvent.OnLogoutIconClicked -> {
                 viewModelScope.launch {
-                    _logoutIconEvent.send(LogoutIconClickedEvent.Callback)
+                    _logoutIconClickedEvent.send(LogoutIconClickedEvent.Callback)
                 }
             }
 
             NoteListUIEvent.OnAddNoteClicked -> {
                 viewModelScope.launch {
-                    _addNoteEvent.send(AddNoteEvent.Callback)
+                    _addNoteClickedEvent.send(AddNoteClickedEvent.Callback)
                 }
             }
 
             is NoteListUIEvent.OnNoteClicked -> {
                 viewModelScope.launch {
-                    _noteDetailEvent.send(NoteClickEvent.Callback(note = uiEvent.note))
+                    _noteClickedEvent.send(NoteClickEvent.Callback(note = uiEvent.note))
                 }
             }
         }
@@ -94,8 +94,8 @@ class NoteListViewModel @Inject constructor(
         data object Callback : LogoutIconClickedEvent()
     }
 
-    sealed class AddNoteEvent {
-        data object Callback : AddNoteEvent()
+    sealed class AddNoteClickedEvent {
+        data object Callback : AddNoteClickedEvent()
     }
 
     sealed class NoteClickEvent(
