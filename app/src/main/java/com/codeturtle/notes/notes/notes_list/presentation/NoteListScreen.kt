@@ -246,7 +246,6 @@ private fun NoteList(
 fun NoteListItem(note: NoteListResponseItem, onEvent: (NoteListUIEvent) -> Unit) {
     Card(
         modifier = Modifier
-            .padding(bottom = 15.dp)
             .clickable { onEvent(NoteListUIEvent.NoteDetailClicked(note)) },
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
     ) {
