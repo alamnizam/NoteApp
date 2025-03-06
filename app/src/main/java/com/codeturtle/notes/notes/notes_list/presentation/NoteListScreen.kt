@@ -139,7 +139,7 @@ private fun NoteList(
         floatingActionButton = {
             FloatingActionButton(
                 modifier = Modifier.testTag("Add"),
-                onClick = { onEvent(NoteListUIEvent.AddNoteClicked) },
+                onClick = { onEvent(NoteListUIEvent.OnAddNoteClicked) },
                 shape = CircleShape
             ) {
                 Icon(
@@ -160,7 +160,7 @@ private fun NoteList(
                 actions = {
                     IconButton(
                         modifier = Modifier.testTag("Search"),
-                        onClick = { onEvent(NoteListUIEvent.SearchIconClicked) }
+                        onClick = { onEvent(NoteListUIEvent.OnSearchIconClicked) }
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Search,
@@ -169,7 +169,7 @@ private fun NoteList(
                     }
                     IconButton(
                         modifier = Modifier.testTag("Logout"),
-                        onClick = { onEvent(NoteListUIEvent.LogoutIconClicked) }
+                        onClick = { onEvent(NoteListUIEvent.OnLogoutIconClicked) }
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.Logout,
@@ -248,7 +248,7 @@ private fun NoteList(
 fun NoteListItem(note: NoteListResponseItem, onEvent: (NoteListUIEvent) -> Unit) {
     Card(
         modifier = Modifier
-            .clickable { onEvent(NoteListUIEvent.NoteClicked(note)) },
+            .clickable { onEvent(NoteListUIEvent.OnNoteClicked(note)) },
         elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
     ) {
         Column(

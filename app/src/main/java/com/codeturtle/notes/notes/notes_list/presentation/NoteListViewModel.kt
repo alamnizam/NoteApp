@@ -45,25 +45,25 @@ class NoteListViewModel @Inject constructor(
 
     fun onEvent(uiEvent: NoteListUIEvent) {
         when (uiEvent) {
-            NoteListUIEvent.SearchIconClicked -> {
+            NoteListUIEvent.OnSearchIconClicked -> {
                 viewModelScope.launch {
                     _searchIconEvent.send(SearchIconEvent.Callback)
                 }
             }
 
-            NoteListUIEvent.LogoutIconClicked -> {
+            NoteListUIEvent.OnLogoutIconClicked -> {
                 viewModelScope.launch {
                     _logoutIconEvent.send(LogoutIconEvent.Callback)
                 }
             }
 
-            NoteListUIEvent.AddNoteClicked -> {
+            NoteListUIEvent.OnAddNoteClicked -> {
                 viewModelScope.launch {
                     _addNoteEvent.send(AddNoteEvent.Callback)
                 }
             }
 
-            is NoteListUIEvent.NoteClicked -> {
+            is NoteListUIEvent.OnNoteClicked -> {
                 viewModelScope.launch {
                     _noteDetailEvent.send(NoteDetailEvent.Callback(note = uiEvent.note))
                 }
