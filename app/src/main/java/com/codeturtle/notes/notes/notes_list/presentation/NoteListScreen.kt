@@ -245,7 +245,10 @@ private fun NoteList(
 }
 
 @Composable
-fun NoteListItem(note: NoteListResponseItem, onEvent: (NoteListUIEvent) -> Unit) {
+fun NoteListItem(
+    note: NoteListResponseItem,
+    onEvent: (NoteListUIEvent) -> Unit
+) {
     Card(
         modifier = Modifier
             .clickable { onEvent(NoteListUIEvent.OnNoteClicked(note)) },
@@ -285,7 +288,7 @@ fun NoteListItem(note: NoteListResponseItem, onEvent: (NoteListUIEvent) -> Unit)
 
 @Preview
 @Composable
-private fun NoteListItemPreview() {
+private fun NoteListPreview() {
     val noteList = listOf(
         NoteListResponseItem(
             noteTitle = "Note Title",
