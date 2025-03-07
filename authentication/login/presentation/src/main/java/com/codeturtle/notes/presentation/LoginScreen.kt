@@ -25,8 +25,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -56,12 +54,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.codeturtle.notes.common.R
-//import com.codeturtle.notes.authentication.navigation.AuthNavGraph
-//import com.codeturtle.notes.authentication.navigation.RegisterScreen
 import com.codeturtle.notes.common.component.ProgressBar
 import com.codeturtle.notes.common.snakbar.SnackBarController
 import com.codeturtle.notes.common.snakbar.SnackBarEvent
-//import com.codeturtle.notes.notes.navigation.NoteNavGraph
+import com.codeturtle.notes.navigation.AuthNavGraph
+import com.codeturtle.notes.navigation.NoteNavGraph
+import com.codeturtle.notes.navigation.RegisterScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -69,8 +67,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
-    navController: NavHostController,
-    snackBarHostState: SnackbarHostState
+    navController: NavHostController
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val loginResponse = viewModel.loginResponse.value
@@ -78,16 +75,14 @@ fun LoginScreen(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
-        }, contentWindowInsets = WindowInsets.safeContent, modifier = Modifier.fillMaxSize()
+         contentWindowInsets = WindowInsets.safeContent, modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
         Box(
             modifier = Modifier.padding(innerPadding)
         ) {
             LaunchedEffect(key1 = true) {
                 viewModel.registerClickEvent.collect {
-//                    navController.navigate(RegisterScreen)
+                    navController.navigate(RegisterScreen)
                 }
             }
 
@@ -118,9 +113,9 @@ fun LoginScreen(
                         job.join()
                         withContext(Dispatchers.Main) {
                             navController.popBackStack(
-//                                route = AuthNavGraph, inclusive = true
+                                route = AuthNavGraph, inclusive = true
                             )
-//                            navController.navigate(NoteNavGraph)
+                            navController.navigate(NoteNavGraph)
                         }
                     }
 
