@@ -41,14 +41,23 @@ android {
     buildFeatures {
         compose = true
     }
-    testOptions{
+    testOptions {
         unitTests {
             isIncludeAndroidResources = true
         }
     }
 }
-val mockitoAgent = configurations.create("mockitoAgent")
 dependencies {
+    //modules
+    implementation(project(":common"))
+    implementation(project(":navigation"))
+    implementation(project(":app:navigation"))
+    implementation(project(":authentication:login:data"))
+    implementation(project(":authentication:login:domain"))
+    implementation(project(":authentication:login:presentation"))
+    implementation(project(":authentication:navigation"))
+
+
 
     //core
     implementation(libs.androidx.core.ktx)
