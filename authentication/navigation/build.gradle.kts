@@ -35,6 +35,7 @@ android {
 dependencies {
     //modules
     implementation(project(":navigation"))
+    implementation(project(":authentication:login:presentation"))
 
     //core
     implementation(libs.androidx.core.ktx)
