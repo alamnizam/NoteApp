@@ -115,6 +115,9 @@ dependencies {
     //coil
     implementation(libs.coil.compose)
 
+    //lottie
+    implementation(libs.lottie.compose)
+
     //test String resource
     testImplementation(libs.robolectric)
 
@@ -144,7 +147,6 @@ dependencies {
     implementation(libs.androidx.junit.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.core.splashscreen)
-    implementation(libs.lottie.compose)
     implementation(libs.androidx.rules)
     testImplementation(libs.junit.jupiter)
 }
