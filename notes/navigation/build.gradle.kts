@@ -37,6 +37,7 @@ dependencies {
     //modules
     implementation(project(":navigation"))
     implementation(project(":notes:add_note:presentation"))
+    implementation(project(":notes:edit_note:presentation"))
 
     //core
     implementation(libs.androidx.core.ktx)
