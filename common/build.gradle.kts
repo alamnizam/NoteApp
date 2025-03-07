@@ -37,6 +37,9 @@ android {
 
 dependencies {
 
+    //giving access to resources
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar","*.so"))))
+
     //core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
