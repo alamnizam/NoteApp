@@ -33,11 +33,19 @@ android {
 }
 
 dependencies {
+    //modules
+    implementation(project(":navigation"))
 
+    //core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+
+    //core junit test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    //navigation
+    implementation(libs.androidx.navigation.compose)
 }
