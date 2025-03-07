@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
+import com.codeturtle.notes.presentation.AddNoteScreen
 
 fun NavGraphBuilder.noteNavGraph(
     navController: NavHostController
@@ -14,7 +15,7 @@ fun NavGraphBuilder.noteNavGraph(
 //            NoteListScreen(navController = navController)
         }
         composable<AddNoteScreen> {
-//            AddNoteScreen(navController = navController)
+            AddNoteScreen(navController = navController)
         }
         composable<NoteSearchScreen> {
 //            NoteSearchScreen(navController = navController)
