@@ -1,7 +1,7 @@
 package com.codeturtle.notes.presentation
 
 import com.codeturtle.notes.common.utils.ErrorResponse
-import com.codeturtle.notes.notes.edit_note.domain.model.EditNoteResponse
+import com.codeturtle.notes.domain.model.EditNoteResponse
 
 data class EditNoteState(
     val isLoading: Boolean = false,

@@ -67,11 +67,11 @@ fun EditNoteScreen(
         }
     }
 
-//    LaunchedEffect(note.note.id) {
-//        viewModel.onEvent(EditNoteUIEvent.SetHiddenId(note.note.id))
-//        viewModel.onEvent(EditNoteUIEvent.OnTitleChanged(note.note.noteTitle))
-//        viewModel.onEvent(EditNoteUIEvent.OnDescriptionChanged(note.note.description))
-//    }
+    LaunchedEffect(note.note.id) {
+        viewModel.onEvent(EditNoteUIEvent.SetHiddenId(note.note.id))
+        viewModel.onEvent(EditNoteUIEvent.OnTitleChanged(note.note.noteTitle))
+        viewModel.onEvent(EditNoteUIEvent.OnDescriptionChanged(note.note.description))
+    }
 
     responseEvent.value.let {
         if (editNoteResponse.isLoading) {

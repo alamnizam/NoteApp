@@ -35,9 +35,11 @@ android {
 dependencies {
 
     //modules
+    implementation(project(":common"))
     implementation(project(":navigation"))
     implementation(project(":notes:add_note:presentation"))
     implementation(project(":notes:edit_note:presentation"))
+    implementation(project(":notes:note_list:domain"))
     implementation(project(":notes:note_list:presentation"))
 
     //core

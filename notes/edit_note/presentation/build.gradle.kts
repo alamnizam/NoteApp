@@ -38,7 +38,7 @@ dependencies {
 
     //modules
     implementation(project(":common"))
-    implementation(project(":notes:add_note:domain"))
+    implementation(project(":notes:edit_note:domain"))
     implementation(project(":navigation"))
 
     //Core
