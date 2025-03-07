@@ -9,6 +9,7 @@ import com.codeturtle.notes.common.utils.CustomNavType
 import com.codeturtle.notes.domain.model.NoteListResponseItem
 import com.codeturtle.notes.presentation.AddNoteScreen
 import com.codeturtle.notes.presentation.EditNoteScreen
+import com.codeturtle.notes.presentation.NoteDetailScreen
 import kotlin.reflect.typeOf
 
 fun NavGraphBuilder.noteNavGraph(
@@ -33,7 +34,7 @@ fun NavGraphBuilder.noteNavGraph(
             )
         ) {
             val note = it.toRoute<NoteDetailScreen>()
-//            NoteDetailScreen(navController = navController,note = note)
+            NoteDetailScreen(navController = navController,note = note)
         }
         composable<EditNoteScreen>(
             typeMap = mapOf(
