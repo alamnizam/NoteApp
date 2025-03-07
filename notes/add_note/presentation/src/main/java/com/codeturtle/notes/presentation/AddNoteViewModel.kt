@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codeturtle.notes.common.utils.Resource
 import com.codeturtle.notes.common.validation.ValidateFieldNotEmpty
-import com.codeturtle.notes.notes.add_note.data.model.AddNoteRequest
-import com.codeturtle.notes.notes.add_note.domain.usecase.AddNoteUseCase
+import com.codeturtle.notes.domain.model.AddNoteRequest
+import com.codeturtle.notes.domain.usecase.AddNoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
