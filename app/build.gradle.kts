@@ -50,14 +50,19 @@ android {
 val mockitoAgent = configurations.create("mockitoAgent")
 dependencies {
 
+    //core
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+
+    //core junit test
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+
+
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
     implementation(libs.core.ktx)
     implementation(libs.androidx.junit.ktx)
     implementation(libs.androidx.material.icons.extended.android)
@@ -66,14 +71,22 @@ dependencies {
     implementation(libs.lottie.compose)
     implementation(libs.androidx.rules)
     testImplementation(libs.junit.jupiter)
-    androidTestImplementation(libs.androidx.junit)
+
+    //compose
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+
+    //compose testing
     androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+
 
     //test String resource
-    testImplementation(libs.junit)
     testImplementation(libs.robolectric)
 
     //dagger hilt
@@ -115,7 +128,6 @@ dependencies {
     //Idling resource
     implementation(libs.androidx.espresso.idling.resource)
     androidTestImplementation(libs.androidx.espresso.idling.resource)
-    androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.okhttp3.idling.resource)
 
     //mock web server
