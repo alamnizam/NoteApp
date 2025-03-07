@@ -11,16 +11,37 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/app/navigation" />
             <option value="$PROJECT_DIR$/authentication" />
             <option value="$PROJECT_DIR$/authentication/login" />
             <option value="$PROJECT_DIR$/authentication/login/data" />
             <option value="$PROJECT_DIR$/authentication/login/domain" />
             <option value="$PROJECT_DIR$/authentication/login/presentation" />
-            <option value="$PROJECT_DIR$/authentication/naviagtion" />
+            <option value="$PROJECT_DIR$/authentication/navigation" />
             <option value="$PROJECT_DIR$/authentication/registration" />
             <option value="$PROJECT_DIR$/authentication/registration/data" />
             <option value="$PROJECT_DIR$/authentication/registration/domain" />
             <option value="$PROJECT_DIR$/authentication/registration/presentation" />
+            <option value="$PROJECT_DIR$/common" />
+            <option value="$PROJECT_DIR$/navigation" />
+            <option value="$PROJECT_DIR$/notes" />
+            <option value="$PROJECT_DIR$/notes/add_note" />
+            <option value="$PROJECT_DIR$/notes/add_note/data" />
+            <option value="$PROJECT_DIR$/notes/add_note/domain" />
+            <option value="$PROJECT_DIR$/notes/add_note/presentation" />
+            <option value="$PROJECT_DIR$/notes/edit_note" />
+            <option value="$PROJECT_DIR$/notes/edit_note/data" />
+            <option value="$PROJECT_DIR$/notes/edit_note/domain" />
+            <option value="$PROJECT_DIR$/notes/edit_note/presentation" />
+            <option value="$PROJECT_DIR$/notes/navigation" />
+            <option value="$PROJECT_DIR$/notes/note_details" />
+            <option value="$PROJECT_DIR$/notes/note_details/presentation" />
+            <option value="$PROJECT_DIR$/notes/note_list" />
+            <option value="$PROJECT_DIR$/notes/note_list/data" />
+            <option value="$PROJECT_DIR$/notes/note_list/domain" />
+            <option value="$PROJECT_DIR$/notes/note_list/presentation" />
+            <option value="$PROJECT_DIR$/notes/note_search" />
+            <option value="$PROJECT_DIR$/notes/note_search/presentation" />
           </set>
         </option>
       </GradleProjectSettings>

@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.codeturtle.notes.presentation.LoginScreen
+import com.codeturtle.notes.presentation.RegistrationScreen
 
 fun NavGraphBuilder.authNavGraph(
     navController: NavHostController
@@ -14,7 +15,7 @@ fun NavGraphBuilder.authNavGraph(
             LoginScreen(navController = navController)
         }
         composable<RegisterScreen> {
-//            RegistrationScreen(navController = navController,snackBarHostState = snackBarHostState)
+            RegistrationScreen(navController = navController)
         }
     }
 }
