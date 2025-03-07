@@ -12,7 +12,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.codeturtle.notes.R
-import com.codeturtle.notes.app.MainActivity
+import com.codeturtle.notes.MainActivity
 import com.codeturtle.notes.authentication.registration.mockwebserver.RegisterMockServerDispatcher
 import com.codeturtle.notes.common.constant.ServerUrlList.REGISTER
 import com.jakewharton.espresso.OkHttp3IdlingResource
