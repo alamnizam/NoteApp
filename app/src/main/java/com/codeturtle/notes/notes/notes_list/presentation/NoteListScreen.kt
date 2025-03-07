@@ -51,11 +51,11 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.codeturtle.notes.R
-import com.codeturtle.notes.authentication.navigation.AuthNavGraph
 import com.codeturtle.notes.common.component.ProgressBar
 import com.codeturtle.notes.common.snakbar.SnackBarController
 import com.codeturtle.notes.common.snakbar.SnackBarEvent
 import com.codeturtle.notes.common.utils.HandleDate.convertLongToDate
+import com.codeturtle.notes.navigation.AuthNavGraph
 import com.codeturtle.notes.notes.navigation.AddNoteScreen
 import com.codeturtle.notes.notes.navigation.NoteDetailScreen
 import com.codeturtle.notes.notes.navigation.NoteNavGraph

@@ -1,6 +1,6 @@
 package com.codeturtle.notes.navigation
 
-//import com.codeturtle.notes.notes.notes_list.domain.model.NoteListResponseItem
+import com.codeturtle.notes.domain.model.NoteListResponseItem
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -12,12 +12,6 @@ object NoteListScreen
 @Serializable
 object NoteSearchScreen
 @Serializable
-data class NoteDetailScreen(
-//    val note:NoteListResponseItem
-    val note:String
-)
+data class NoteDetailScreen(val note: NoteListResponseItem)
 @Serializable
-data class EditNoteScreen(
-//    val note:NoteListResponseItem
-    val note:String
-)
+data class EditNoteScreen(val note:NoteListResponseItem)
