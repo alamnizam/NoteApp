@@ -35,7 +35,8 @@ android {
 
 dependencies {
 
-
+    //modules
+    implementation(project(":notes:note_list:domain"))
 
     //core
     implementation(libs.androidx.core.ktx)
