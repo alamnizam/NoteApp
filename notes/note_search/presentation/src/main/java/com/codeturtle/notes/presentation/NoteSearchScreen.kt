@@ -46,14 +46,14 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.codeturtle.notes.R
+import com.codeturtle.notes.common.R
 import com.codeturtle.notes.common.component.ProgressBar
 import com.codeturtle.notes.common.component.SearchView
 import com.codeturtle.notes.common.snakbar.SnackBarController
 import com.codeturtle.notes.common.snakbar.SnackBarEvent
 import com.codeturtle.notes.common.utils.HandleDate.convertLongToDate
-import com.codeturtle.notes.notes.navigation.NoteDetailScreen
-import com.codeturtle.notes.notes.notes_list.domain.model.NoteListResponseItem
+import com.codeturtle.notes.domain.model.NoteListResponseItem
+import com.codeturtle.notes.navigation.NoteDetailScreen
 import kotlinx.coroutines.launch
 
 @Composable
