@@ -22,8 +22,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -61,8 +59,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun NoteSearchScreen(
     navController: NavHostController,
-    viewModel: NoteSearchViewModel = hiltViewModel(),
-    snackBarHostState: SnackbarHostState
+    viewModel: NoteSearchViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val noteListResponse = viewModel.noteListResponse.value
@@ -86,7 +83,6 @@ fun NoteSearchScreen(
         onEvent = {
             viewModel.onEvent(it)
         },
-        snackBarHostState = snackBarHostState,
         noteListResponse = noteListResponse
     )
 }
@@ -96,7 +92,6 @@ fun NoteSearchScreen(
 private fun NoteList(
     uiState: NoteSearchUIState,
     onEvent: (NoteSearchUIEvent) -> Unit,
-    snackBarHostState: SnackbarHostState,
     noteListResponse: NoteSearchState
 ) {
     val scope = rememberCoroutineScope()
@@ -106,9 +101,6 @@ private fun NoteList(
 
 
     Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
-        },
         contentWindowInsets = WindowInsets.safeContent,
         modifier = Modifier
             .fillMaxSize(),
@@ -282,7 +274,6 @@ private fun NoteSearchPreview() {
     NoteList(
         uiState = NoteSearchUIState(),
         onEvent = {},
-        snackBarHostState = SnackbarHostState(),
         noteListResponse = NoteSearchState(
             data = noteList
         )

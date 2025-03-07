@@ -24,8 +24,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -68,8 +66,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun RegistrationScreen(
     viewModel: RegistrationViewModel = hiltViewModel(),
-    navController: NavHostController,
-    snackBarHostState: SnackbarHostState
+    navController: NavHostController
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val registerResponse = viewModel.registerResponse.value
@@ -77,9 +74,6 @@ fun RegistrationScreen(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
-        },
         contentWindowInsets = WindowInsets.safeContent,
         modifier = Modifier
             .fillMaxSize()

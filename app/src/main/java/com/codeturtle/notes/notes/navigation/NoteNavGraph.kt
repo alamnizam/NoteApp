@@ -1,6 +1,5 @@
 package com.codeturtle.notes.notes.navigation
 
-import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -15,19 +14,16 @@ import com.codeturtle.notes.notes.notes_list.domain.model.NoteListResponseItem
 import com.codeturtle.notes.notes.notes_list.presentation.NoteListScreen
 import kotlin.reflect.typeOf
 
-fun NavGraphBuilder.noteNavGraph(
-    navController: NavHostController,
-    snackBarHostState: SnackbarHostState
-) {
+fun NavGraphBuilder.noteNavGraph(navController: NavHostController) {
     navigation<NoteNavGraph>(startDestination = NoteListScreen) {
         composable<NoteListScreen> {
-            NoteListScreen(navController = navController, snackBarHostState = snackBarHostState)
+            NoteListScreen(navController = navController)
         }
         composable<AddNoteScreen> {
-            AddNoteScreen(navController = navController, snackBarHostState = snackBarHostState)
+            AddNoteScreen(navController = navController)
         }
         composable<NoteSearchScreen> {
-            NoteSearchScreen(navController = navController, snackBarHostState = snackBarHostState)
+            NoteSearchScreen(navController = navController)
         }
         composable<NoteDetailScreen>(
             typeMap = mapOf(
@@ -38,7 +34,7 @@ fun NavGraphBuilder.noteNavGraph(
             )
         ) {
             val note = it.toRoute<NoteDetailScreen>()
-            NoteDetailScreen(navController = navController, snackBarHostState = snackBarHostState,note = note)
+            NoteDetailScreen(navController = navController, note = note)
         }
         composable<EditNoteScreen>(
             typeMap = mapOf(
@@ -49,7 +45,7 @@ fun NavGraphBuilder.noteNavGraph(
             )
         ) {
             val note = it.toRoute<EditNoteScreen>()
-            EditNoteScreen(navController = navController, snackBarHostState = snackBarHostState,note = note)
+            EditNoteScreen(navController = navController, note = note)
         }
     }
 }

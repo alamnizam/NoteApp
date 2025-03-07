@@ -22,8 +22,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -55,7 +53,6 @@ import kotlinx.coroutines.withContext
 fun EditNoteScreen(
     navController: NavHostController,
     viewModel: EditNoteViewModel = hiltViewModel(),
-    snackBarHostState: SnackbarHostState,
     note: EditNoteScreen
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
@@ -124,8 +121,7 @@ fun EditNoteScreen(
         uiState = uiState.value,
         onEvent = {
             viewModel.onEvent(it)
-        },
-        snackBarHostState = snackBarHostState
+        }
     )
 }
 
@@ -133,7 +129,6 @@ fun EditNoteScreen(
 @Composable
 fun EditNote(
     onEvent: (EditNoteUIEvent) -> Unit,
-    snackBarHostState: SnackbarHostState,
     uiState: EditNoteUIState
 ) {
     Scaffold(
@@ -155,9 +150,6 @@ fun EditNote(
                     }
                 }
             )
-        },
-        snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
         },
         contentWindowInsets = WindowInsets.safeContent, modifier = Modifier.fillMaxSize(),
         bottomBar = {
@@ -259,7 +251,6 @@ fun EditNote(
 private fun EditNotePreview() {
     EditNote(
         onEvent = {},
-        snackBarHostState = SnackbarHostState(),
         uiState = EditNoteUIState()
     )
 }

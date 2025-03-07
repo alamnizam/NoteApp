@@ -27,8 +27,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -68,8 +66,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun NoteListScreen(
     navController: NavHostController,
-    viewModel: NoteListViewModel = hiltViewModel(),
-    snackBarHostState: SnackbarHostState
+    viewModel: NoteListViewModel = hiltViewModel()
 ) {
     val noteListResponse = viewModel.noteListResponse.value
     val scope = rememberCoroutineScope()
@@ -111,8 +108,7 @@ fun NoteListScreen(
         noteListResponse = noteListResponse,
         onEvent = {
             viewModel.onEvent(it)
-        },
-        snackBarHostState = snackBarHostState
+        }
     )
 }
 
@@ -120,7 +116,6 @@ fun NoteListScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 private fun NoteList(
     onEvent: (NoteListUIEvent) -> Unit,
-    snackBarHostState: SnackbarHostState,
     noteListResponse: NoteListState
 ) {
     val scope = rememberCoroutineScope()
@@ -130,9 +125,6 @@ private fun NoteList(
 
 
     Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
-        },
         contentWindowInsets = WindowInsets.safeContent,
         modifier = Modifier
             .fillMaxSize(),
@@ -322,7 +314,6 @@ private fun NoteListPreview() {
         noteListResponse = NoteListState(
             data = noteList
         ),
-        onEvent = {},
-        snackBarHostState = SnackbarHostState()
+        onEvent = {}
     )
 }

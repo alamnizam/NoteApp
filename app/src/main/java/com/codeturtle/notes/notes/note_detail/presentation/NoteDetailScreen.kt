@@ -17,8 +17,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -46,7 +44,6 @@ import com.codeturtle.notes.notes.notes_list.domain.model.NoteListResponseItem
 fun NoteDetailScreen(
     navController: NavHostController,
     viewModel: NoteDetailViewModel = hiltViewModel(),
-    snackBarHostState: SnackbarHostState,
     note: NoteDetailScreen
 ) {
     LaunchedEffect(key1 = true) {
@@ -66,8 +63,7 @@ fun NoteDetailScreen(
         note = note,
         onEvent = {
             viewModel.onEvent(it)
-        },
-        snackBarHostState = snackBarHostState
+        }
     )
 }
 
@@ -75,8 +71,7 @@ fun NoteDetailScreen(
 @Composable
 fun NoteDetail(
     note: NoteDetailScreen,
-    onEvent: (NoteDetailUIEvent) -> Unit,
-    snackBarHostState: SnackbarHostState
+    onEvent: (NoteDetailUIEvent) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -110,9 +105,6 @@ fun NoteDetail(
                     }
                 }
             )
-        },
-        snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
         },
         contentWindowInsets = WindowInsets.safeContent, modifier = Modifier.fillMaxSize(),
     ) {
@@ -181,7 +173,6 @@ private fun NoteDetailPreview() {
                 date = 1740338779
             )
         ),
-        onEvent = {},
-        snackBarHostState = SnackbarHostState()
+        onEvent = {}
     )
 }

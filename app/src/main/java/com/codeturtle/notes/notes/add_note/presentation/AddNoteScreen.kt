@@ -22,8 +22,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -54,8 +52,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun AddNoteScreen(
     navController: NavHostController,
-    viewModel: AddNoteViewModel = hiltViewModel(),
-    snackBarHostState: SnackbarHostState
+    viewModel: AddNoteViewModel = hiltViewModel()
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val addNoteResponse = viewModel.addNoteResponse.value
@@ -117,8 +114,7 @@ fun AddNoteScreen(
         uiState = uiState.value,
         onEvent = {
             viewModel.onEvent(it)
-        },
-        snackBarHostState = snackBarHostState
+        }
     )
 }
 
@@ -126,8 +122,7 @@ fun AddNoteScreen(
 @Composable
 private fun AddNote(
     uiState: AddNoteUIState,
-    onEvent: (AddNoteUIEvent) -> Unit,
-    snackBarHostState: SnackbarHostState
+    onEvent: (AddNoteUIEvent) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -148,9 +143,6 @@ private fun AddNote(
                     }
                 }
             )
-        },
-        snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
         },
         contentWindowInsets = WindowInsets.safeContent, modifier = Modifier.fillMaxSize(),
         bottomBar = {
@@ -249,8 +241,7 @@ private fun AddNote(
 private fun AddNotePrev() {
     AddNote(
         uiState = AddNoteUIState(),
-        onEvent = {},
-        snackBarHostState = SnackbarHostState()
+        onEvent = {}
     )
 }
 
