@@ -1,7 +1,7 @@
 package com.codeturtle.notes.presentation
 
-import com.codeturtle.notes.authentication.login.domain.model.LoginResponse
 import com.codeturtle.notes.common.utils.ErrorResponse
+import com.codeturtle.notes.domain.model.LoginResponse
 
 data class LoginState(
     val isLoading: Boolean = false,
