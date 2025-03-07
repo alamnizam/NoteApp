@@ -39,6 +39,7 @@ dependencies {
     //modules
     implementation(project(":common"))
     implementation(project(":authentication:login:domain"))
+    implementation(project(":navigation"))
 
     //Core
     implementation(libs.androidx.core.ktx)
