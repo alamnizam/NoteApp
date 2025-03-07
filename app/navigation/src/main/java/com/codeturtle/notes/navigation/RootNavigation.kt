@@ -19,6 +19,6 @@ fun RootNavigation(
         startDestination = if(isLoggedIn) Destinations.Note.route else Destinations.Auth.route
     ) {
         authNavGraph(navController = navController)
-        noteNavGraph(navController = navController)
+//        noteNavGraph(navController = navController)
     }
 }
