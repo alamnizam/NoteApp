@@ -49,14 +49,28 @@ android {
 }
 dependencies {
     //modules
-    implementation(project(":common"))
-    implementation(project(":navigation"))
     implementation(project(":app:navigation"))
     implementation(project(":authentication:login:data"))
     implementation(project(":authentication:login:domain"))
     implementation(project(":authentication:login:presentation"))
     implementation(project(":authentication:navigation"))
-
+    implementation(project(":authentication:registration:data"))
+    implementation(project(":authentication:registration:domain"))
+    implementation(project(":authentication:registration:presentation"))
+    implementation(project(":common"))
+    implementation(project(":navigation"))
+    implementation(project(":notes:add_note:data"))
+    implementation(project(":notes:add_note:domain"))
+    implementation(project(":notes:add_note:presentation"))
+    implementation(project(":notes:edit_note:data"))
+    implementation(project(":notes:edit_note:domain"))
+    implementation(project(":notes:edit_note:presentation"))
+    implementation(project(":notes:navigation"))
+    implementation(project(":notes:note_details:presentation"))
+    implementation(project(":notes:note_list:data"))
+    implementation(project(":notes:note_list:domain"))
+    implementation(project(":notes:note_list:presentation"))
+    implementation(project(":notes:note_search:presentation"))
 
 
     //core

@@ -12,10 +12,10 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.compose.rememberNavController
-import com.codeturtle.notes.app.ui.theme.NotesTheme
-import com.codeturtle.notes.common.preference.tokken.TokenManager
 import com.codeturtle.notes.common.snakbar.ObserveAsEvents
 import com.codeturtle.notes.common.snakbar.SnackBarController
+import com.codeturtle.notes.common.theme.NotesTheme
+import com.codeturtle.notes.common.tokken.TokenManager
 import com.codeturtle.notes.navigation.RootNavigation
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
