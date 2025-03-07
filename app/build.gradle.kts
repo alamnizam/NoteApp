@@ -60,17 +60,18 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    //dagger hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+    kspAndroidTest(libs.hilt.android.compiler)
+    androidTestImplementation(libs.hilt.android.testing)
+    androidTestAnnotationProcessor(libs.hilt.android.compiler)
 
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.core.ktx)
-    implementation(libs.androidx.junit.ktx)
-    implementation(libs.androidx.material.icons.extended.android)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.core.splashscreen)
-    implementation(libs.lottie.compose)
-    implementation(libs.androidx.rules)
-    testImplementation(libs.junit.jupiter)
+    //retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
 
     //compose
     implementation(platform(libs.androidx.compose.bom))
@@ -85,45 +86,37 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     androidTestImplementation(libs.androidx.ui.test.junit4)
 
+    //Icons
+    implementation(libs.androidx.material.icons.extended.android)
 
-    //test String resource
-    testImplementation(libs.robolectric)
+    //serialization
+    implementation(libs.kotlinx.serialization.json)
 
-    //dagger hilt
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)
-    kspAndroidTest(libs.hilt.android.compiler)
-    androidTestImplementation(libs.hilt.android.testing)
-    androidTestAnnotationProcessor(libs.hilt.android.compiler)
+    //navigation
+    implementation(libs.androidx.navigation.compose)
 
-    //mockito
-    @Suppress("UnstableApiUsage")
-    mockitoAgent(libs.mockito.core) { isTransitive = false }
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.turbine)
-    testImplementation(libs.mockito.kotlin)
-    testImplementation(libs.mockito.inline)
+    //datastore preference
+    implementation(libs.datastore.preferences)
 
     //room
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
-    //retrofit
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.logging.interceptor)
-
-    //coroutines
-    testImplementation(libs.kotlinx.coroutines.test)
-
     //coil
     implementation(libs.coil.compose)
 
-    //navigation
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.kotlinx.serialization.json)
+    //test String resource
+    testImplementation(libs.robolectric)
+
+    //mockito
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.turbine)
+    testImplementation(libs.mockito.kotlin)
+    testImplementation(libs.mockito.inline)
+
+    //coroutines test
+    testImplementation(libs.kotlinx.coroutines.test)
 
     //Idling resource
     implementation(libs.androidx.espresso.idling.resource)
@@ -136,6 +129,13 @@ dependencies {
     androidTestImplementation(libs.okhttp)
     androidTestImplementation(libs.okhttp.tls)
 
-    //datastore preference
-    implementation(libs.datastore.preferences)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.core.ktx)
+    implementation(libs.androidx.junit.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.lottie.compose)
+    implementation(libs.androidx.rules)
+    testImplementation(libs.junit.jupiter)
 }
