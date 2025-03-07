@@ -10,12 +10,12 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.IdlingRegistry
-import com.codeturtle.notes.R
 import com.codeturtle.notes.MainActivity
+import com.codeturtle.notes.R
 import com.codeturtle.notes.authentication.login.mockwebserver.LoginMockServerDispatcher
 import com.codeturtle.notes.common.constant.Pref.TEST_DATA_STORE_FILE_NAME
 import com.codeturtle.notes.common.constant.ServerUrlList.LOGIN
-import com.codeturtle.notes.common.preference.tokken.TokenManager
+import com.codeturtle.notes.common.tokken.TokenManager
 import com.jakewharton.espresso.OkHttp3IdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
