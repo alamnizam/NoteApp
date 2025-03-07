@@ -4,14 +4,14 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.codeturtle.notes.authentication.registration.data.model.RegisterRequest
-import com.codeturtle.notes.authentication.registration.domain.usecase.RegisterUseCase
-import com.codeturtle.notes.common.preference.tokken.TokenManager
+import com.codeturtle.notes.common.tokken.TokenManager
 import com.codeturtle.notes.common.utils.Resource
 import com.codeturtle.notes.common.validation.ValidateConfirmPassword
 import com.codeturtle.notes.common.validation.ValidateEmail
 import com.codeturtle.notes.common.validation.ValidatePassword
 import com.codeturtle.notes.common.validation.ValidateUsername
+import com.codeturtle.notes.domain.model.RegisterRequest
+import com.codeturtle.notes.domain.usecase.RegisterUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
