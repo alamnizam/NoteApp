@@ -1,4 +1,4 @@
-package com.codeturtle.presentation
+package com.codeturtle.notes.presentation
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

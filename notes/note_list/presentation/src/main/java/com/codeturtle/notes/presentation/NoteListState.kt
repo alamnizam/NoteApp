@@ -1,4 +1,4 @@
-package com.codeturtle.presentation
+package com.codeturtle.notes.presentation
 
 import com.codeturtle.notes.common.utils.ErrorResponse
 import com.codeturtle.notes.domain.model.NoteListResponseItem

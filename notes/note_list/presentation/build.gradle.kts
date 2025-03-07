@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.codeturtle.presentation"
+    namespace = "com.codeturtle.notes.presentation"
     compileSdk = 35
 
     defaultConfig {

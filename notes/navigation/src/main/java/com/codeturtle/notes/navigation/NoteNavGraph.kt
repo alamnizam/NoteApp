@@ -7,7 +7,7 @@ import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import com.codeturtle.notes.common.utils.CustomNavType
 import com.codeturtle.notes.domain.model.NoteListResponseItem
-import com.codeturtle.presentation.NoteListScreen
+import com.codeturtle.notes.presentation.NoteListScreen
 import com.codeturtle.notes.presentation.AddNoteScreen
 import com.codeturtle.notes.presentation.EditNoteScreen
 import com.codeturtle.notes.presentation.NoteDetailScreen
