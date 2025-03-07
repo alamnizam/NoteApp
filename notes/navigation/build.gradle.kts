@@ -37,11 +37,11 @@ dependencies {
     //modules
     implementation(project(":common"))
     implementation(project(":navigation"))
-    implementation(project(":notes:add_note:presentation"))
-    implementation(project(":notes:edit_note:presentation"))
-    implementation(project(":notes:note_details:presentation"))
-    implementation(project(":notes:note_list:domain"))
     implementation(project(":notes:note_list:presentation"))
+    implementation(project(":notes:note_list:domain"))
+    implementation(project(":notes:add_note:presentation"))
+    implementation(project(":notes:note_details:presentation"))
+    implementation(project(":notes:edit_note:presentation"))
 
     //core
     implementation(libs.androidx.core.ktx)
