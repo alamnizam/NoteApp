@@ -99,20 +99,18 @@ fun EditNoteScreen(
                 withContext(Dispatchers.Main) {
                     navController.popBackStack(
                         route = NoteListScreen,
-                        inclusive = true
+                        inclusive = false
                     )
-                    navController.navigate(NoteListScreen)
-
                 }
             }
-            if (editNoteResponse.errorData != null) {
-                scope.launch {
-                    SnackBarController.sendEvent(
-                        event = SnackBarEvent(
-                            message = editNoteResponse.errorData.message
-                        )
+        }
+        if (editNoteResponse.errorData != null) {
+            scope.launch {
+                SnackBarController.sendEvent(
+                    event = SnackBarEvent(
+                        message = editNoteResponse.errorData.message
                     )
-                }
+                )
             }
         }
     }
@@ -173,7 +171,7 @@ fun EditNote(
                 value = uiState.title,
                 onValueChange = { onEvent(EditNoteUIEvent.OnTitleChanged(it)) },
                 textStyle = TextStyle(
-                    color =MaterialTheme.colorScheme.onSurface ,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 ),
