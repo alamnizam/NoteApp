@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.dagger)
     alias(libs.plugins.ksp)
 }
@@ -32,14 +33,18 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
 
     //modules
     implementation(project(":common"))
-    implementation(project(":notes:edit_note:domain"))
     implementation(project(":navigation"))
+    implementation(project(":notes:edit_note:domain"))
+    implementation(project(":notes:note_list:domain"))
 
     //Core
     implementation(libs.androidx.core.ktx)
