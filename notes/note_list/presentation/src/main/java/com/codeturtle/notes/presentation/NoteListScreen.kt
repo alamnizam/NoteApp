@@ -45,6 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -68,8 +69,18 @@ fun NoteListScreen(
     navController: NavHostController,
     viewModel: NoteListViewModel = hiltViewModel()
 ) {
-    val noteListResponse = viewModel.noteListResponse.value
+    val noteListResponse = viewModel.noteListResponse.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
+
+    val isApiCalled = remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        if (!isApiCalled.value) {
+            println("API call triggered") // Debug log
+            viewModel.getNoteList()
+            isApiCalled.value = true
+        }
+    }
 
     LaunchedEffect(key1 = true) {
         viewModel.searchIconClickedEvent.collect {
@@ -105,7 +116,7 @@ fun NoteListScreen(
     }
 
     NoteList(
-        noteListResponse = noteListResponse,
+        noteListResponse = noteListResponse.value,
         onEvent = {
             viewModel.onEvent(it)
         }
