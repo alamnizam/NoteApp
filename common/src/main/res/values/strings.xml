@@ -42,4 +42,8 @@
     <string name="note_added_successfully">Note Added Successfully</string>
     <string name="note_edited_successfully">Note Edited Successfully</string>
     <string name="note_search">Note Search</string>
+    <string name="edit_icon">Edit Icon</string>
+    <string name="delete_icon">Delete Icon</string>
+    <string name="are_you_sure_you_want_to_delete_this_note">Are you sure \nyou want to delete this note?</string>
+    <string name="note_deleted_successfully">Note Deleted Successfully</string>
 </resources>

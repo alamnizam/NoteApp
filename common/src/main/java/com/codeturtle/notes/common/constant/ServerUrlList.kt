@@ -7,4 +7,5 @@ object ServerUrlList {
     const val GET_NOTES = "notes"
     const val ADD_NOTE = "notes/create"
     const val UPDATE_NOTE = "notes/update"
+    const val DELETE_NOTE = "notes/delete"
 }

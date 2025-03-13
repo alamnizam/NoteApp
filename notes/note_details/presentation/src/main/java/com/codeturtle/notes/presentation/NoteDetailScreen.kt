@@ -11,6 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -21,7 +22,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -35,10 +43,18 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.codeturtle.notes.common.R
+import com.codeturtle.notes.common.component.AlertDialog
+import com.codeturtle.notes.common.component.ProgressBar
+import com.codeturtle.notes.common.snakbar.SnackBarController
+import com.codeturtle.notes.common.snakbar.SnackBarEvent
 import com.codeturtle.notes.common.utils.HandleDate.convertLongToDate
 import com.codeturtle.notes.domain.model.NoteListResponseItem
 import com.codeturtle.notes.navigation.EditNoteScreen
 import com.codeturtle.notes.navigation.NoteDetailScreen
+import com.codeturtle.notes.navigation.NoteListScreen
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun NoteDetailScreen(
@@ -46,6 +62,53 @@ fun NoteDetailScreen(
     viewModel: NoteDetailViewModel = hiltViewModel(),
     note: NoteDetailScreen
 ) {
+    val deleteNoteResponse = viewModel.deleteNoteResponse.value
+    val deleteIconEvent = viewModel.deleteIconEvent.collectAsState(initial = null)
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    deleteIconEvent.value.let {
+        if(deleteNoteResponse.isLoading){
+            ProgressBar()
+        }
+        if (deleteNoteResponse.errorMessage.isNotBlank()) {
+            scope.launch {
+                SnackBarController.sendEvent(
+                    event = SnackBarEvent(
+                        message = deleteNoteResponse.errorMessage
+                    )
+                )
+            }
+        }
+        if (deleteNoteResponse.data != null) {
+            scope.launch {
+                val job = launch {
+                    SnackBarController.sendEvent(
+                        event = SnackBarEvent(
+                            message = context.getString(R.string.note_deleted_successfully)
+                        )
+                    )
+                }
+                job.join()
+                withContext(Dispatchers.Main) {
+                    navController.popBackStack(
+                        route = NoteListScreen,
+                        inclusive = false
+                    )
+                }
+            }
+        }
+        if (deleteNoteResponse.errorData != null) {
+            scope.launch {
+                SnackBarController.sendEvent(
+                    event = SnackBarEvent(
+                        message = deleteNoteResponse.errorData.message
+                    )
+                )
+            }
+        }
+    }
+
     LaunchedEffect(key1 = true) {
         viewModel.backArrowIconEvent.collect{
             navController.popBackStack()
@@ -73,6 +136,16 @@ fun NoteDetail(
     note: NoteDetailScreen,
     onEvent: (NoteDetailUIEvent) -> Unit
 ) {
+    var showDialog by remember { mutableStateOf(false) }
+    if(showDialog){
+        AlertDialog(
+            heading = stringResource(R.string.are_you_sure_you_want_to_delete_this_note),
+            onYesClicked = {
+                onEvent(NoteDetailUIEvent.OnDeleteNoteClicked(note.note.id))
+            },
+            onNoClicked = { showDialog = false }
+        )
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -100,7 +173,17 @@ fun NoteDetail(
                     ) {
                         Icon(
                             imageVector = Icons.Filled.Edit,
-                            contentDescription = stringResource(R.string.search_icon)
+                            contentDescription = stringResource(R.string.edit_icon)
+                        )
+                    }
+
+                    IconButton(
+                        modifier = Modifier.testTag("DeleteNote"),
+                        onClick = { showDialog = true }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = stringResource(R.string.delete_icon)
                         )
                     }
                 }

@@ -44,6 +44,8 @@ dependencies {
     implementation(project(":common"))
     implementation(project(":navigation"))
     implementation(project(":notes:note_list:domain"))
+    implementation(project(":notes:delete_notes:data"))
+    implementation(project(":notes:delete_notes:domain"))
 
     //Core
     implementation(libs.androidx.core.ktx)
