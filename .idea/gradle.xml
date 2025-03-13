@@ -31,6 +31,7 @@
             <option value="$PROJECT_DIR$/notes/add_note/presentation" />
             <option value="$PROJECT_DIR$/notes/delete_notes" />
             <option value="$PROJECT_DIR$/notes/delete_notes/data" />
+            <option value="$PROJECT_DIR$/notes/delete_notes/domain" />
             <option value="$PROJECT_DIR$/notes/edit_note" />
             <option value="$PROJECT_DIR$/notes/edit_note/data" />
             <option value="$PROJECT_DIR$/notes/edit_note/domain" />
