@@ -14,9 +14,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.compose.rememberNavController
 import com.codeturtle.notes.common.snakbar.ObserveAsEvents
 import com.codeturtle.notes.common.snakbar.SnackBarController
-import com.codeturtle.notes.common.theme.NotesTheme
 import com.codeturtle.notes.common.tokken.TokenManager
 import com.codeturtle.notes.navigation.RootNavigation
+import com.codeturtle.notes.theme.NotesTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject

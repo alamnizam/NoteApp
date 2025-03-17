@@ -32,6 +32,7 @@ android {
 }
 dependencies {
     //modules
+    implementation(project(":theme"))
     implementation(project(":app:navigation"))
     implementation(project(":authentication:login:data"))
     implementation(project(":authentication:login:domain"))
