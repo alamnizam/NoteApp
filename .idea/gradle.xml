@@ -45,6 +45,7 @@
             <option value="$PROJECT_DIR$/notes/note_list/presentation" />
             <option value="$PROJECT_DIR$/notes/note_search" />
             <option value="$PROJECT_DIR$/notes/note_search/presentation" />
+            <option value="$PROJECT_DIR$/theme" />
           </set>
         </option>
       </GradleProjectSettings>
