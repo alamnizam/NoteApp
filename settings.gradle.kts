@@ -21,7 +21,9 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Notes"
+rootProject.name = "NotesApp"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 include(":app")
 include(":authentication:login:data")
 include(":authentication:login:domain")

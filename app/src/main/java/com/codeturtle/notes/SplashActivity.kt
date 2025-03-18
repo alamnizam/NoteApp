@@ -9,8 +9,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.codeturtle.notes.common.theme.NotesTheme
 import com.codeturtle.notes.common.tokken.TokenManager
+import com.codeturtle.notes.theme.NotesTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
