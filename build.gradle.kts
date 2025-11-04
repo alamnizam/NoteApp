@@ -19,10 +19,10 @@ plugins {
 }
 
 fun BaseExtension.defaultConfig(){
-    compileSdkVersion(35)
+    compileSdkVersion(36)
     defaultConfig {
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")

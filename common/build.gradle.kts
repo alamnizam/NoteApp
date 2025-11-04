@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.codeturtle.notes.common"
-    compileSdk = 35
+    compileSdk = 36
 
     buildFeatures {
         compose = true
