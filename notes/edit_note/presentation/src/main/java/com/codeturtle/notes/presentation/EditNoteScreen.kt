@@ -36,7 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.codeturtle.notes.common.R
@@ -52,7 +52,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun EditNoteScreen(
     navController: NavHostController,
-    viewModel: EditNoteViewModel = hiltViewModel(),
+    viewModel: EditNoteViewModel = hiltViewModel<EditNoteViewModel>(),
     note: EditNoteScreen
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()

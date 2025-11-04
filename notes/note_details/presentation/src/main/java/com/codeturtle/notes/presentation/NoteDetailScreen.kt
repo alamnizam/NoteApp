@@ -40,7 +40,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.codeturtle.notes.common.R
 import com.codeturtle.notes.common.component.AlertDialog
@@ -59,7 +59,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun NoteDetailScreen(
     navController: NavHostController,
-    viewModel: NoteDetailViewModel = hiltViewModel(),
+    viewModel: NoteDetailViewModel = hiltViewModel<NoteDetailViewModel>(),
     note: NoteDetailScreen
 ) {
     val deleteNoteResponse = viewModel.deleteNoteResponse.value
