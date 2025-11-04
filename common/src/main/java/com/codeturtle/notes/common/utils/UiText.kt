@@ -11,7 +11,7 @@ sealed class UiText {
     ): UiText()
 
     class StringResource(
-        @StringRes val id: Int,
+        @param:StringRes val id: Int,
         vararg val args: Any
     ): UiText()
 
