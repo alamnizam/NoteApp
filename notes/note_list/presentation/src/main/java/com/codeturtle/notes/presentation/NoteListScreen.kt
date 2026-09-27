@@ -35,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -52,8 +53,8 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.codeturtle.notes.common.R
 import com.codeturtle.notes.common.component.ProgressBar
-import com.codeturtle.notes.common.snackbar.SnackBarController
-import com.codeturtle.notes.common.snackbar.SnackBarEvent
+import com.codeturtle.notes.common.snakbar.SnackBarController
+import com.codeturtle.notes.common.snakbar.SnackBarEvent
 import com.codeturtle.notes.common.utils.HandleDate.convertLongToDate
 import com.codeturtle.notes.domain.model.NoteListResponseItem
 import com.codeturtle.notes.navigation.AddNoteScreen
@@ -61,6 +62,7 @@ import com.codeturtle.notes.navigation.AuthNavGraph
 import com.codeturtle.notes.navigation.NoteDetailScreen
 import com.codeturtle.notes.navigation.NoteNavGraph
 import com.codeturtle.notes.navigation.NoteSearchScreen
+import kotlinx.coroutines.launch
 
 @Composable
 fun NoteListScreen(
@@ -68,6 +70,17 @@ fun NoteListScreen(
     viewModel: NoteListViewModel = hiltViewModel<NoteListViewModel>()
 ) {
     val noteListResponse = viewModel.noteListResponse.collectAsStateWithLifecycle()
+    val scope = rememberCoroutineScope()
+
+    val isApiCalled = remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        if (!isApiCalled.value) {
+            println("API call triggered") // Debug log
+            viewModel.getNoteList()
+            isApiCalled.value = true
+        }
+    }
 
     LaunchedEffect(key1 = true) {
         viewModel.searchIconClickedEvent.collect {
@@ -77,6 +90,9 @@ fun NoteListScreen(
 
     LaunchedEffect(key1 = true) {
         viewModel.logoutIconClickedEvent.collect {
+            scope.launch {
+                viewModel.tokenManager.clearData()
+            }
             navController.popBackStack(
                 route = NoteNavGraph,
                 inclusive = true
@@ -113,6 +129,7 @@ private fun NoteList(
     onEvent: (NoteListUIEvent) -> Unit,
     noteListResponse: NoteListState
 ) {
+    val scope = rememberCoroutineScope()
     val isPlaying by remember { mutableStateOf(true) }
     val speed by remember { mutableFloatStateOf(1F) }
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.empty_list_lottie))
@@ -175,20 +192,24 @@ private fun NoteList(
             }
             if (noteListResponse.errorMessage.isNotBlank()) {
                 LaunchedEffect(key1 = true) {
-                    SnackBarController.sendEvent(
-                        event = SnackBarEvent(
-                            message = noteListResponse.errorMessage
+                    scope.launch {
+                        SnackBarController.sendEvent(
+                            event = SnackBarEvent(
+                                message = noteListResponse.errorMessage
+                            )
                         )
-                    )
+                    }
                 }
             }
             if (noteListResponse.dataError != null) {
                 LaunchedEffect(key1 = true) {
-                    SnackBarController.sendEvent(
-                        event = SnackBarEvent(
-                            message = noteListResponse.dataError.message
+                    scope.launch {
+                        SnackBarController.sendEvent(
+                            event = SnackBarEvent(
+                                message = noteListResponse.dataError.message
+                            )
                         )
-                    )
+                    }
                 }
             }
             if (noteListResponse.data != null) {

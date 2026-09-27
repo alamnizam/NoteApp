@@ -4,9 +4,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.codeturtle.notes.common.token.TokenManager
+import com.codeturtle.notes.common.tokken.TokenManager
 import com.codeturtle.notes.common.utils.Resource
-import com.codeturtle.notes.common.utils.UiText
 import com.codeturtle.notes.common.validation.ValidateEmail
 import com.codeturtle.notes.common.validation.ValidateLoginPassword
 import com.codeturtle.notes.domain.model.LoginRequest
@@ -15,6 +14,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,9 +24,11 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val validateEmail: ValidateEmail,
     private val validateLoginPassword: ValidateLoginPassword,
-    private val useCase: LoginUseCase,
-    private val tokenManager: TokenManager
+    private val useCase: LoginUseCase
 ) : ViewModel() {
+
+    @Inject
+    lateinit var tokenManager: TokenManager
 
     private val _uiState = MutableStateFlow(LoginUIState())
     val uiState: StateFlow<LoginUIState> = _uiState
@@ -35,6 +38,9 @@ class LoginViewModel @Inject constructor(
 
     private val _registerClickEvent = Channel<RegisterClickEvent>()
     val registerClickEvent = _registerClickEvent.receiveAsFlow()
+
+    private val _responseEvent = Channel<ResponseEvent>()
+    val responseEvent = _responseEvent.receiveAsFlow()
 
     fun onEvent(uiEvent: LoginUIEvent) {
         when (uiEvent) {
@@ -61,71 +67,61 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun loginForm() {
-        val formState = _uiState.value
-        val validation = validateForm(formState)
+        val emailResult = validateEmail.execute(_uiState.value.email)
+        val passwordResult = validateLoginPassword.execute(_uiState.value.password)
 
-        updateValidationState(formState, validation)
+        val hasError = listOf(
+            emailResult, passwordResult
+        ).any { !it.success }
 
-        if (validation.isValid) {
-            loginUser(formState.toLoginRequest())
+        if (hasError) {
+            _uiState.value = _uiState.value.copy(
+                emailError = emailResult.errorMessage,
+                passwordError = passwordResult.errorMessage
+            )
+        } else {
+            _uiState.value = _uiState.value.copy(
+                emailError = null,
+                passwordError = null
+            )
+        }
+        if (!hasError) {
+            val request = LoginRequest(
+                email = _uiState.value.email,
+                password = _uiState.value.password
+            )
+            loginUser(request)
+        }
+        viewModelScope.launch {
+            _responseEvent.send(ResponseEvent.Callback)
         }
     }
 
-    private fun validateForm(state: LoginUIState): LoginValidation {
-        val emailResult = validateEmail.execute(state.email)
-        val passwordResult = validateLoginPassword.execute(state.password)
+    private fun loginUser(request: LoginRequest) = viewModelScope.launch {
+        useCase(request).onEach {
+            when (it) {
+                is Resource.Loading -> {
+                    _loginResponse.value = LoginState(isLoading = true)
+                }
 
-        return LoginValidation(
-            emailError = emailResult.errorMessage,
-            passwordError = passwordResult.errorMessage,
-            isValid = emailResult.success && passwordResult.success
-        )
-    }
+                is Resource.Error -> {
+                    _loginResponse.value = LoginState(errorMessage = it.errorMessage.toString())
+                }
 
-    private fun updateValidationState(
-        state: LoginUIState,
-        validation: LoginValidation
-    ) {
-        _uiState.value = state.copy(
-            emailError = validation.emailError,
-            passwordError = validation.passwordError
-        )
-    }
+                is Resource.DataError -> {
+                    _loginResponse.value = LoginState(errorData = it.errorData)
+                }
 
-    private fun loginUser(request: LoginRequest) {
-        viewModelScope.launch {
-            useCase(request).collect { resource ->
-                when (resource) {
-                    is Resource.Loading -> _loginResponse.value = LoginState(isLoading = true)
-                    is Resource.Error -> {
-                        _loginResponse.value =
-                            LoginState(errorMessage = resource.errorMessage.toString())
-                    }
-                    is Resource.DataError -> {
-                        _loginResponse.value = LoginState(errorData = resource.errorData)
-                    }
-                    is Resource.Success -> {
-                        resource.data?.let { response ->
-                            tokenManager.saveToken(response.message)
-                            tokenManager.saveIsLoggedIn(true)
-                        }
-                        _loginResponse.value = LoginState(data = resource.data)
-                    }
+                is Resource.Success -> {
+                    _loginResponse.value = LoginState(data = it.data)
                 }
             }
-        }
+        }.launchIn(viewModelScope)
     }
 
-    private fun LoginUIState.toLoginRequest() = LoginRequest(
-        email = email,
-        password = password
-    )
-
-    private data class LoginValidation(
-        val emailError: UiText?,
-        val passwordError: UiText?,
-        val isValid: Boolean
-    )
+    sealed class ResponseEvent {
+        data object Callback : ResponseEvent()
+    }
 
     sealed class RegisterClickEvent {
         data object Callback : RegisterClickEvent()

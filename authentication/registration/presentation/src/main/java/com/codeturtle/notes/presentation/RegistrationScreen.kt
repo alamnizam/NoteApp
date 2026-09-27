@@ -27,8 +27,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -52,11 +54,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.codeturtle.notes.common.R
 import com.codeturtle.notes.common.component.ProgressBar
-import com.codeturtle.notes.common.snackbar.SnackBarController
-import com.codeturtle.notes.common.snackbar.SnackBarEvent
+import com.codeturtle.notes.common.snakbar.SnackBarController
+import com.codeturtle.notes.common.snakbar.SnackBarEvent
 import com.codeturtle.notes.navigation.AuthNavGraph
 import com.codeturtle.notes.navigation.LoginScreen
 import com.codeturtle.notes.navigation.NoteNavGraph
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun RegistrationScreen(
@@ -65,6 +70,8 @@ fun RegistrationScreen(
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val registerResponse = viewModel.registerResponse.value
+    val responseEvent = viewModel.responseEvent.collectAsState(initial = null)
+    val scope = rememberCoroutineScope()
     val context = LocalContext.current
     Scaffold(
         contentWindowInsets = WindowInsets.safeContent,
@@ -80,32 +87,45 @@ fun RegistrationScreen(
                 }
             }
 
-            if (registerResponse.isLoading) {
-                ProgressBar()
-            }
-
-            LaunchedEffect(registerResponse) {
-                when {
-                    registerResponse.errorMessage.isNotBlank() -> {
-                        SnackBarController.sendEvent(
-                            event = SnackBarEvent(message = registerResponse.errorMessage)
-                        )
-                    }
-                    registerResponse.data != null -> {
+            responseEvent.value.let {
+                if (registerResponse.isLoading) {
+                    ProgressBar()
+                }
+                if (registerResponse.errorMessage.isNotBlank()) {
+                    scope.launch {
                         SnackBarController.sendEvent(
                             event = SnackBarEvent(
-                                message = context.getString(R.string.user_registered_successfully)
+                                message = registerResponse.errorMessage
                             )
                         )
-                        navController.popBackStack(
-                            route = AuthNavGraph,
-                            inclusive = true
-                        )
-                        navController.navigate(NoteNavGraph)
                     }
-                    registerResponse.errorData != null -> {
+                }
+                if (registerResponse.data != null) {
+                    scope.launch {
+                        val job = launch {
+                            viewModel.tokenManager.saveToken(registerResponse.data.message)
+                            viewModel.tokenManager.saveIsLoggedIn(true)
+                            SnackBarController.sendEvent(
+                                event = SnackBarEvent(
+                                    message = context.getString(R.string.user_registered_successfully)
+                                )
+                            )
+                        }
+                        job.join()
+                        withContext(Dispatchers.Main) {
+                            navController.popBackStack(
+                                route = AuthNavGraph, inclusive = true
+                            )
+                            navController.navigate(NoteNavGraph)
+                        }
+                    }
+                }
+                if (registerResponse.errorData != null) {
+                    scope.launch {
                         SnackBarController.sendEvent(
-                            event = SnackBarEvent(message = registerResponse.errorData.message)
+                            event = SnackBarEvent(
+                                message = registerResponse.errorData.message
+                            )
                         )
                     }
                 }
@@ -168,7 +188,7 @@ fun RegistrationForm(
             shape = RoundedCornerShape(12.dp),
             singleLine = true,
             onValueChange = { onEvent(RegistrationUIEvent.UserNameChanged(it)) },
-            label = { Text(stringResource(R.string.user_name)) },
+            label = { Text(stringResource(R.string.user_name)   ) },
             isError = uiState.userNameError != null,
             supportingText = {
                 uiState.userNameError?.asString()?.let {

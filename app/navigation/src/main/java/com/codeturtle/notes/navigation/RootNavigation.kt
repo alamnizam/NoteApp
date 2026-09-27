@@ -16,7 +16,7 @@ fun RootNavigation(
     NavHost(
         modifier = Modifier.padding(innerPadding),
         navController = navController,
-        startDestination = if (isLoggedIn) Destinations.Note.route else Destinations.Auth.route
+        startDestination = if(isLoggedIn) Destinations.Note.route else Destinations.Auth.route
     ) {
         authNavGraph(navController = navController)
         noteNavGraph(navController = navController)

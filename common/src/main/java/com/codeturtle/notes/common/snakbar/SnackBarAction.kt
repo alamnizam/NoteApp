@@ -1,4 +1,4 @@
-package com.codeturtle.notes.common.snackbar
+package com.codeturtle.notes.common.snakbar
 
 data class SnackBarAction(
     val name: String,

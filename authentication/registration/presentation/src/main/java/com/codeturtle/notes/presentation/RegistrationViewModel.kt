@@ -4,9 +4,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.codeturtle.notes.common.token.TokenManager
+import com.codeturtle.notes.common.tokken.TokenManager
 import com.codeturtle.notes.common.utils.Resource
-import com.codeturtle.notes.common.utils.UiText
 import com.codeturtle.notes.common.validation.ValidateConfirmPassword
 import com.codeturtle.notes.common.validation.ValidateEmail
 import com.codeturtle.notes.common.validation.ValidatePassword
@@ -17,6 +16,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,15 +28,20 @@ class RegistrationViewModel @Inject constructor(
     private val validateEmail: ValidateEmail,
     private val validatePassword: ValidatePassword,
     private val validateConfirmPassword: ValidateConfirmPassword,
-    private val useCase: RegisterUseCase,
-    private val tokenManager: TokenManager
+    private val useCase: RegisterUseCase
 ) : ViewModel() {
+
+    @Inject
+    lateinit var tokenManager: TokenManager
 
     private val _uiState = MutableStateFlow(RegistrationUIState())
     val uiState: StateFlow<RegistrationUIState> = _uiState
 
     private val _registerResponse = mutableStateOf(RegisterState())
     val registerResponse: State<RegisterState> = _registerResponse
+
+    private val _responseEvent = Channel<ResponseEvent>()
+    val responseEvent = _responseEvent.receiveAsFlow()
 
     private val _loginClickEvent = Channel<LoginClickEvent>()
     val loginClickEvent = _loginClickEvent.receiveAsFlow()
@@ -76,84 +82,72 @@ class RegistrationViewModel @Inject constructor(
     }
 
     private fun registerForm() {
-        val formState = _uiState.value
-        val validation = validateForm(formState)
-
-        _uiState.value = formState.copy(
-            userNameError = validation.userNameError,
-            emailError = validation.emailError,
-            passwordError = validation.passwordError,
-            confirmPasswordError = validation.confirmPasswordError
-        )
-
-        if (validation.isValid) {
-            registerUser(formState.toRegisterRequest())
-        }
-    }
-
-    private fun validateForm(state: RegistrationUIState): RegistrationValidation {
-        val userNameResult = validateUsername.execute(state.userName)
-        val emailResult = validateEmail.execute(state.email)
-        val passwordResult = validatePassword.execute(state.password)
+        val userNameResult = validateUsername.execute(_uiState.value.userName)
+        val emailResult = validateEmail.execute(_uiState.value.email)
+        val passwordResult = validatePassword.execute(_uiState.value.password)
         val confirmPasswordResult =
-            validateConfirmPassword.execute(state.password, state.confirmPassword)
+            validateConfirmPassword.execute(_uiState.value.password, _uiState.value.confirmPassword)
 
-        return RegistrationValidation(
-            userNameError = userNameResult.errorMessage,
-            emailError = emailResult.errorMessage,
-            passwordError = passwordResult.errorMessage,
-            confirmPasswordError = confirmPasswordResult.errorMessage,
-            isValid = userNameResult.success &&
-                emailResult.success &&
-                passwordResult.success &&
-                confirmPasswordResult.success
-        )
+        val hasError = listOf(
+            userNameResult, emailResult, passwordResult, confirmPasswordResult
+        ).any { !it.success }
+
+        if (hasError) {
+            _uiState.value = _uiState.value.copy(
+                userNameError = userNameResult.errorMessage,
+                emailError = emailResult.errorMessage,
+                passwordError = passwordResult.errorMessage,
+                confirmPasswordError = confirmPasswordResult.errorMessage
+            )
+        } else {
+            _uiState.value = _uiState.value.copy(
+                userNameError = null,
+                emailError = null,
+                passwordError = null,
+                confirmPasswordError = null
+            )
+        }
+
+        if (!hasError) {
+            val request = RegisterRequest(
+                name = _uiState.value.userName,
+                email = _uiState.value.email,
+                password = _uiState.value.password
+            )
+            registerUser(request)
+        }
+        viewModelScope.launch {
+            _responseEvent.send(ResponseEvent.Callback)
+        }
     }
 
     private fun registerUser(
         request: RegisterRequest,
-    ) {
-        viewModelScope.launch {
-            useCase(request).collect { resource ->
-                when (resource) {
-                    is Resource.Loading -> {
-                        _registerResponse.value = RegisterState(isLoading = true)
-                    }
+    ) = viewModelScope.launch {
+        useCase(request).onEach {
+            when (it) {
+                is Resource.Loading -> {
+                    _registerResponse.value = RegisterState(isLoading = true)
+                }
 
-                    is Resource.Error -> {
-                        _registerResponse.value =
-                            RegisterState(errorMessage = resource.errorMessage.toString())
-                    }
+                is Resource.Error -> {
+                    _registerResponse.value = RegisterState(errorMessage = it.errorMessage.toString())
+                }
 
-                    is Resource.Success -> {
-                        resource.data?.let { response ->
-                            tokenManager.saveToken(response.message)
-                            tokenManager.saveIsLoggedIn(true)
-                        }
-                        _registerResponse.value = RegisterState(data = resource.data)
-                    }
+                is Resource.Success -> {
+                    _registerResponse.value = RegisterState(data = it.data)
+                }
 
-                    is Resource.DataError -> {
-                        _registerResponse.value = RegisterState(errorData = resource.errorData)
-                    }
+                is Resource.DataError -> {
+                    _registerResponse.value = RegisterState(errorData = it.errorData)
                 }
             }
-        }
+        }.launchIn(viewModelScope)
     }
 
-    private fun RegistrationUIState.toRegisterRequest() = RegisterRequest(
-        name = userName,
-        email = email,
-        password = password
-    )
-
-    private data class RegistrationValidation(
-        val userNameError: UiText?,
-        val emailError: UiText?,
-        val passwordError: UiText?,
-        val confirmPasswordError: UiText?,
-        val isValid: Boolean
-    )
+    sealed class ResponseEvent {
+        data object Callback : ResponseEvent()
+    }
 
     sealed class LoginClickEvent {
         data object Callback : LoginClickEvent()

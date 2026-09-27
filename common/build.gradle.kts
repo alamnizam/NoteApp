@@ -9,6 +9,8 @@ plugins {
 
 android {
     namespace = "com.codeturtle.notes.common"
+    compileSdk = 36
+
     buildFeatures {
         compose = true
     }
@@ -16,20 +18,20 @@ android {
 
 dependencies {
 
-    // giving access to resources
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar", "*.so"))))
+    //giving access to resources
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar","*.so"))))
 
-    // core
+    //core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
 
-    // core junit test
+    //core junit test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    // dagger hilt
+    //dagger hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
@@ -37,12 +39,12 @@ dependencies {
     androidTestImplementation(libs.hilt.android.testing)
     androidTestAnnotationProcessor(libs.hilt.android.compiler)
 
-    // retrofit
+    //retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
 
-    // compose
+    //compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
@@ -50,17 +52,18 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.extended.android)
 
-    // compose testing
+    //compose testing
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     androidTestImplementation(libs.androidx.ui.test.junit4)
 
-    // datastore
+    //datastore
     implementation(libs.datastore.preferences)
 
-    // serialization
+    //serialization
     implementation(libs.kotlinx.serialization.json)
 
-    // navigation
+    //navigation
     implementation(libs.androidx.navigation.compose)
 }

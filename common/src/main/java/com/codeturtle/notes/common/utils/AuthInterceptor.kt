@@ -1,23 +1,27 @@
 package com.codeturtle.notes.common.utils
 
-import com.codeturtle.notes.common.token.TokenManager
+import android.util.Log
+import com.codeturtle.notes.common.tokken.TokenManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
 
-class AuthInterceptor @Inject constructor(
-    private val tokenManager: TokenManager
-) : Interceptor {
+class AuthInterceptor @Inject constructor() : Interceptor {
+    @Inject
+    lateinit var tokenManager: TokenManager
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request().newBuilder()
-        val token = runBlocking(Dispatchers.IO) {
-            tokenManager.getToken()
+        val token = runBlocking {
+            withContext(Dispatchers.IO) {
+                tokenManager.getToken().toString()
+            }
         }
-        if (!token.isNullOrBlank()) {
-            request.addHeader("Authorization", token)
-        }
+        Log.d("Token", token)
+        request.addHeader("Authorization", "Bearer $token")
         return chain.proceed(request.build())
     }
 }

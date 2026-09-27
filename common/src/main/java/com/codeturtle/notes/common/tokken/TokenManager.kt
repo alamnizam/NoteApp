@@ -1,7 +1,7 @@
-package com.codeturtle.notes.common.token
+package com.codeturtle.notes.common.tokken
 
 import androidx.datastore.core.DataStore
-import com.codeturtle.notes.common.token.model.UserPreferences
+import com.codeturtle.notes.common.tokken.model.UserPreferences
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package com.codeturtle.notes.data.network
+package com.codeturtle.noets.data.network
 
 
 import com.codeturtle.notes.common.constant.ServerUrlList.UPDATE_NOTE

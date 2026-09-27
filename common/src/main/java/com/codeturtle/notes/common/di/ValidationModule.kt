@@ -4,7 +4,6 @@ import com.codeturtle.notes.common.validation.ValidateConfirmPassword
 import com.codeturtle.notes.common.validation.ValidateEmail
 import com.codeturtle.notes.common.validation.ValidateFieldNotEmpty
 import com.codeturtle.notes.common.validation.ValidateLoginPassword
-import com.codeturtle.notes.common.validation.ValidateNoteFields
 import com.codeturtle.notes.common.validation.ValidatePassword
 import com.codeturtle.notes.common.validation.ValidateUsername
 import dagger.Module
@@ -32,8 +31,4 @@ object ValidationModule {
     
     @Provides
     fun provideValidateFieldNotEmpty() = ValidateFieldNotEmpty()
-
-    @Provides
-    fun provideValidateNoteFields(validateFieldNotEmpty: ValidateFieldNotEmpty) =
-        ValidateNoteFields(validateFieldNotEmpty)
 }

@@ -2,7 +2,7 @@ package com.codeturtle.notes.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.codeturtle.notes.common.token.TokenManager
+import com.codeturtle.notes.common.tokken.TokenManager
 import com.codeturtle.notes.common.utils.Resource
 import com.codeturtle.notes.domain.model.NoteListResponseItem
 import com.codeturtle.notes.domain.usecase.NoteListUseCase
@@ -10,15 +10,19 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NoteListViewModel @Inject constructor(
-    private val useCase: NoteListUseCase,
-    private val tokenManager: TokenManager
+    private val useCase: NoteListUseCase
 ) : ViewModel() {
+
+    @Inject
+    lateinit var tokenManager: TokenManager
 
     private val _noteListResponse = MutableStateFlow(NoteListState())
     val noteListResponse: StateFlow<NoteListState> = _noteListResponse
@@ -52,7 +56,6 @@ class NoteListViewModel @Inject constructor(
 
             NoteListUIEvent.OnLogoutIconClicked -> {
                 viewModelScope.launch {
-                    tokenManager.clearData()
                     _logoutIconClickedEvent.send(LogoutIconClickedEvent.Callback)
                 }
             }
@@ -72,24 +75,24 @@ class NoteListViewModel @Inject constructor(
     }
 
 
-    private fun getNoteList() {
-        if (isListLoaded) return
-        isListLoaded = true
+    fun getNoteList() {
+        if(isListLoaded) return
         viewModelScope.launch {
-            useCase().collect { resource ->
-                when (resource) {
+            useCase().onEach {
+                when (it) {
                     is Resource.Loading -> _noteListResponse.value = NoteListState(isLoading = true)
                     is Resource.DataError -> _noteListResponse.value =
-                        NoteListState(dataError = resource.errorData)
+                        NoteListState(dataError = it.errorData)
 
                     is Resource.Error -> _noteListResponse.value =
-                        NoteListState(errorMessage = resource.errorMessage.toString())
+                        NoteListState(errorMessage = it.errorMessage.toString())
 
                     is Resource.Success -> {
-                        _noteListResponse.value = NoteListState(data = resource.data)
+                        println("Notes loaded: ${it.data}")
+                        _noteListResponse.value = NoteListState(data = it.data)
                     }
                 }
-            }
+            }.launchIn(viewModelScope)
         }
     }
 
@@ -108,6 +111,6 @@ class NoteListViewModel @Inject constructor(
     sealed class NoteClickEvent(
         val note: NoteListResponseItem? = null
     ) {
-        class Callback(note: NoteListResponseItem?) : NoteClickEvent(note = note)
+        class Callback(note:NoteListResponseItem?) : NoteClickEvent(note = note)
     }
 }

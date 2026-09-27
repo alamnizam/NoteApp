@@ -6,26 +6,26 @@ plugins {
 }
 
 android {
-    namespace = "com.codeturtle.notes.data"
+    namespace = "com.codeturtle.noets.data"
 }
 
 dependencies {
 
-    // modules
+    //modules
     implementation(project(":common"))
     implementation(project(":notes:edit_note:domain"))
 
-    // Core
+    //Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
 
-    // core junit test
+    //core junit test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    // dagger hilt
+    //dagger hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
@@ -33,7 +33,7 @@ dependencies {
     androidTestImplementation(libs.hilt.android.testing)
     androidTestAnnotationProcessor(libs.hilt.android.compiler)
 
-    // retrofit
+    //retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)

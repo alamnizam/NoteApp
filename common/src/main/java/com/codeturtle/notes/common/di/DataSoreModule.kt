@@ -5,9 +5,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import com.codeturtle.notes.common.constant.Pref.DATA_STORE_FILE_NAME
-import com.codeturtle.notes.common.token.TokenManager
-import com.codeturtle.notes.common.token.model.UserPreferences
-import com.codeturtle.notes.common.token.model.UserPreferencesSerializer
+import com.codeturtle.notes.common.tokken.TokenManager
+import com.codeturtle.notes.common.tokken.model.UserPreferences
+import com.codeturtle.notes.common.tokken.model.UserPreferencesSerializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,7 +20,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DataStoreModule {
+object DataSoreModule {
     @Singleton
     @Provides
     fun provideProtoDataStore(@ApplicationContext appContext: Context): DataStore<UserPreferences> {

@@ -1,4 +1,4 @@
-package com.codeturtle.notes.common.token.model
+package com.codeturtle.notes.common.tokken.model
 
 import android.os.Build
 import androidx.datastore.core.Serializer
@@ -24,9 +24,6 @@ object UserPreferencesSerializer : Serializer<UserPreferences> {
     override suspend fun readFrom(input: InputStream): UserPreferences {
         val encryptedBytes = withContext(Dispatchers.IO) {
             input.use { it.readBytes() }
-        }
-        if (encryptedBytes.isEmpty()) {
-            return defaultValue
         }
         val encryptedBytesBase64 = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Base64.getDecoder().decode(encryptedBytes)

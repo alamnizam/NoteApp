@@ -1,5 +1,6 @@
 package com.codeturtle.notes.domain.model
 
+
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
@@ -11,8 +12,14 @@ data class NoteListResponseItem(
     val description: String,
     val id: Int,
     val noteTitle: String
-) : Parcelable {
+): Parcelable{
     fun isMatchWithQuery(queryString: String): Boolean {
-        return noteTitle.contains(queryString, ignoreCase = true)
+        val matchResult = listOf(
+            noteTitle, "${noteTitle.first()}"
+        )
+
+        return matchResult.any {
+            it.contains(queryString, true)
+        }
     }
 }

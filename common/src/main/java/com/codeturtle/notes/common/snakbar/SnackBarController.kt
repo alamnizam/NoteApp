@@ -1,4 +1,4 @@
-package com.codeturtle.notes.common.snackbar
+package com.codeturtle.notes.common.snakbar
 
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow

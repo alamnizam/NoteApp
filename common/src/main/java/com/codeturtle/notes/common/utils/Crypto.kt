@@ -15,6 +15,7 @@ object Crypto {
     private const val PADDING = KeyProperties.ENCRYPTION_PADDING_PKCS7
     private const val TRANSFORMATION = "$ALGORITHM/$BLOCK_MODE/$PADDING"
 
+    private val cipher = Cipher.getInstance(TRANSFORMATION)
     private val keyStore = KeyStore.getInstance("AndroidKeyStore").apply {
         load(null)
     }
@@ -42,7 +43,6 @@ object Crypto {
     }
 
     fun encrypt(data: ByteArray): ByteArray {
-        val cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.ENCRYPT_MODE, getKey())
         val iv = cipher.iv
         val encryptedData = cipher.doFinal(data)
@@ -50,7 +50,6 @@ object Crypto {
     }
 
     fun decrypt(data: ByteArray): ByteArray {
-        val cipher = Cipher.getInstance(TRANSFORMATION)
         val iv = data.copyOfRange(0, cipher.blockSize)
         val encryptedData = data.copyOfRange(cipher.blockSize, data.size)
         cipher.init(Cipher.DECRYPT_MODE, getKey(), IvParameterSpec(iv))
