@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class NoteSearchViewModel @Inject constructor(
@@ -65,14 +66,13 @@ class NoteSearchViewModel @Inject constructor(
                 }
             }
 
-            else -> {}
         }
     }
 
     private fun getNoteList() = viewModelScope.launch {
         useCase().onEach {
             when (it) {
-                is Resource.Loading -> _noteListResponse.value = NoteSearchState(isLoading = true)
+                Resource.Loading -> _noteListResponse.value = NoteSearchState(isLoading = true)
                 is Resource.DataError -> _noteListResponse.value =
                     NoteSearchState(dataError = it.errorData)
 
@@ -91,7 +91,7 @@ class NoteSearchViewModel @Inject constructor(
     private fun observeSearchQuery() {
         viewModelScope.launch {
             searchQuery
-                .debounce(300L)
+                .debounce(300.milliseconds)
                 .collect { query ->
                     performSearch(query)
                 }

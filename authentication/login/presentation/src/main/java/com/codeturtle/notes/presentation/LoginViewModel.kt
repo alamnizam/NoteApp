@@ -100,7 +100,7 @@ class LoginViewModel @Inject constructor(
     private fun loginUser(request: LoginRequest) = viewModelScope.launch {
         useCase(request).onEach {
             when (it) {
-                is Resource.Loading -> {
+                Resource.Loading -> {
                     _loginResponse.value = LoginState(isLoading = true)
                 }
 

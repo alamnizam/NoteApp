@@ -1,12 +1,12 @@
 package com.codeturtle.notes.common.utils
 
-sealed class Resource<T>(
+sealed class Resource<out T, out E>(
     val data: T? = null,
-    val errorData: ErrorResponse? = null,
+    val errorData: E? = null,
     val errorMessage: String? = null
 ) {
-    class Loading<T>() : Resource<T>()
-    class Success<T>(data: T?) : Resource<T>(data = data)
-    class DataError<T>(errorData: ErrorResponse?) : Resource<T>(errorData = errorData)
-    class Error<T>(error: String?) : Resource<T>(errorMessage = error)
+    data object Loading : Resource<Nothing, Nothing>()
+    class Success<T>(data: T?) : Resource<T, Nothing>(data = data)
+    class DataError<E>(errorData: E?) : Resource<Nothing, E>(errorData = errorData)
+    class Error(error: String?) : Resource<Nothing, Nothing>(errorMessage = error)
 }

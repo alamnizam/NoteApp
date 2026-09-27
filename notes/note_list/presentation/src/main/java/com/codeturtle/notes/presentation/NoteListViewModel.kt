@@ -80,7 +80,7 @@ class NoteListViewModel @Inject constructor(
         viewModelScope.launch {
             useCase().onEach {
                 when (it) {
-                    is Resource.Loading -> _noteListResponse.value = NoteListState(isLoading = true)
+                    Resource.Loading -> _noteListResponse.value = NoteListState(isLoading = true)
                     is Resource.DataError -> _noteListResponse.value =
                         NoteListState(dataError = it.errorData)
 

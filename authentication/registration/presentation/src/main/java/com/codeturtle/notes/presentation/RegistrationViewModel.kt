@@ -126,7 +126,7 @@ class RegistrationViewModel @Inject constructor(
     ) = viewModelScope.launch {
         useCase(request).onEach {
             when (it) {
-                is Resource.Loading -> {
+                Resource.Loading -> {
                     _registerResponse.value = RegisterState(isLoading = true)
                 }
 

@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.flowOn
 class DeleteNoteUseCase(
     private val repository: DeleteNoteRepository
 ) {
-    operator fun invoke(id:Int): Flow<Resource<DeleteNoteResponse>> = flow {
-        emit(Resource.Loading())
+    operator fun invoke(id:Int): Flow<Resource<DeleteNoteResponse, ErrorResponse>> = flow {
+        emit(Resource.Loading)
         try {
             val response = repository.deleteNote(id)
             if (response.isSuccessful) {

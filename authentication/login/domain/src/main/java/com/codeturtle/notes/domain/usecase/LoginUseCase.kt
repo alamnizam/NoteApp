@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.flowOn
 class LoginUseCase(
     private val repository: LoginRepository
 ) {
-    operator fun invoke(request: LoginRequest):Flow<Resource<LoginResponse>> = flow {
-        emit(Resource.Loading())
+    operator fun invoke(request: LoginRequest): Flow<Resource<LoginResponse, ErrorResponse>> = flow {
+        emit(Resource.Loading)
         try {
             val response = repository.login(request)
             if (response.isSuccessful) {

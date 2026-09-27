@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.flowOn
 class EditNoteUseCase(
     private val repository: EditNoteRepository
 ) {
-    operator fun invoke(request: EditNoteRequest): Flow<Resource<EditNoteResponse>> = flow {
-        emit(Resource.Loading())
+    operator fun invoke(request: EditNoteRequest): Flow<Resource<EditNoteResponse, ErrorResponse>> = flow {
+        emit(Resource.Loading)
         try {
             val response = repository.editNote(request)
             if (response.isSuccessful) {

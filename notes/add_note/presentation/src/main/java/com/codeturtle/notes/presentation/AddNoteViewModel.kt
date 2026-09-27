@@ -89,7 +89,7 @@ class AddNoteViewModel @Inject constructor(
     private fun addNote(request: AddNoteRequest) = viewModelScope.launch {
         addNoteUseCase(request).onEach {
             when (it) {
-                is Resource.Loading -> _addNoteResponse.value = AddNoteState(isLoading = true)
+                Resource.Loading -> _addNoteResponse.value = AddNoteState(isLoading = true)
                 is Resource.Error -> _addNoteResponse.value =
                     AddNoteState(errorMessage = it.errorMessage.toString())
 

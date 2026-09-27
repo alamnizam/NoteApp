@@ -14,8 +14,8 @@ import kotlinx.coroutines.flow.flowOn
 class RegisterUseCase(
     private val repository: RegisterRepository
 ) {
-    operator fun invoke(request: RegisterRequest): Flow<Resource<RegisterResponse>> = flow {
-        emit(Resource.Loading())
+    operator fun invoke(request: RegisterRequest): Flow<Resource<RegisterResponse, ErrorResponse>> = flow {
+        emit(Resource.Loading)
         try {
             val response = repository.register(request)
             if (response.isSuccessful) {

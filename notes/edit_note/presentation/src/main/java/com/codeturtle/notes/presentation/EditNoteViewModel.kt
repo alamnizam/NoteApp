@@ -90,7 +90,7 @@ class EditNoteViewModel @Inject constructor(
     private fun updateNote(request: EditNoteRequest) = viewModelScope.launch {
         editNoteUseCase(request).onEach {
             when(it){
-                is Resource.Loading -> _editNoteResponse.value = EditNoteState(isLoading = true)
+                Resource.Loading -> _editNoteResponse.value = EditNoteState(isLoading = true)
                 is Resource.Error -> _editNoteResponse.value = EditNoteState(errorMessage = it.errorMessage.toString())
                 is Resource.DataError -> _editNoteResponse.value = EditNoteState(errorData = it.errorData)
                 is Resource.Success -> _editNoteResponse.value = EditNoteState(data = it.data)

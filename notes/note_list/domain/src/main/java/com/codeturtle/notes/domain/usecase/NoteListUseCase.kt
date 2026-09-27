@@ -13,8 +13,8 @@ import kotlinx.coroutines.flow.flowOn
 class NoteListUseCase(
     private val repository: NoteListRepository
 ) {
-    operator fun invoke(): Flow<Resource<List<NoteListResponseItem>>> = flow {
-        emit(Resource.Loading())
+    operator fun invoke(): Flow<Resource<List<NoteListResponseItem>, ErrorResponse>> = flow {
+        emit(Resource.Loading)
         try {
             val response = repository.getNoteList()
             if (response.isSuccessful) {
