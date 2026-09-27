@@ -77,7 +77,7 @@ class NoteSearchViewModel @Inject constructor(
                     NoteSearchState(dataError = it.errorData)
 
                 is Resource.Error -> _noteListResponse.value =
-                    NoteSearchState(errorMessage = it.errorMessage.toString())
+                    NoteSearchState(errorMessage = it.errorMessage.orEmpty())
 
                 is Resource.Success -> {
                     _originalNoteList.value = it.data ?: emptyList()

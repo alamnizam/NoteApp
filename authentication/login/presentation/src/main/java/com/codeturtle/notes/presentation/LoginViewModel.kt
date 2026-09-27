@@ -105,7 +105,7 @@ class LoginViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-                    _loginResponse.value = LoginState(errorMessage = it.errorMessage.toString())
+                    _loginResponse.value = LoginState(errorMessage = it.errorMessage.orEmpty())
                 }
 
                 is Resource.DataError -> {

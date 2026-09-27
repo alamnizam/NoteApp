@@ -1,6 +1,5 @@
 package com.codeturtle.notes.common.utils
 
-import android.util.Log
 import com.codeturtle.notes.common.tokken.TokenManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -20,7 +19,6 @@ class AuthInterceptor @Inject constructor() : Interceptor {
                 tokenManager.getToken().toString()
             }
         }
-        Log.d("Token", token)
         request.addHeader("Authorization", "Bearer $token")
         return chain.proceed(request.build())
     }

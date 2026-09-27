@@ -131,7 +131,7 @@ class RegistrationViewModel @Inject constructor(
                 }
 
                 is Resource.Error -> {
-                    _registerResponse.value = RegisterState(errorMessage = it.errorMessage.toString())
+                    _registerResponse.value = RegisterState(errorMessage = it.errorMessage.orEmpty())
                 }
 
                 is Resource.Success -> {

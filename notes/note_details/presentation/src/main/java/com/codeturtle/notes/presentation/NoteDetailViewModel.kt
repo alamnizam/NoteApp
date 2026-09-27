@@ -58,7 +58,7 @@ class NoteDetailViewModel @Inject constructor(
             useCase(it).onEach { resource ->
                 when (resource) {
                     Resource.Loading -> _deleteNoteResponse.value = DeleteNoteState(isLoading = true)
-                    is Resource.Error -> _deleteNoteResponse.value = DeleteNoteState(errorMessage = resource.errorMessage.toString())
+                    is Resource.Error -> _deleteNoteResponse.value = DeleteNoteState(errorMessage = resource.errorMessage.orEmpty())
                     is Resource.DataError -> _deleteNoteResponse.value = DeleteNoteState(errorData = resource.errorData)
                     is Resource.Success -> _deleteNoteResponse.value = DeleteNoteState(data = resource.data)
                 }

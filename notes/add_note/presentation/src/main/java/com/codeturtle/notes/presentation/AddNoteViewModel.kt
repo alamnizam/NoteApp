@@ -91,7 +91,7 @@ class AddNoteViewModel @Inject constructor(
             when (it) {
                 Resource.Loading -> _addNoteResponse.value = AddNoteState(isLoading = true)
                 is Resource.Error -> _addNoteResponse.value =
-                    AddNoteState(errorMessage = it.errorMessage.toString())
+                    AddNoteState(errorMessage = it.errorMessage.orEmpty())
 
                 is Resource.DataError -> _addNoteResponse.value =
                     AddNoteState(errorData = it.errorData)

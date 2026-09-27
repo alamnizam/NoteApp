@@ -1,17 +1,16 @@
-package com.codeturtle.notes.common.utils
+   package com.codeturtle.notes.common.utils
 
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.CancellationException
+   import com.google.gson.Gson
+   import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import retrofit2.Response
-import java.io.IOException
-import java.net.SocketTimeoutException
 
 inline fun <T, reified E> safeApiCall(
+    errorReporter: ErrorReporter = LogcatErrorReporter,
+    crossinline exceptionMessage: (Exception) -> String? = ApiExceptionMapper::toUserMessage,
     crossinline request: suspend () -> Response<T>
 ): Flow<Resource<T, E>> = flow {
     emit(Resource.Loading)
@@ -25,13 +24,8 @@ inline fun <T, reified E> safeApiCall(
             val error = Gson().fromJson<E>(response.errorBody()?.string(), errorType)
             emit(Resource.DataError(error))
         }
-    } catch (exception: CancellationException) {
-        throw exception
-    } catch (exception: SocketTimeoutException) {
-        emit(Resource.Error("Request timed out"))
-    } catch (exception: IOException) {
-        emit(Resource.Error("Unable to connect to server"))
     } catch (exception: Exception) {
-        emit(Resource.Error("Something went wrong"))
+        errorReporter.report(exception)
+        emit(Resource.Error(exceptionMessage(exception)))
     }
 }.flowOn(Dispatchers.IO)

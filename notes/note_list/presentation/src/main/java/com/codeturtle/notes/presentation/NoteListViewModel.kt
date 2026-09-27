@@ -85,7 +85,7 @@ class NoteListViewModel @Inject constructor(
                         NoteListState(dataError = it.errorData)
 
                     is Resource.Error -> _noteListResponse.value =
-                        NoteListState(errorMessage = it.errorMessage.toString())
+                        NoteListState(errorMessage = it.errorMessage.orEmpty())
 
                     is Resource.Success -> {
                         println("Notes loaded: ${it.data}")
