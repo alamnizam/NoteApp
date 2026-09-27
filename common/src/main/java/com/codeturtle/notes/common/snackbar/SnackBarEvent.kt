@@ -1,4 +1,4 @@
-package com.codeturtle.notes.common.snakbar
+package com.codeturtle.notes.common.snackbar
 
 data class SnackBarEvent(
     val message: String,

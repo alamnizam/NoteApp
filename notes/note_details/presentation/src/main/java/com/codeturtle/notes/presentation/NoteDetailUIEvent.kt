@@ -7,6 +7,6 @@ sealed class NoteDetailUIEvent(
     val note: NoteListResponseItem? = null
 ) {
     data object OnBackNavigationClicked : NoteDetailUIEvent()
-    class OnEditNoteClicked(note:NoteListResponseItem?) : NoteDetailUIEvent(note = note)
+    class OnEditNoteClicked(note: NoteListResponseItem?) : NoteDetailUIEvent(note = note)
     class OnDeleteNoteClicked(id:Int?) : NoteDetailUIEvent(id = id)
 }

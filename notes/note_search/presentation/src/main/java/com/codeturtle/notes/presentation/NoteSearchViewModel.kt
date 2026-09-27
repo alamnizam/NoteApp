@@ -13,10 +13,9 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 import javax.inject.Inject
 
 @HiltViewModel
@@ -64,34 +63,32 @@ class NoteSearchViewModel @Inject constructor(
                     _backArrowIconClickedEvent.send(BackArrowClickedIconEvent.Callback)
                 }
             }
-
-            else -> {}
         }
     }
 
     private fun getNoteList() = viewModelScope.launch {
-        useCase().onEach {
-            when (it) {
+        useCase().collect { resource ->
+            when (resource) {
                 is Resource.Loading -> _noteListResponse.value = NoteSearchState(isLoading = true)
                 is Resource.DataError -> _noteListResponse.value =
-                    NoteSearchState(dataError = it.errorData)
+                    NoteSearchState(dataError = resource.errorData)
 
                 is Resource.Error -> _noteListResponse.value =
-                    NoteSearchState(errorMessage = it.errorMessage.toString())
+                    NoteSearchState(errorMessage = resource.errorMessage.toString())
 
                 is Resource.Success -> {
-                    _originalNoteList.value = it.data ?: emptyList()
-                    _noteListResponse.value = NoteSearchState(data = it.data)
+                    _originalNoteList.value = resource.data ?: emptyList()
+                    _noteListResponse.value = NoteSearchState(data = resource.data)
                 }
             }
-        }.launchIn(viewModelScope)
+        }
     }
 
     @OptIn(FlowPreview::class)
     private fun observeSearchQuery() {
         viewModelScope.launch {
             searchQuery
-                .debounce(300L)
+                .debounce(300.milliseconds)
                 .collect { query ->
                     performSearch(query)
                 }
@@ -117,6 +114,6 @@ class NoteSearchViewModel @Inject constructor(
     sealed class NoteClickEvent(
         val note: NoteListResponseItem? = null
     ) {
-        class Callback(note:NoteListResponseItem?) : NoteClickEvent(note = note)
+        class Callback(note: NoteListResponseItem?) : NoteClickEvent(note = note)
     }
 }

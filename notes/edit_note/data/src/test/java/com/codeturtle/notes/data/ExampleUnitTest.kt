@@ -1,4 +1,4 @@
-package com.codeturtle.noets.data
+package com.codeturtle.notes.data
 
 import org.junit.Test
 

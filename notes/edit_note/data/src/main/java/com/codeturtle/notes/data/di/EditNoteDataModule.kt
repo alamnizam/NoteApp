@@ -1,7 +1,7 @@
-package com.codeturtle.noets.data.di
+package com.codeturtle.notes.data.di
 
-import com.codeturtle.noets.data.network.EditNoteApiService
-import com.codeturtle.noets.data.repository.EditNoteRepositoryImpl
+import com.codeturtle.notes.data.network.EditNoteApiService
+import com.codeturtle.notes.data.repository.EditNoteRepositoryImpl
 import com.codeturtle.notes.domain.repository.EditNoteRepository
 import dagger.Module
 import dagger.Provides

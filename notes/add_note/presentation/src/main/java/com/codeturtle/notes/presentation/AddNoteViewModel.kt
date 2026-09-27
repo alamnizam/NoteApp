@@ -5,22 +5,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codeturtle.notes.common.utils.Resource
-import com.codeturtle.notes.common.validation.ValidateFieldNotEmpty
+import com.codeturtle.notes.common.validation.ValidateNoteFields
 import com.codeturtle.notes.domain.model.AddNoteRequest
 import com.codeturtle.notes.domain.usecase.AddNoteUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AddNoteViewModel @Inject constructor(
-    private val validateFieldNotEmpty: ValidateFieldNotEmpty,
+    private val validateNoteFields: ValidateNoteFields,
     private val addNoteUseCase: AddNoteUseCase
 ) : ViewModel() {
 
@@ -32,9 +30,6 @@ class AddNoteViewModel @Inject constructor(
 
     private val _backArrowIconClickedEvent = Channel<BackArrowIconClickedEvent>()
     val backArrowIconClickedEvent = _backArrowIconClickedEvent.receiveAsFlow()
-
-    private val _responseEvent = Channel<ResponseEvent>()
-    val responseEvent = _responseEvent.receiveAsFlow()
 
     fun onEvent(uiEvent: AddNoteUIEvent) {
         when (uiEvent) {
@@ -55,54 +50,35 @@ class AddNoteViewModel @Inject constructor(
     }
 
     private fun saveNote() {
-        val titleResult = validateFieldNotEmpty.execute(_uiState.value.title)
-        val descriptionResult = validateFieldNotEmpty.execute(_uiState.value.description)
-        val hasError = listOf(
-            titleResult, descriptionResult
-        ).any { !it.success }
-        if (hasError) {
-            _uiState.value = _uiState.value.copy(
-                titleError = titleResult.errorMessage,
-                descriptionError = descriptionResult.errorMessage
-            )
-        } else {
-            _uiState.value = _uiState.value.copy(
-                titleError = null,
-                descriptionError = null
-            )
-        }
+        val state = _uiState.value
+        val validation = validateNoteFields.execute(state.title, state.description)
+        _uiState.value = state.copy(
+            titleError = validation.titleError,
+            descriptionError = validation.descriptionError
+        )
 
-        if (!hasError) {
+        if (validation.isValid) {
             val date = System.currentTimeMillis() / 1000
             val request = AddNoteRequest(
                 date = date,
-                noteTitle = _uiState.value.title,
-                description = _uiState.value.description
+                noteTitle = state.title,
+                description = state.description
             )
             addNote(request)
-        }
-        viewModelScope.launch {
-            _responseEvent.send(ResponseEvent.Callback)
         }
     }
 
     private fun addNote(request: AddNoteRequest) = viewModelScope.launch {
-        addNoteUseCase(request).onEach {
-            when (it) {
+        addNoteUseCase(request).collect { resource ->
+            when (resource) {
                 is Resource.Loading -> _addNoteResponse.value = AddNoteState(isLoading = true)
                 is Resource.Error -> _addNoteResponse.value =
-                    AddNoteState(errorMessage = it.errorMessage.toString())
-
+                    AddNoteState(errorMessage = resource.errorMessage.toString())
                 is Resource.DataError -> _addNoteResponse.value =
-                    AddNoteState(errorData = it.errorData)
-
-                is Resource.Success -> _addNoteResponse.value = AddNoteState(data = it.data)
+                    AddNoteState(errorData = resource.errorData)
+                is Resource.Success -> _addNoteResponse.value = AddNoteState(data = resource.data)
             }
-        }.launchIn(viewModelScope)
-    }
-
-    sealed class ResponseEvent {
-        data object Callback : ResponseEvent()
+        }
     }
 
     sealed class BackArrowIconClickedEvent {

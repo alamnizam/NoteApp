@@ -22,11 +22,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -45,16 +43,13 @@ import androidx.navigation.NavHostController
 import com.codeturtle.notes.common.R
 import com.codeturtle.notes.common.component.AlertDialog
 import com.codeturtle.notes.common.component.ProgressBar
-import com.codeturtle.notes.common.snakbar.SnackBarController
-import com.codeturtle.notes.common.snakbar.SnackBarEvent
+import com.codeturtle.notes.common.snackbar.SnackBarController
+import com.codeturtle.notes.common.snackbar.SnackBarEvent
 import com.codeturtle.notes.common.utils.HandleDate.convertLongToDate
 import com.codeturtle.notes.domain.model.NoteListResponseItem
 import com.codeturtle.notes.navigation.EditNoteScreen
 import com.codeturtle.notes.navigation.NoteDetailScreen
 import com.codeturtle.notes.navigation.NoteListScreen
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @Composable
 fun NoteDetailScreen(
@@ -63,60 +58,46 @@ fun NoteDetailScreen(
     note: NoteDetailScreen
 ) {
     val deleteNoteResponse = viewModel.deleteNoteResponse.value
-    val deleteIconEvent = viewModel.deleteIconEvent.collectAsState(initial = null)
-    val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    deleteIconEvent.value.let {
-        if(deleteNoteResponse.isLoading){
-            ProgressBar()
-        }
-        if (deleteNoteResponse.errorMessage.isNotBlank()) {
-            scope.launch {
+    if (deleteNoteResponse.isLoading) {
+        ProgressBar()
+    }
+
+    LaunchedEffect(deleteNoteResponse) {
+        when {
+            deleteNoteResponse.errorMessage.isNotBlank() -> {
                 SnackBarController.sendEvent(
-                    event = SnackBarEvent(
-                        message = deleteNoteResponse.errorMessage
-                    )
+                    event = SnackBarEvent(message = deleteNoteResponse.errorMessage)
                 )
             }
-        }
-        if (deleteNoteResponse.data != null) {
-            scope.launch {
-                val job = launch {
-                    SnackBarController.sendEvent(
-                        event = SnackBarEvent(
-                            message = context.getString(R.string.note_deleted_successfully)
-                        )
-                    )
-                }
-                job.join()
-                withContext(Dispatchers.Main) {
-                    navController.popBackStack(
-                        route = NoteListScreen,
-                        inclusive = false
-                    )
-                }
-            }
-        }
-        if (deleteNoteResponse.errorData != null) {
-            scope.launch {
+            deleteNoteResponse.data != null -> {
                 SnackBarController.sendEvent(
                     event = SnackBarEvent(
-                        message = deleteNoteResponse.errorData.message
+                        message = context.getString(R.string.note_deleted_successfully)
                     )
+                )
+                navController.popBackStack(
+                    route = NoteListScreen,
+                    inclusive = false
+                )
+            }
+            deleteNoteResponse.errorData != null -> {
+                SnackBarController.sendEvent(
+                    event = SnackBarEvent(message = deleteNoteResponse.errorData.message)
                 )
             }
         }
     }
 
     LaunchedEffect(key1 = true) {
-        viewModel.backArrowIconEvent.collect{
+        viewModel.backArrowIconEvent.collect {
             navController.popBackStack()
         }
     }
 
     LaunchedEffect(key1 = true) {
-        viewModel.editIconEvent.collect{
+        viewModel.editIconEvent.collect {
             it.note?.let { note ->
                 navController.navigate(EditNoteScreen(note = note))
             }
@@ -137,7 +118,7 @@ fun NoteDetail(
     onEvent: (NoteDetailUIEvent) -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }
-    if(showDialog){
+    if (showDialog) {
         AlertDialog(
             heading = stringResource(R.string.are_you_sure_you_want_to_delete_this_note),
             onYesClicked = {

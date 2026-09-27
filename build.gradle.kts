@@ -18,15 +18,15 @@ plugins {
     alias(libs.plugins.android.library) apply false
 }
 
-fun BaseExtension.defaultConfig(){
-    compileSdkVersion(36)
+fun BaseExtension.defaultConfig() {
+    compileSdkVersion(37)
     defaultConfig {
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 37
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-        vectorDrawables{
+        vectorDrawables {
             useSupportLibrary = true
         }
     }
@@ -43,9 +43,9 @@ fun BaseExtension.defaultConfig(){
     }
 }
 
-fun PluginContainer.applyDefaultConfig(project: Project){
-    whenPluginAdded{
-        when(this){
+fun PluginContainer.applyDefaultConfig(project: Project) {
+    whenPluginAdded {
+        when (this) {
             is AppPlugin -> {
                 project.extensions.getByType<AppExtension>().apply {
                     defaultConfig()
@@ -56,8 +56,8 @@ fun PluginContainer.applyDefaultConfig(project: Project){
                     defaultConfig()
                 }
             }
-            is JavaPlugin ->{
-                project.extensions.getByType<JavaPluginExtension>().apply{
+            is JavaPlugin -> {
+                project.extensions.getByType<JavaPluginExtension>().apply {
                     sourceCompatibility = JavaVersion.VERSION_17
                     targetCompatibility = JavaVersion.VERSION_17
                 }
@@ -69,7 +69,7 @@ fun PluginContainer.applyDefaultConfig(project: Project){
 subprojects {
     project.plugins.applyDefaultConfig(project)
 
-    tasks.withType<KotlinCompile>{
+    tasks.withType<KotlinCompile> {
         compilerOptions {
             jvmTarget.set(JVM_17)
             freeCompilerArgs.addAll(
