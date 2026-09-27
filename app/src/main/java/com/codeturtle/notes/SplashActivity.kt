@@ -9,11 +9,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.codeturtle.notes.common.tokken.TokenManager
+import com.codeturtle.notes.common.token.TokenManager
 import com.codeturtle.notes.theme.NotesTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
+import kotlin.time.Duration.Companion.seconds
 import javax.inject.Inject
 
 @SuppressLint("CustomSplashScreen")
@@ -26,11 +26,11 @@ class SplashActivity : ComponentActivity() {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        splashScreen.setKeepOnScreenCondition{ true }
+        splashScreen.setKeepOnScreenCondition { true }
         setContent {
             NotesTheme {
-                SplashScreenContent{
-                    val isLoggedIn = runBlocking { tokenManager.getIsLoggedIn() }
+                SplashScreenContent {
+                    val isLoggedIn = tokenManager.getIsLoggedIn()
                     val intent = Intent(this, MainActivity::class.java).apply {
                         putExtra("isLoggedIn", isLoggedIn)
                     }
@@ -43,9 +43,9 @@ class SplashActivity : ComponentActivity() {
 }
 
 @Composable
-fun SplashScreenContent(onTimeout: () -> Unit) {
+fun SplashScreenContent(onTimeout: suspend () -> Unit) {
     LaunchedEffect(Unit) {
-        delay(2000L)
+        delay(2.seconds)
         onTimeout()
     }
 }

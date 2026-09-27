@@ -1,14 +1,13 @@
 package com.codeturtle.notes.common.utils
 
-import android.annotation.SuppressLint
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 object HandleDate {
-    @SuppressLint("SimpleDateFormat")
     fun convertLongToDate(timeStamp: Long): String {
         val date = Date(timeStamp * 1000)
-        val format = SimpleDateFormat("dd-MMM-yyyy")
+        val format = SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault())
         return format.format(date)
     }
 }

@@ -8,5 +8,5 @@ sealed class NoteListUIEvent(
     data object OnSearchIconClicked : NoteListUIEvent()
     data object OnLogoutIconClicked : NoteListUIEvent()
     data object OnAddNoteClicked : NoteListUIEvent()
-    class OnNoteClicked(note:NoteListResponseItem?) : NoteListUIEvent(note = note)
+    class OnNoteClicked(note: NoteListResponseItem?) : NoteListUIEvent(note = note)
 }

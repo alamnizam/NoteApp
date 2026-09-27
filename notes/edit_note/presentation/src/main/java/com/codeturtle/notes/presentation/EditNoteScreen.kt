@@ -26,8 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -41,13 +39,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.codeturtle.notes.common.R
 import com.codeturtle.notes.common.component.ProgressBar
-import com.codeturtle.notes.common.snakbar.SnackBarController
-import com.codeturtle.notes.common.snakbar.SnackBarEvent
+import com.codeturtle.notes.common.snackbar.SnackBarController
+import com.codeturtle.notes.common.snackbar.SnackBarEvent
 import com.codeturtle.notes.navigation.EditNoteScreen
 import com.codeturtle.notes.navigation.NoteListScreen
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @Composable
 fun EditNoteScreen(
@@ -57,8 +52,6 @@ fun EditNoteScreen(
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val editNoteResponse = viewModel.editNoteResponse.value
-    val responseEvent = viewModel.responseEvent.collectAsState(initial = null)
-    val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
@@ -73,43 +66,31 @@ fun EditNoteScreen(
         viewModel.onEvent(EditNoteUIEvent.OnDescriptionChanged(note.note.description))
     }
 
-    responseEvent.value.let {
-        if (editNoteResponse.isLoading) {
-            ProgressBar()
-        }
-        if (editNoteResponse.errorMessage.isNotBlank()) {
-            scope.launch {
+    if (editNoteResponse.isLoading) {
+        ProgressBar()
+    }
+
+    LaunchedEffect(editNoteResponse) {
+        when {
+            editNoteResponse.errorMessage.isNotBlank() -> {
                 SnackBarController.sendEvent(
-                    event = SnackBarEvent(
-                        message = editNoteResponse.errorMessage
-                    )
+                    event = SnackBarEvent(message = editNoteResponse.errorMessage)
                 )
             }
-        }
-        if (editNoteResponse.data != null) {
-            scope.launch {
-                val job = launch {
-                    SnackBarController.sendEvent(
-                        event = SnackBarEvent(
-                            message = context.getString(R.string.note_edited_successfully)
-                        )
-                    )
-                }
-                job.join()
-                withContext(Dispatchers.Main) {
-                    navController.popBackStack(
-                        route = NoteListScreen,
-                        inclusive = false
-                    )
-                }
-            }
-        }
-        if (editNoteResponse.errorData != null) {
-            scope.launch {
+            editNoteResponse.data != null -> {
                 SnackBarController.sendEvent(
                     event = SnackBarEvent(
-                        message = editNoteResponse.errorData.message
+                        message = context.getString(R.string.note_edited_successfully)
                     )
+                )
+                navController.popBackStack(
+                    route = NoteListScreen,
+                    inclusive = false
+                )
+            }
+            editNoteResponse.errorData != null -> {
+                SnackBarController.sendEvent(
+                    event = SnackBarEvent(message = editNoteResponse.errorData.message)
                 )
             }
         }
@@ -197,7 +178,6 @@ fun EditNote(
             }
             Spacer(modifier = Modifier.height(10.dp))
             val scrollState = rememberScrollState()
-            val coroutineScope = rememberCoroutineScope()
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -205,9 +185,7 @@ fun EditNote(
                     .verticalScroll(scrollState)
             ) {
                 LaunchedEffect(uiState.description) {
-                    coroutineScope.launch {
-                        scrollState.scrollTo(scrollState.maxValue)
-                    }
+                    scrollState.scrollTo(scrollState.maxValue)
                 }
                 BasicTextField(
                     value = uiState.description,

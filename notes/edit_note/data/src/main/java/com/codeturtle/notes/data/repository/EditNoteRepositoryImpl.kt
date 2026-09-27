@@ -1,6 +1,6 @@
-package com.codeturtle.noets.data.repository
+package com.codeturtle.notes.data.repository
 
-import com.codeturtle.noets.data.network.EditNoteApiService
+import com.codeturtle.notes.data.network.EditNoteApiService
 import com.codeturtle.notes.domain.model.EditNoteRequest
 import com.codeturtle.notes.domain.model.EditNoteResponse
 import com.codeturtle.notes.domain.repository.EditNoteRepository

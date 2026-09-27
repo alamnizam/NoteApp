@@ -8,15 +8,15 @@ import androidx.compose.ui.res.stringResource
 sealed class UiText {
     data class DynamicString(
         val value: String
-    ): UiText()
+    ) : UiText()
 
     class StringResource(
         @param:StringRes val id: Int,
         vararg val args: Any
-    ): UiText()
+    ) : UiText()
 
     fun asString(context: Context): String {
-        return when(this){
+        return when (this) {
             is DynamicString -> value
             is StringResource -> context.getString(id, *args)
         }
@@ -24,7 +24,7 @@ sealed class UiText {
 
     @Composable
     fun asString(): String {
-        return when(this){
+        return when (this) {
             is DynamicString -> value
             is StringResource -> stringResource(id, *args)
         }

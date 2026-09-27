@@ -12,9 +12,9 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.compose.rememberNavController
-import com.codeturtle.notes.common.snakbar.ObserveAsEvents
-import com.codeturtle.notes.common.snakbar.SnackBarController
-import com.codeturtle.notes.common.tokken.TokenManager
+import com.codeturtle.notes.common.snackbar.ObserveAsEvents
+import com.codeturtle.notes.common.snackbar.SnackBarController
+import com.codeturtle.notes.common.token.TokenManager
 import com.codeturtle.notes.navigation.RootNavigation
 import com.codeturtle.notes.theme.NotesTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,11 +53,11 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
-                Scaffold (
+                Scaffold(
                     snackbarHost = {
                         SnackbarHost(hostState = snackBarHostState)
                     }
-                ){innerPadding ->
+                ) { innerPadding ->
                     RootNavigation(
                         navController = navController,
                         isLoggedIn = isLoggedIn,

@@ -26,10 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -42,12 +39,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.codeturtle.notes.common.R
 import com.codeturtle.notes.common.component.ProgressBar
-import com.codeturtle.notes.common.snakbar.SnackBarController
-import com.codeturtle.notes.common.snakbar.SnackBarEvent
+import com.codeturtle.notes.common.snackbar.SnackBarController
+import com.codeturtle.notes.common.snackbar.SnackBarEvent
 import com.codeturtle.notes.navigation.NoteListScreen
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @Composable
 fun AddNoteScreen(
@@ -56,8 +50,6 @@ fun AddNoteScreen(
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val addNoteResponse = viewModel.addNoteResponse.value
-    val responseEvent = viewModel.responseEvent.collectAsState(initial = null)
-    val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
@@ -66,45 +58,32 @@ fun AddNoteScreen(
         }
     }
 
-    responseEvent.value.let {
-        if (addNoteResponse.isLoading) {
-            ProgressBar()
-        }
-        if (addNoteResponse.errorMessage.isNotBlank()) {
-            scope.launch {
+    if (addNoteResponse.isLoading) {
+        ProgressBar()
+    }
+
+    LaunchedEffect(addNoteResponse) {
+        when {
+            addNoteResponse.errorMessage.isNotBlank() -> {
                 SnackBarController.sendEvent(
-                    event = SnackBarEvent(
-                        message = addNoteResponse.errorMessage
-                    )
+                    event = SnackBarEvent(message = addNoteResponse.errorMessage)
                 )
             }
-        }
-        if (addNoteResponse.data != null) {
-            scope.launch {
-                val job = launch {
-                    SnackBarController.sendEvent(
-                        event = SnackBarEvent(
-                            message = context.getString(R.string.note_added_successfully)
-                        )
-                    )
-                }
-                job.join()
-                withContext(Dispatchers.Main) {
-                    navController.popBackStack(
-                        route = NoteListScreen,
-                        inclusive = true
-                    )
-                    navController.navigate(NoteListScreen)
-
-                }
-            }
-        }
-        if (addNoteResponse.errorData != null) {
-            scope.launch {
+            addNoteResponse.data != null -> {
                 SnackBarController.sendEvent(
                     event = SnackBarEvent(
-                        message = addNoteResponse.errorData.message
+                        message = context.getString(R.string.note_added_successfully)
                     )
+                )
+                navController.popBackStack(
+                    route = NoteListScreen,
+                    inclusive = true
+                )
+                navController.navigate(NoteListScreen)
+            }
+            addNoteResponse.errorData != null -> {
+                SnackBarController.sendEvent(
+                    event = SnackBarEvent(message = addNoteResponse.errorData.message)
                 )
             }
         }
@@ -185,14 +164,13 @@ private fun AddNote(
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = uiState.titleError.asString(),
-                    color = Color.Red,
+                    color = MaterialTheme.colorScheme.error,
                     fontSize = 14.sp,
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp)
                 )
             }
             Spacer(modifier = Modifier.height(10.dp))
             val scrollState = rememberScrollState()
-            val coroutineScope = rememberCoroutineScope()
             Box(
                 modifier = Modifier
                     .weight(1f)
@@ -200,9 +178,7 @@ private fun AddNote(
                     .verticalScroll(scrollState)
             ) {
                 LaunchedEffect(uiState.description) {
-                    coroutineScope.launch {
-                        scrollState.scrollTo(scrollState.maxValue)
-                    }
+                    scrollState.scrollTo(scrollState.maxValue)
                 }
                 BasicTextField(
                     value = uiState.description,
@@ -227,7 +203,7 @@ private fun AddNote(
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     text = uiState.descriptionError.asString(),
-                    color = Color.Red,
+                    color = MaterialTheme.colorScheme.error,
                     fontSize = 14.sp,
                     modifier = Modifier.padding(start = 16.dp, top = 4.dp)
                 )
@@ -244,4 +220,3 @@ private fun AddNotePrev() {
         onEvent = {}
     )
 }
-

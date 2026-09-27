@@ -1,4 +1,4 @@
-package com.codeturtle.notes.common.snakbar
+package com.codeturtle.notes.common.snackbar
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,8 +18,8 @@ fun <T> ObserveAsEvents(
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(lifecycleOwner.lifecycle, key1, key2, flow) {
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-            withContext(Dispatchers.Main.immediate){
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            withContext(Dispatchers.Main.immediate) {
                 flow.collect(onEvent)
             }
         }
