@@ -1,7 +1,7 @@
-   package com.codeturtle.notes.common.utils
+package com.codeturtle.notes.common.utils
 
-   import com.google.gson.Gson
-   import com.google.gson.reflect.TypeToken
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
