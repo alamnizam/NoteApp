@@ -1,16 +1,15 @@
 
-import com.android.build.gradle.AppExtension
+import com.android.build.api.dsl.ApplicationExtension
+import com.android.build.api.dsl.CommonExtension
+import com.android.build.api.dsl.LibraryExtension
 import com.android.build.gradle.AppPlugin
-import com.android.build.gradle.BaseExtension
-import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.LibraryPlugin
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+// Top-level build file where you can add configuration options common to all subprojects/modules.
 plugins {
     alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.compose) apply false
     alias(libs.plugins.dagger) apply false
     alias(libs.plugins.ksp) apply false
@@ -18,42 +17,33 @@ plugins {
     alias(libs.plugins.android.library) apply false
 }
 
-fun BaseExtension.defaultConfig(){
-    compileSdkVersion(36)
-    defaultConfig {
-        minSdk = 24
-        targetSdk = 36
+fun CommonExtension.configureAndroidDefaults(){
+    compileSdk = 37
+    defaultConfig.minSdk = 24
+    defaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    defaultConfig.vectorDrawables.useSupportLibrary = true
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-        vectorDrawables{
-            useSupportLibrary = true
-        }
+    when (this) {
+        is ApplicationExtension -> defaultConfig.targetSdk = 37
+        is LibraryExtension -> defaultConfig.consumerProguardFiles("consumer-rules.pro")
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    testOptions {
-        unitTests {
-            isIncludeAndroidResources = true
-        }
-    }
+    compileOptions.sourceCompatibility = JavaVersion.VERSION_17
+    compileOptions.targetCompatibility = JavaVersion.VERSION_17
+    testOptions.unitTests.isIncludeAndroidResources = true
 }
 
 fun PluginContainer.applyDefaultConfig(project: Project){
     whenPluginAdded{
         when(this){
             is AppPlugin -> {
-                project.extensions.getByType<AppExtension>().apply {
-                    defaultConfig()
+                project.extensions.getByType<ApplicationExtension>().apply {
+                    configureAndroidDefaults()
                 }
             }
             is LibraryPlugin -> {
                 project.extensions.getByType<LibraryExtension>().apply {
-                    defaultConfig()
+                    configureAndroidDefaults()
                 }
             }
             is JavaPlugin ->{
