@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.dagger)
     alias(libs.plugins.ksp)
@@ -9,8 +8,6 @@ plugins {
 
 android {
     namespace = "com.codeturtle.notes.common"
-    compileSdk = 36
-
     buildFeatures {
         compose = true
     }
